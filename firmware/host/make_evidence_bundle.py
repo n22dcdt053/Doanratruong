@@ -23,16 +23,29 @@ def digest(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest().upper()
 
 
+def read_text(p: Path) -> str:
+    """Doc text bat ke encoding thuc te (log PowerShell 5.1 la UTF-16 co BOM)."""
+    raw = p.read_bytes()
+    if raw[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        return raw.decode("utf-16")
+    if b"\x00" in raw:
+        return raw.decode("utf-16-le", errors="replace")
+    try:
+        return raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return raw.decode("cp1252")
+
+
 def block(title: str, path: Path, lang: str = "text") -> str:
     EMBEDDED.append(path)
-    text = path.read_text(encoding="utf-8", errors="replace").rstrip()
+    text = read_text(path).rstrip()
     rel = path.relative_to(ROOT).as_posix()
     return f"### {title}\n\n`{rel}`\n\n```{lang}\n{text}\n```\n"
 
 
 def tail_block(title: str, path: Path, lines: int = 8) -> str:
     EMBEDDED.append(path)
-    all_lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    all_lines = read_text(path).splitlines()
     text = "\n".join(all_lines[-lines:])
     rel = path.relative_to(ROOT).as_posix()
     return f"### {title}\n\n`{rel}` — {lines} dòng cuối\n\n```text\n{text}\n```\n"
@@ -41,8 +54,8 @@ def tail_block(title: str, path: Path, lines: int = 8) -> str:
 def line_diff(a: Path, b: Path) -> tuple[bool, int]:
     if a.read_bytes() == b.read_bytes():
         return True, 0
-    la = a.read_text(errors="replace").splitlines()
-    lb = b.read_text(errors="replace").splitlines()
+    la = read_text(a).splitlines()
+    lb = read_text(b).splitlines()
     d = sum(1 for x, y in zip(la, lb) if x != y) + abs(len(la) - len(lb))
     return False, d
 

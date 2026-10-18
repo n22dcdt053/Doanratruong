@@ -31,7 +31,9 @@ if ($Batch) {
 $log = Join-Path $logDir ("host_" + (Get-Date -Format "yyyyMMdd_HHmmss") + ".txt")
 $out = wsl -e bash "$wslRoot/firmware/host/run_host_test.sh" $Iterations 2>&1
 $code = $LASTEXITCODE
-$out | Tee-Object -FilePath $log
+$out
+# UTF-8 (không phải mặc định UTF-16 của Tee-Object) để log đọc/diff được như text
+$out | Out-File -FilePath $log -Encoding utf8
 if ($code -ne 0) {
     Write-Host "FAILED (exit $code)"
     exit $code

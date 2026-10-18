@@ -243,7 +243,9 @@ if ($Batch) {
 $log = Join-Path $logDir ("host_" + (Get-Date -Format "yyyyMMdd_HHmmss") + ".txt")
 $out = wsl -e bash "$wslRoot/firmware/host/run_host_test.sh" $Iterations 2>&1
 $code = $LASTEXITCODE
-$out | Tee-Object -FilePath $log
+$out
+# UTF-8 (không phải mặc định UTF-16 của Tee-Object) để log đọc/diff được như text
+$out | Out-File -FilePath $log -Encoding utf8
 if ($code -ne 0) {
     Write-Host "FAILED (exit $code)"
     exit $code
@@ -478,15 +480,10 @@ main()
 `firmware/host/logs/baseline_leak_1000runs.txt`
 
 ```text
-��M o d e l _ F o r w a r d   c o m p l e t e d . 
- 
- P r e d i c t i o n :   0 
- 
- E l a p s e d   t i m e :   4 6 2 5 5 1   u s   ( h o s t   w a l l   c l o c k ,   1 0 0 0   r u n ( s ) ,   N O T   M C U   t i m i n g ) 
- 
- H o s t   R S S :   1 9 9 6   K B   - >   1 0 4 1 2   K B   ( d e l t a   8 4 1 6   K B   o v e r   1 0 0 0   r u n ( s ) ) 
- 
- 
+Model_Forward completed.
+Prediction: 0
+Elapsed time: 462551 us (host wall clock, 1000 run(s), NOT MCU timing)
+Host RSS: 1996 KB -> 10412 KB (delta 8416 KB over 1000 run(s))
 ```
 
 ### 4.2 Rò rỉ: 4000 lượt trước sửa
@@ -494,15 +491,10 @@ main()
 `firmware/host/logs/baseline_leak_4000runs.txt`
 
 ```text
-��M o d e l _ F o r w a r d   c o m p l e t e d . 
- 
- P r e d i c t i o n :   0 
- 
- E l a p s e d   t i m e :   1 9 5 2 8 6 6   u s   ( h o s t   w a l l   c l o c k ,   4 0 0 0   r u n ( s ) ,   N O T   M C U   t i m i n g ) 
- 
- H o s t   R S S :   2 0 0 0   K B   - >   3 4 4 6 0   K B   ( d e l t a   3 2 4 6 0   K B   o v e r   4 0 0 0   r u n ( s ) ) 
- 
- 
+Model_Forward completed.
+Prediction: 0
+Elapsed time: 1952866 us (host wall clock, 4000 run(s), NOT MCU timing)
+Host RSS: 2000 KB -> 34460 KB (delta 32460 KB over 4000 run(s))
 ```
 
 ### 4.3 Baseline 1 mẫu trước sửa
@@ -510,15 +502,10 @@ main()
 `firmware/host/logs/host_20261018_194955.txt`
 
 ```text
-��M o d e l _ F o r w a r d   c o m p l e t e d . 
- 
- P r e d i c t i o n :   0 
- 
- E l a p s e d   t i m e :   4 1 6   u s   ( h o s t   w a l l   c l o c k ,   1   r u n ( s ) ,   N O T   M C U   t i m i n g ) 
- 
- H o s t   R S S :   2 0 0 0   K B   - >   2 4 1 2   K B   ( d e l t a   4 1 2   K B   o v e r   1   r u n ( s ) ) 
- 
- 
+Model_Forward completed.
+Prediction: 0
+Elapsed time: 416 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 2000 KB -> 2412 KB (delta 412 KB over 1 run(s))
 ```
 
 ### 4.4 ASan trước sửa (leak + overflow)
@@ -526,135 +513,135 @@ main()
 `firmware/host/logs/asan_prefix.txt`
 
 ```text
-﻿=== ASan run 1: default (first error stops the run) ===
-wsl : =================================================================
-At line:1 char:6
-+ $o = wsl -e bash /mnt/d/DoanNhomQuy/firmware/host/run_asan.sh 2>&1; $ ...
-+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (===============...===============:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-==571==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x59bf7b5b3ef8 bp 0x7ffc98a55860 
-sp 0x7ffc98a55850
-READ of size 4 at 0x51e000000a90 thread T0
-    #0 0x59bf7b5b3ef7 in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
-    #1 0x59bf7b5bca11 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:45
-    #2 0x59bf7b5bdfb9 in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
-    #3 0x7660dee2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #4 0x7660dee2a28a in __libc_start_main_impl ../csu/libc-start.c:360
-    #5 0x59bf7b5b05a4 in _start (/tmp/asan_hard+0x1b5a4) (BuildId: e30f323ae4bca6d2ca85e44a2c1b5eb2d0f702b5)
-
-0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
-allocated by thread T0 here:
-    #0 0x7660dfafd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x59bf7b5b2fa2 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
-in Mamba_Forward
-Shadow bytes around the buggy address:
-  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-==571==ABORTING
-=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
-=================================================================
-==577==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x5a3fafecf140 bp 0x7fff575e2a00 
-sp 0x7fff575e29f0
-READ of size 4 at 0x51e000000a90 thread T0
-    #0 0x5a3fafecf13f in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
-    #1 0x5a3fafed8382 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:45
-    #2 0x5a3fafed99d9 in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
-    #3 0x712b6262a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #4 0x712b6262a28a in __libc_start_main_impl ../csu/libc-start.c:360
-    #5 0x5a3fafecb5a4 in _start (/tmp/asan_soft+0x1b5a4) (BuildId: dc40c5c4077a7e88af50768ebe8ce12373c24055)
-
-0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
-allocated by thread T0 here:
-    #0 0x712b632fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x5a3fafece154 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
-in Mamba_Forward
-Shadow bytes around the buggy address:
-  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-
-=================================================================
-==577==ERROR: LeakSanitizer: detected memory leaks
-
-Direct leak of 7728 byte(s) in 3 object(s) allocated from:
-    #0 0x712b632fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x5a3fafece154 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
-
-Direct leak of 312 byte(s) in 2 object(s) allocated from:
-    #0 0x712b632fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x5a3fafecbba7 in matrix_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/matrix.c:36
-
-Direct leak of 88 byte(s) in 1 object(s) allocated from:
-    #0 0x712b632fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x5a3fafece53b in Mamba_Init /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:52
-
-SUMMARY: AddressSanitizer: 8128 byte(s) leaked in 6 allocation(s).
-Model_Forward completed.
-Prediction: 0
-Logits: -nan -nan -nan -nan -nan -nan
-Elapsed time: 129216 us (host wall clock, 1 run(s), NOT MCU timing)
-Host RSS: 7892 KB -> 39480 KB (delta 31588 KB over 1 run(s))
+=== ASan run 1: default (first error stops the run) ===
+wsl : =================================================================
+At line:1 char:6
++ $o = wsl -e bash /mnt/d/DoanNhomQuy/firmware/host/run_asan.sh 2>&1; $ ...
++      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (===============...===============:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+==571==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x59bf7b5b3ef8 bp 0x7ffc98a55860 
+sp 0x7ffc98a55850
+READ of size 4 at 0x51e000000a90 thread T0
+    #0 0x59bf7b5b3ef7 in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
+    #1 0x59bf7b5bca11 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:45
+    #2 0x59bf7b5bdfb9 in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
+    #3 0x7660dee2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x7660dee2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x59bf7b5b05a4 in _start (/tmp/asan_hard+0x1b5a4) (BuildId: e30f323ae4bca6d2ca85e44a2c1b5eb2d0f702b5)
+
+0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
+allocated by thread T0 here:
+    #0 0x7660dfafd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x59bf7b5b2fa2 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
+in Mamba_Forward
+Shadow bytes around the buggy address:
+  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==571==ABORTING
+=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
+=================================================================
+==577==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x5a3fafecf140 bp 0x7fff575e2a00 
+sp 0x7fff575e29f0
+READ of size 4 at 0x51e000000a90 thread T0
+    #0 0x5a3fafecf13f in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
+    #1 0x5a3fafed8382 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:45
+    #2 0x5a3fafed99d9 in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
+    #3 0x712b6262a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x712b6262a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x5a3fafecb5a4 in _start (/tmp/asan_soft+0x1b5a4) (BuildId: dc40c5c4077a7e88af50768ebe8ce12373c24055)
+
+0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
+allocated by thread T0 here:
+    #0 0x712b632fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5a3fafece154 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
+in Mamba_Forward
+Shadow bytes around the buggy address:
+  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+
+=================================================================
+==577==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 7728 byte(s) in 3 object(s) allocated from:
+    #0 0x712b632fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5a3fafece154 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
+
+Direct leak of 312 byte(s) in 2 object(s) allocated from:
+    #0 0x712b632fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5a3fafecbba7 in matrix_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/matrix.c:36
+
+Direct leak of 88 byte(s) in 1 object(s) allocated from:
+    #0 0x712b632fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5a3fafece53b in Mamba_Init /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:52
+
+SUMMARY: AddressSanitizer: 8128 byte(s) leaked in 6 allocation(s).
+Model_Forward completed.
+Prediction: 0
+Logits: -nan -nan -nan -nan -nan -nan
+Elapsed time: 129216 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7892 KB -> 39480 KB (delta 31588 KB over 1 run(s))
 === ASan done ===
 ```
 
@@ -663,118 +650,118 @@ Host RSS: 7892 KB -> 39480 KB (delta 31588 KB over 1 run(s))
 `firmware/host/logs/asan_fixed.txt`
 
 ```text
-﻿=== ASan run 1: default (first error stops the run) ===
-wsl : =================================================================
-At line:1 char:6
-+ $o = wsl -e bash /mnt/d/DoanNhomQuy/firmware/host/run_asan.sh 2>&1; $ ...
-+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (===============...===============:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-==658==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x5e74a44c8ef8 bp 0x7fffa2f91f20 
-sp 0x7fffa2f91f10
-READ of size 4 at 0x51e000000a90 thread T0
-    #0 0x5e74a44c8ef7 in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
-    #1 0x5e74a44d1a56 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:58
-    #2 0x5e74a44d3184 in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
-    #3 0x784acfa2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #4 0x784acfa2a28a in __libc_start_main_impl ../csu/libc-start.c:360
-    #5 0x5e74a44c55a4 in _start (/tmp/asan_hard+0x1b5a4) (BuildId: 4c275885f80d13793cc9783ae3c16bebda47af14)
-
-0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
-allocated by thread T0 here:
-    #0 0x784ad06fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x5e74a44c7fa2 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
-in Mamba_Forward
-Shadow bytes around the buggy address:
-  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-==658==ABORTING
-=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
-=================================================================
-==666==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x5f2fc1d3b140 bp 0x7ffe79b9e960 
-sp 0x7ffe79b9e950
-READ of size 4 at 0x51e000000a90 thread T0
-    #0 0x5f2fc1d3b13f in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
-    #1 0x5f2fc1d443c5 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:58
-    #2 0x5f2fc1d45bff in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
-    #3 0x77750122a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #4 0x77750122a28a in __libc_start_main_impl ../csu/libc-start.c:360
-    #5 0x5f2fc1d375a4 in _start (/tmp/asan_soft+0x1b5a4) (BuildId: f6467fbfe8d5373aa6f07e3bf4e701e9b4d93a62)
-
-0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
-allocated by thread T0 here:
-    #0 0x777501efd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x5f2fc1d3a154 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
-in Mamba_Forward
-Shadow bytes around the buggy address:
-  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-Model_Forward completed.
-Prediction: 0
-Logits: -nan -nan -nan -nan -nan -nan
-Elapsed time: 101071 us (host wall clock, 1 run(s), NOT MCU timing)
-Host RSS: 7880 KB -> 39484 KB (delta 31604 KB over 1 run(s))
+=== ASan run 1: default (first error stops the run) ===
+wsl : =================================================================
+At line:1 char:6
++ $o = wsl -e bash /mnt/d/DoanNhomQuy/firmware/host/run_asan.sh 2>&1; $ ...
++      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (===============...===============:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+==658==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x5e74a44c8ef8 bp 0x7fffa2f91f20 
+sp 0x7fffa2f91f10
+READ of size 4 at 0x51e000000a90 thread T0
+    #0 0x5e74a44c8ef7 in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
+    #1 0x5e74a44d1a56 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:58
+    #2 0x5e74a44d3184 in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
+    #3 0x784acfa2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x784acfa2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x5e74a44c55a4 in _start (/tmp/asan_hard+0x1b5a4) (BuildId: 4c275885f80d13793cc9783ae3c16bebda47af14)
+
+0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
+allocated by thread T0 here:
+    #0 0x784ad06fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5e74a44c7fa2 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
+in Mamba_Forward
+Shadow bytes around the buggy address:
+  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==658==ABORTING
+=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
+=================================================================
+==666==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x5f2fc1d3b140 bp 0x7ffe79b9e960 
+sp 0x7ffe79b9e950
+READ of size 4 at 0x51e000000a90 thread T0
+    #0 0x5f2fc1d3b13f in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
+    #1 0x5f2fc1d443c5 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:58
+    #2 0x5f2fc1d45bff in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
+    #3 0x77750122a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x77750122a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x5f2fc1d375a4 in _start (/tmp/asan_soft+0x1b5a4) (BuildId: f6467fbfe8d5373aa6f07e3bf4e701e9b4d93a62)
+
+0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
+allocated by thread T0 here:
+    #0 0x777501efd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5f2fc1d3a154 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
+in Mamba_Forward
+Shadow bytes around the buggy address:
+  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+Model_Forward completed.
+Prediction: 0
+Logits: -nan -nan -nan -nan -nan -nan
+Elapsed time: 101071 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7880 KB -> 39484 KB (delta 31604 KB over 1 run(s))
 === ASan done ===
 ```
 
@@ -783,18 +770,18 @@ Host RSS: 7880 KB -> 39484 KB (delta 31604 KB over 1 run(s))
 `firmware/host/logs/asan_vendored.txt`
 
 ```text
-﻿=== ASan run 1: default (first error stops the run) ===
-Model_Forward completed.
-Prediction: 0
-Logits: -nan -nan -nan -nan -nan -nan
-Elapsed time: 2731 us (host wall clock, 1 run(s), NOT MCU timing)
-Host RSS: 7864 KB -> 8816 KB (delta 952 KB over 1 run(s))
-=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
-Model_Forward completed.
-Prediction: 0
-Logits: -nan -nan -nan -nan -nan -nan
-Elapsed time: 3305 us (host wall clock, 1 run(s), NOT MCU timing)
-Host RSS: 7916 KB -> 8972 KB (delta 1056 KB over 1 run(s))
+=== ASan run 1: default (first error stops the run) ===
+Model_Forward completed.
+Prediction: 0
+Logits: -nan -nan -nan -nan -nan -nan
+Elapsed time: 2731 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7864 KB -> 8816 KB (delta 952 KB over 1 run(s))
+=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
+Model_Forward completed.
+Prediction: 0
+Logits: -nan -nan -nan -nan -nan -nan
+Elapsed time: 3305 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7916 KB -> 8972 KB (delta 1056 KB over 1 run(s))
 === ASan done ===
 ```
 
@@ -803,20 +790,20 @@ Host RSS: 7916 KB -> 8972 KB (delta 1056 KB over 1 run(s))
 `firmware/host/logs/asan_final.txt`
 
 ```text
-﻿=== ASan run 1: default (first error stops the run) ===
-Model_Forward completed.
-Prediction: -2
-Output: INVALID (non-finite logits), pred=-2 is not a class
-Logits: nan nan nan nan nan nan
-Elapsed time: 4770 us (host wall clock, 1 run(s), NOT MCU timing)
-Host RSS: 7916 KB -> 8940 KB (delta 1024 KB over 1 run(s))
-=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
-Model_Forward completed.
-Prediction: -2
-Output: INVALID (non-finite logits), pred=-2 is not a class
-Logits: nan nan nan nan nan nan
-Elapsed time: 3130 us (host wall clock, 1 run(s), NOT MCU timing)
-Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
+=== ASan run 1: default (first error stops the run) ===
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 4770 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7916 KB -> 8940 KB (delta 1024 KB over 1 run(s))
+=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 3130 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
 === ASan done ===
 ```
 
@@ -825,19 +812,12 @@ Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
 `firmware/host/logs/uci_test_pre_mamba_score.txt`
 
 ```text
-��s a m p l e s :   2 9 4 7 
- 
- n a n _ r o w s   ( n o n - f i n i t e   l o g i t s ) :   0 
- 
- i n v a l i d _ r o w s   ( p r e d   <   0 ) :   0 
- 
- a c c u r a c y :   0 . 9 2 6 7 
- 
- m a c r o - F 1 :   0 . 9 2 6 5 
- 
- F 1   p e r   c l a s s :   c 0 = 0 . 9 3 6 5   c 1 = 0 . 9 1 3 2   c 2 = 0 . 9 4 8 9   c 3 = 0 . 8 7 8 6   c 4 = 0 . 9 0 3 5   c 5 = 0 . 9 7 8 2 
- 
- 
+samples: 2947
+nan_rows (non-finite logits): 0
+invalid_rows (pred < 0): 0
+accuracy: 0.9267
+macro-F1: 0.9265
+F1 per class: c0=0.9365 c1=0.9132 c2=0.9489 c3=0.8786 c4=0.9035 c5=0.9782
 ```
 
 ### 4.9 Chấm điểm UCI cuối
@@ -845,19 +825,12 @@ Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
 `firmware/host/logs/uci_test_final_score.txt`
 
 ```text
-��s a m p l e s :   2 9 4 7 
- 
- n a n _ r o w s   ( n o n - f i n i t e   l o g i t s ) :   0 
- 
- i n v a l i d _ r o w s   ( p r e d   <   0 ) :   0 
- 
- a c c u r a c y :   0 . 9 2 6 7 
- 
- m a c r o - F 1 :   0 . 9 2 6 5 
- 
- F 1   p e r   c l a s s :   c 0 = 0 . 9 3 6 5   c 1 = 0 . 9 1 3 2   c 2 = 0 . 9 4 8 9   c 3 = 0 . 8 7 8 6   c 4 = 0 . 9 0 3 5   c 5 = 0 . 9 7 8 2 
- 
- 
+samples: 2947
+nan_rows (non-finite logits): 0
+invalid_rows (pred < 0): 0
+accuracy: 0.9267
+macro-F1: 0.9265
+F1 per class: c0=0.9365 c1=0.9132 c2=0.9489 c3=0.8786 c4=0.9035 c5=0.9782
 ```
 
 ### 4.10 Lần chạy 1 mẫu cuối — báo đầu ra không hợp lệ
@@ -865,19 +838,12 @@ Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
 `firmware/host/logs/host_20261018_202535.txt`
 
 ```text
-��M o d e l _ F o r w a r d   c o m p l e t e d . 
- 
- P r e d i c t i o n :   - 2 
- 
- O u t p u t :   I N V A L I D   ( n o n - f i n i t e   l o g i t s ) ,   p r e d = - 2   i s   n o t   a   c l a s s 
- 
- L o g i t s :   n a n   n a n   n a n   n a n   n a n   n a n 
- 
- E l a p s e d   t i m e :   1 2 1 2   u s   ( h o s t   w a l l   c l o c k ,   1   r u n ( s ) ,   N O T   M C U   t i m i n g ) 
- 
- H o s t   R S S :   2 0 3 2   K B   - >   2 5 3 6   K B   ( d e l t a   5 0 4   K B   o v e r   1   r u n ( s ) ) 
- 
- 
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 1212 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 2032 KB -> 2536 KB (delta 504 KB over 1 run(s))
 ```
 
 ### 4.11 Build Portenta H7 (thành công)
@@ -885,14 +851,14 @@ Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
 `firmware/mambahar-portenta-h7/logs/build_20261018_201729.txt` — 8 dòng cuối
 
 ```text
- 
- F l a s h :   [ = = = =             ]     3 9 . 1 %   ( u s e d   3 0 7 3 6 8   b y t e s   f r o m   7 8 6 4 3 2   b y t e s ) 
- 
- B u i l d i n g   . p i o \ b u i l d \ p o r t e n t a _ h 7 _ m 7 \ f i r m w a r e . b i n 
- 
- = = = = = = = = = = = = = = = = = = = = = = = = =   [ S U C C E S S ]   T o o k   2 2 . 5 6   s e c o n d s   = = = = = = = = = = = = = = = = = = = = = = = = = 
- 
- 
+Indexing .pio\build\portenta_h7_m7\libFrameworkArduino.a
+Linking .pio\build\portenta_h7_m7\firmware.elf
+Checking size .pio\build\portenta_h7_m7\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]  14.8% (used 77256 bytes from 523624 bytes)
+Flash: [====      ]  39.1% (used 307368 bytes from 786432 bytes)
+Building .pio\build\portenta_h7_m7\firmware.bin
+========================= [SUCCESS] Took 22.56 seconds =========================
 ```
 
 ### 4.12 Build ESP32-S3 (thành công)
@@ -900,14 +866,14 @@ Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
 `firmware/mambahar-esp32s3/logs/build_20261018_202030.txt` — 8 dòng cuối
 
 ```text
- 
- M e r g e d   2   E L F   s e c t i o n s 
- 
- S u c c e s s f u l l y   c r e a t e d   e s p 3 2 s 3   i m a g e . 
- 
- = = = = = = = = = = = = = = = = = = = = = = = = =   [ S U C C E S S ]   T o o k   9 9 . 2 7   s e c o n d s   = = = = = = = = = = = = = = = = = = = = = = = = = 
- 
- 
+Building .pio\build\esp32s3\firmware.bin with action:
+  "$PYTHONEXE" "$OBJCOPY" --chip esp32s3 elf2image --flash_mode ${__get_board_flash_mode(__env__)} --flash_freq ${__get_board_f_image(__env__)} --flash_size 8MB --elf-sha256-offset 0xb0 -o $TARGET $SOURCES
+Building .pio\build\esp32s3\firmware.bin
+esptool.py v4.5.1
+Creating esp32s3 image...
+Merged 2 ELF sections
+Successfully created esp32s3 image.
+========================= [SUCCESS] Took 99.27 seconds =========================
 ```
 
 ## 5. File số liệu (nằm trong repo, không in vào phụ lục cho gọn)
@@ -929,21 +895,21 @@ Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
 | File | SHA-256 |
 |---|---|
 | `firmware/host/host_main.c` | `B63C3DA7CF06A21C0CC9BA827D033F76CA7773A67D9BAAA47BB4E401DEC4DC05` |
-| `firmware/host/run_host_test.ps1` | `2DB22C955607B700888BDF007F6CEA831072AC7B2A9DE44A5AA086AD09F1A8B1` |
+| `firmware/host/run_host_test.ps1` | `0732498B413B28F725A76CE491D62BDFE43ACD8A25F9109A9449A762F3607334` |
 | `firmware/host/run_host_test.sh` | `E8803361C2BAA757582EB01586BEBF1611453C070760FCE5A668D8C0792053CD` |
 | `firmware/host/run_asan.sh` | `A16CDEFEA7053BC46B59C42A0A24583286F9DD9081D1AD2E6E44A6B6E6D76BCA` |
 | `firmware/host/uci_har.py` | `741B026DF77EF112790E2E61DA65566313C6108CF103174F2D6F96F82DD04971` |
 | `firmware/host/make_batch.py` | `7B2831A54546F0982FDF8242B68C85C9D7C0D53EDCA4FBCDFBA7D991A59969D6` |
 | `firmware/common/mamba_vs_upstream.diff` | `3D2E8BCD9DA6539351B26B3428B80BE451C87DA2FE3CB4525CF05A4CFD649E1E` |
-| `firmware/host/logs/baseline_leak_1000runs.txt` | `D86DE9FE4C5F767DC0612FD392164AB66DE9B8B9DC458EA7120EA83673ADFFC3` |
-| `firmware/host/logs/baseline_leak_4000runs.txt` | `8921AC72B8F1E39B00821399458D70751B362D331B721F8A1319CD7D3D02BED0` |
-| `firmware/host/logs/host_20261018_194955.txt` | `8CBEBB6A218F9910BD4A10A669A958225381F4283D2312B701B10CCE4145E9EE` |
+| `firmware/host/logs/baseline_leak_1000runs.txt` | `528672FDBADEDE64A863F221CBBF84A7A8CB8F9005934CD6AA3D3808BA2B2D39` |
+| `firmware/host/logs/baseline_leak_4000runs.txt` | `E7A3C2CFEF486069426ED8D845C0641E217AC5B1F63FCFF627D6A190F0572522` |
+| `firmware/host/logs/host_20261018_194955.txt` | `5FF14369A00BFCAC2EB98C21D8841F98A19594115CE4E6E4605DF5E2DCE0F828` |
 | `firmware/host/logs/asan_prefix.txt` | `05F1346058B596368570EBBD354BCD4D1C482116D6E36ECF6A86830782A7D9E8` |
 | `firmware/host/logs/asan_fixed.txt` | `8610DEC8FB3331E51470469405F80A99D6246D37F88DFCA74DA31342960D2AF4` |
 | `firmware/host/logs/asan_vendored.txt` | `C987904FF8E9CA107231252388E5A27D559A540F0A38E5A7A9ECA4FB558375DB` |
 | `firmware/host/logs/asan_final.txt` | `D9E15A18C78A7344166242479EC3F3BB099848539A3E2E6A84AB5E011F79142A` |
-| `firmware/host/logs/uci_test_pre_mamba_score.txt` | `BE7904AE295BCBF04FC7247E9BD4253C13D81FAC36C84E982B8BD92B813BB977` |
-| `firmware/host/logs/uci_test_final_score.txt` | `BE7904AE295BCBF04FC7247E9BD4253C13D81FAC36C84E982B8BD92B813BB977` |
-| `firmware/host/logs/host_20261018_202535.txt` | `614884B3015C73CFF2D02354EB4F7EC5ED6A04694123B7B54262E97A30FF399D` |
-| `firmware/mambahar-portenta-h7/logs/build_20261018_201729.txt` | `1A192615A5819275EB8964E66EF80F03780A701FDA9C4725D8241D3C8E173C79` |
-| `firmware/mambahar-esp32s3/logs/build_20261018_202030.txt` | `EE5181C5246B7F53415E620251EEF64C20C4C43144E235C212749821FFFFF027` |
+| `firmware/host/logs/uci_test_pre_mamba_score.txt` | `1C0AE724980FF71FB9FD0B1ABC88322CF0CC771E50FCCD8E34FA6F3EF5FE288F` |
+| `firmware/host/logs/uci_test_final_score.txt` | `1C0AE724980FF71FB9FD0B1ABC88322CF0CC771E50FCCD8E34FA6F3EF5FE288F` |
+| `firmware/host/logs/host_20261018_202535.txt` | `A6B9269A4299DDB53F7EBB8AE7D793D80D2AF83693E62055AAE944032629FB0F` |
+| `firmware/mambahar-portenta-h7/logs/build_20261018_201729.txt` | `C5C075C2A17B35ADBE5FEAF35090E485752CAB2CFD5F10C0DDA8D22DE6555054` |
+| `firmware/mambahar-esp32s3/logs/build_20261018_202030.txt` | `6C185C994B196C7CEB4003C7C19FD1D04837CC9963D33C86DFBBE8DF5942851C` |
