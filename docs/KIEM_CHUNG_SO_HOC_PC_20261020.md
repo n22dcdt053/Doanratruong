@@ -1,4 +1,4 @@
-# PHỤ LỤC NGHIỆM THU — kiểm chứng số học trên máy tính (không cần bo)
+# KIỂM CHỨNG SỐ HỌC TRÊN PC — phụ lục kèm báo cáo tiến độ
 
 Ngày 18–20/10/2026 · Nhóm: Nguyễn Mai Trọng Quý (N22DCDT053), Võ Trung Nhân (N22DCDT043), Đinh Hữu Phước (N22DCDT047) · GVHD: TS. Nguyễn Thanh Bình
 
@@ -6,33 +6,39 @@ File sinh tự động: `python firmware/host/make_evidence_bundle.py` — đừ
 
 ## 0. Phạm vi tài liệu này
 
-- Môi trường: **máy tính của nhóm — Windows gọi qua PowerShell, chương trình chạy trong WSL Ubuntu 24.04, gcc 13.3, x86-64**. Không có bo nào tham gia.
+- Môi trường: **máy tính của nhóm — Windows gọi qua PowerShell, chương trình chạy trong WSL Ubuntu 24.04, gcc/g++ 13.3.0, x86-64**. Không có bo nào tham gia.
 
-- Kiểm chứng **số học**: đúng/sai kết quả, rò rỉ bộ nhớ, hành vi với đầu vào lỗi, của **đúng mã nguồn C sẽ nạp lên bo** (cùng bản vendor `firmware/common/`).
+- Sinh từ cây làm việc tại commit `26bc3d8` — trạng thái cây khi sinh: **cây sạch (không tính file chưa được git theo dõi — gồm chính file này)** (`git rev-parse --short HEAD` + `git status --porcelain --untracked-files=no`).
+
+- Kiểm chứng **số học**: đúng/sai kết quả, rò rỉ bộ nhớ, hành vi với đầu vào lỗi, của cùng bộ mã nguồn mô hình sẽ nạp lên bo (`firmware/common/`).
+
+- **Khác biệt nguồn lệch tầng B (compiler/ngôn ngữ):** firmware Portenta biên dịch mô hình bằng **C++** (`arm-none-eabi-g++`, newlib, Cortex-M7 FPv5) vì `main.cpp` include các file `.c` trong `extern "C" {}`; host truyền thống dùng **gcc ở chế độ C** (glibc, x86-64 SSE2). Đây là một nguồn lệch thật của tầng B — đã đo bằng A/B build `g++` vs `gcc` trên cùng bộ nguồn, cùng runner (mục 2.4, log 4.13). Phần khác biệt còn lại (target, newlib vs glibc, FPU) chỉ chốt được khi đo trên bo thật.
+
+- Firmware gọi `mambahar_forward()` (1 mẫu rồi reset); host gọi `mambahar_forward_logits()`. Hai hàm **cùng một thân hàm** (`mambahar_forward` gọi `forward_logits(input, NULL)` — `firmware/common/mambahar.c` dòng 161–164), nên không có nhánh tính toán riêng.
 
 - **Không thay thế** bài test trên phần cứng: Flash/RAM theo map file, heap Mbed, 1.000 lượt liên tiếp, thời gian, năng lượng — chỉ số đo trên Portenta H7 mới tính là bằng chứng nghiệm thu.
 
-- Thời gian in ra là wall clock của PC, **không phải** thời gian MCU.
+- Thời gian in ra là wall clock của PC, **không phải** thời gian MCU. Các chỗ ghi *(ước tính)* / *(giả thuyết)* là suy luận chưa đo, không dùng làm bằng chứng.
 
 ## 1. Cách tái tạo toàn bộ file này
 
 ```powershell
 cd D:\DoanNhomQuy
-# 1 lượt (mẫu demo -> báo đầu ra không hợp lệ), 1000 / 4000 lượt (kiểm rò rỉ)
+# Biên dịch + chạy host (1 lượt / 1000 / 4000 lượt, hoặc batch .f32 -> CSV)
 powershell -ExecutionPolicy Bypass -File .\firmware\host\run_host_test.ps1 -Iterations 1
-powershell -ExecutionPolicy Bypass -File .\firmware\host\run_host_test.ps1 -Iterations 1000
-# chạy lô N mẫu từ file .f32 -> CSV (idx,pred,6 logits)
 powershell -ExecutionPolicy Bypass -File .\firmware\host\run_host_test.ps1 -Batch .\firmware\host\logs\batch_demo.f32 -OutName out.csv
-# ASan + UBSan + LSan (chạy trong WSL)
+# A/B: gcc(C) vs g++(C++); upstream 1:1 vs bản dev (cùng runner, 2947 mẫu UCI)
+wsl -e bash /mnt/d/DoanNhomQuy/firmware/host/run_cpp_vs_c.sh
+wsl -e bash /mnt/d/DoanNhomQuy/firmware/host/run_upstream_cmp.sh
+# ASan + UBSan + LSan: 1 mẫu, 1000 lượt, batch UCI
 wsl -e bash /mnt/d/DoanNhomQuy/firmware/host/run_asan.sh
-# UCI HAR: chuyển tập test -> .f32 và chấm điểm
+# UCI HAR: chuyển tập test -> .f32 rồi chấm điểm (in cả confusion matrix), và sinh lại phụ lục
 python .\firmware\host\uci_har.py to-f32 "D:\DoanNhomQuy\data\UCI HAR Dataset" .\firmware\host\logs\uci_test.f32
 python .\firmware\host\uci_har.py score .\firmware\host\logs\uci_test_logits_final.csv "D:\DoanNhomQuy\data\UCI HAR Dataset"
-# đối chiếu bit-exact (cmp khớp từng byte)
-wsl -e bash -c "cd /mnt/d/DoanNhomQuy/firmware/host/logs && cmp fixed_logits.csv v2_batch201_logits.csv && echo BIT-EXACT"
+python .\firmware\host\make_evidence_bundle.py
 ```
 
-Dataset: UCI HAR Dataset (archive.ics.uci.edu/static/public/240/human+activity+recognition+using+smartphones.zip), giải nén vào `data/` (không commit, .gitignore).
+Dataset: UCI HAR Dataset (archive.ics.uci.edu/static/public/240/human+activity+recognition+using+smartphones.zip), giải nén vào `data/` (không commit, `.gitignore`).
 
 ## 2. Kết quả chính
 
@@ -40,19 +46,26 @@ Dataset: UCI HAR Dataset (archive.ics.uci.edu/static/public/240/human+activity+r
 
 | | RSS 1000 lượt | RSS 4000 lượt |
 |---|---|---|
-| Trước sửa | +8.416 KB (tăng tuyến tính ~8,4 KB/lượt) | +32.460 KB |
-| Sau sửa | **+496 KB** | **+500 KB** (thêm 4 KB khi gấp 4 lần số lượt) |
+| Trước sửa | +8.416 KB (tăng theo số lượt) | +32.460 KB |
+| Sau sửa | **+496 KB** | **+500 KB** |
 
-Mức +496/500 KB là lần chạm trang đầu tiên của glibc (trọng số + allocator), không tăng theo số lượt -> đạt yêu cầu "không rò rỉ". Trước sửa: RAM H7 511 KB sẽ hết sau ~60 lượt -> không thể đạt yêu cầu 1.000 lượt.
+Diễn giải "+496/500 KB là lần chạm trang đầu tiên của glibc" và "RAM H7 (511 KB) sẽ hết sau khoảng 60 lượt nếu giữ rò rỉ" là **ước tính/giả thuyết — chưa đo trên bo**; bằng chứng đo được nằm ở chính các con số RSS trên. Kiểm chứng "không rò rỉ" chắc chắn nhất: LSan/ASan ở 2.2.
 
-### 2.2 ASan / LSan / UBSan (log 4.4–4.7)
+### 2.2 ASan / LSan / UBSan (log 4.4–4.7 cũ + 4.15 mở rộng)
 
 - Trước sửa: `8128 byte(s) leaked in 6 allocation(s)` + `heap-buffer-overflow READ of size 4` tại `csrc/mamba.c:94`.
-- Sau sửa rò rỉ: hết leak. Sau khi vendor `mamba.c` (sửa 1 dòng vòng chép `xz`): **sạch hoàn toàn**, không còn report nào.
+
+- Sau sửa rò rỉ: hết leak. Sau khi vendor `mamba.c` (sửa 1 dòng vòng chép `xz`): hết report.
+
+- **Độ phủ hiện tại (log 4.15):** 4 lượt chạy — 1 mẫu (2 chế độ) + **1.000 lượt liên tiếp** + **batch đủ 2.947 mẫu UCI hữu hạn** — không còn report ASan/UBSan/LSan nào.
+
+- Trong run 3 dưới ASan, RSS tăng **+108 MB** — đó là *artifact của allocator ASan* (redzone + quarantine giữ các vùng đã free), **không phải rò rỉ**: LSan không in report nào, và bản gcc thường (mục 2.1) chỉ +500 KB cho 4.000 lượt.
+
+- KET QUA: ASan build (-O1) == bang chung (-O2) - bit-exact tren 2947 mau
 
 ### 2.3 Tập test UCI HAR, bản C tham chiếu (log 4.8–4.9)
 
-Toàn bộ **2.947 mẫu test**, trọng số công khai, chấm theo `y_test.txt` (trừ 1 do nhãn gốc 1..6, khớp `train.py` dòng 39):
+Toàn bộ **2.947 mẫu test**, trọng số công khai, nhãn `y_test.txt` 1..6 trừ 1 (khớp `train.py` dòng 37/39):
 
 | Chỉ số | Giá trị |
 |---|---|
@@ -60,26 +73,35 @@ Toàn bộ **2.947 mẫu test**, trọng số công khai, chấm theo `y_test.tx
 | Macro-F1 | **0,9265** |
 | F1 theo lớp | 0,937 / 0,913 / 0,949 / 0,879 / 0,904 / 0,978 |
 | Số mẫu NaN / không hợp lệ | **0 / 0** |
+| Confusion matrix + tên lớp | in ở log 4.9 |
 
-Ý nghĩa: pipeline (tiền xử lý -> 6 logits -> argmax) khớp dữ liệu thật; đây **chỉ là điểm tham chiếu cho kiểm chứng số học MT1/MT3**, không dùng trong bảng so sánh Mamba↔MLP (checkpoint công khai chọn bằng validation chia ngẫu nhiên).
+Ý nghĩa: pipeline (tiền xử lý → 6 logits → argmax) khớp dữ liệu thật; đây **chỉ là điểm tham chiếu cho kiểm chứng số học MT1/MT3**, không dùng trong bảng so sánh Mamba↔MLP (checkpoint công khai chọn bằng validation chia ngẫu nhiên).
 
-### 2.4 Đối chiếu bit-exact (`cmp`) — sửa code không đổi kết quả
+### 2.4 Đối chiếu bit-exact — phạm vi chính xác
 
-| Cặp file | Kết quả |
-|---|---|
-| baseline_logits.csv vs fixed_logits.csv (sau sửa rò rỉ) | khớp từng byte |
-| fixed_logits.csv vs v2_batch201_logits.csv (sau vendor mamba.c) | khớp từng byte |
-| uci pre_mamba vs post_mamba (2.947 mẫu, sau vendor mamba.c) | khớp từng byte |
-| uci post_mamba vs final (sau thêm kiểm tra isfinite) | khớp từng byte |
-| v2 vs v3 (trước/sau thêm kiểm tra isfinite) | khác **1 dòng** — đúng dự kiến: cột pred của mẫu demo đổi 0 -> -2 |
+Chỉ khẳng định **bit-exact cho các đầu ra hữu hạn** (tập UCI HAR chuẩn hóa: 0 mẫu NaN). Các cặp đã đối chiếu:
 
-### 2.5 Mẫu demo sai thang đầu vào -> báo không hợp lệ (log 4.10)
+- KET QUA: gcc(C) == g++(C++) - bit-exact tren 2947 mau UCI (222906 B)
 
-Mẫu demo `sample_input.h` (thang thô ~ -39) cho logits NaN; trước đây bị tính thành lớp 0 (argmax trên NaN luôn sai) — **không phải dự đoán thật**. Bản vendor hiện tại kiểm `isfinite` cả 6 logits -> trả `-2` và in `Output: INVALID`. Dữ liệu UCI chuẩn hóa không có mẫu NaN nào, xác nhận nguyên nhân là thang đầu vào.
+- KET QUA: build gcc moi == bang chung logs/uci_test_logits_final.csv - bit-exact
 
-## 3. Code kiểm chứng (nguyên văn)
+- KET QUA: upstream 1:1 == ban dev - pred bit-exact tren 2947 mau UCI
 
-### 3.1 `host_main.c` — chương trình tham chiếu chạy trên PC (dùng chung mã nguồn với firmware)
+- KET QUA: ban dev (chay moi) == bang chung logs/uci_test_logits_final.csv - bit-exact
+
+- Ba bản CSV 2.947 mẫu (trước khi vendor `mamba.c` / sau khi vendor / bản cuối): **trùng khớp từng byte** — `uci_test_logits_{pre_mamba,post_mamba,final}.csv`.
+
+- Lô 201 mẫu (`baseline` → `fixed` → `v2`): **trùng khớp từng byte**. *Lưu ý phạm vi:* lô này gồm **1 mẫu demo thật (cho NaN) + 200 mẫu ngẫu nhiên**, nên chỉ là bằng chứng phụ cho lần sửa rò rỉ; kết luận chính dùng cặp 2.947 mẫu thật ở trên.
+
+- `v2_batch201_logits.csv` vs `v3_batch201_logits.csv` (trước/sau thêm kiểm `isfinite`): khác 1 dòng; kích thước 15,052 → 15,047 B (Δ -5) — mẫu 0: pred (0 → -2), logit0 (-nan → nan), logit1 (-nan → nan), logit2 (-nan → nan), logit3 (-nan → nan), logit4 (-nan → nan), logit5 (-nan → nan). Đúng dự kiến: chỉ mẫu demo (NaN) đổi cách báo; dữ liệu thật hữu hạn không đổi.
+
+### 2.5 Mẫu demo sai thang đầu vào → báo không hợp lệ (log 4.10)
+
+Mẫu demo `sample_input.h` (thang thô ~ −39) cho logits NaN; trước đây bị tính thành lớp 0 (argmax trên NaN luôn sai) — **không phải dự đoán thật**. Bản vendor hiện tại kiểm `isfinite` cả 6 logits → trả `-2` và in `Output: INVALID`. Dữ liệu UCI chuẩn hóa không có mẫu NaN nào, xác nhận nguyên nhân là thang đầu vào.
+
+## 3. Mã nguồn kiểm chứng (nguyên văn)
+
+### 3.1 `host_main.c` — runner PC (dùng chung mã nguồn với firmware; cờ `-DUPSTREAM_ONLY` cho A/B upstream)
 
 `firmware/host/host_main.c`
 
@@ -110,6 +132,21 @@ Mẫu demo `sample_input.h` (thang thô ~ -39) cho logits NaN; trước đây b�
 #include "sample_input.h"
 
 #define N_FEAT (10 * 57)
+
+/* A/B build (run_upstream_cmp.sh): the 1:1 upstream mambahar.c exposes only the
+ * prediction (no logits). Logits columns stay 0 in that CSV — compare pred only. */
+#ifdef UPSTREAM_ONLY
+static int model_forward(float *input, float *logits)
+{
+    (void)logits;
+    return mambahar_forward(input);
+}
+#else
+static int model_forward(float *input, float *logits)
+{
+    return mambahar_forward_logits(input, logits);
+}
+#endif
 
 static double now_us(void)
 {
@@ -153,7 +190,7 @@ static int run_batch(const char *in_path, const char *out_path)
     while (fread(sample, sizeof(float), N_FEAT, fin) == N_FEAT)
     {
         float logits[6] = {0};
-        int pred = mambahar_forward_logits(sample, logits);
+        int pred = model_forward(sample, logits);
         fprintf(fout, "%ld,%d,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g\n", idx, pred,
                 (double)logits[0], (double)logits[1], (double)logits[2],
                 (double)logits[3], (double)logits[4], (double)logits[5]);
@@ -183,9 +220,9 @@ int main(int argc, char **argv)
     long rss0 = rss_kb();
     double t0 = now_us();
     float logits[6] = {0};
-    int pred = mambahar_forward_logits(input_data, logits); /* first 570 floats = [1, 10, 57] */
+    int pred = model_forward(input_data, logits); /* first 570 floats = [1, 10, 57] */
     for (int i = 1; i < iterations; i++)
-        pred = mambahar_forward_logits(input_data, logits);
+        pred = model_forward(input_data, logits);
     double t1 = now_us();
     long rss1 = rss_kb();
 
@@ -276,31 +313,143 @@ if [ "$#" -eq 0 ]; then set -- 1; fi
 "$BIN" "$@"
 ```
 
-### 3.4 `run_asan.sh` — ASan + UBSan + LSan
+### 3.4 `run_asan.sh` — ASan + UBSan + LSan (1 mẫu, 1000 lượt, batch UCI)
 
 `firmware/host/run_asan.sh`
 
 ```bash
 #!/usr/bin/env bash
-# ASan/UBSan run of the host build (same sources as the firmware), no MCU.
-# Run 1 halts at the first finding; run 2 keeps going and reports leaks at exit.
-# Usage: bash run_asan.sh   (from anywhere)
+# ASan/UBSan/LSan runs of the host build (same sources as the firmware), no MCU.
+# Coverage: 1 sample (stop-on-first / recover) + 1000 continuous runs + the full
+# 2947-sample UCI batch (finite outputs). Usage: bash run_asan.sh
 set -u
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
 INC="-I$ROOT/firmware/common -I$ROOT/MambaLite-Micro/csrc -I$ROOT/MambaLite-Micro/examples/mambahar-arduino-6/include"
+UCI="$ROOT/firmware/host/logs/uci_test.f32"
+REF="$ROOT/firmware/host/logs/uci_test_logits_final.csv"
 
 gcc -O1 -g -fsanitize=address,undefined -o /tmp/asan_hard "$HERE/host_main.c" $INC -lm
-echo "=== ASan run 1: default (first error stops the run) ==="
+echo "=== ASan run 1: default (first error stops the run), 1 sample ==="
 /tmp/asan_hard 1 || true
 
 gcc -O1 -g -fsanitize=address,undefined -fsanitize-recover=all -o /tmp/asan_soft "$HERE/host_main.c" $INC -lm
-echo "=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ==="
+echo "=== ASan run 2: recover mode (halt_on_error=0), 1 sample, leaks at exit ==="
 ASAN_OPTIONS=halt_on_error=0:detect_leaks=1 /tmp/asan_soft 1 || true
+
+echo "=== ASan run 3: recover mode, 1000 continuous runs (same demo sample) ==="
+ASAN_OPTIONS=halt_on_error=0:detect_leaks=1 /tmp/asan_soft 1000 || true
+
+if [ -f "$UCI" ]; then
+    echo "=== ASan run 4: recover mode, full UCI batch (2947 finite samples) ==="
+    ASAN_OPTIONS=halt_on_error=0:detect_leaks=1 /tmp/asan_soft --batch "$UCI" /tmp/asan_uci_batch.csv || true
+    if [ -f "$REF" ] && cmp -s /tmp/asan_uci_batch.csv "$REF"; then
+        echo "KET QUA: ASan build (-O1) == bang chung (-O2) - bit-exact tren 2947 mau"
+    else
+        echo "KET QUA: ASan build CSV khac bang chung (kiem tay neu can)"
+    fi
+else
+    echo "=== ASan run 4: SKIP — thieu $UCI (chay uci_har.py to-f32 truoc) ==="
+fi
 echo "=== ASan done ==="
 ```
 
-### 3.5 `uci_har.py` — chuyển UCI HAR sang .f32 + chấm điểm
+### 3.5 `run_cpp_vs_c.sh` — A/B gcc(C) vs g++(C++)
+
+`firmware/host/run_cpp_vs_c.sh`
+
+```bash
+#!/usr/bin/env bash
+# A/B: same host sources built with gcc (C) and g++ (C++), outputs compared byte
+# for byte. Reason: the Portenta firmware compiles the model sources with a C++
+# compiler (arm-none-eabi-g++ via main.cpp + extern "C"), the host runner uses
+# gcc C — a tier-B divergence source that must be measured, not assumed.
+# Usage: bash run_cpp_vs_c.sh   (needs logs/uci_test.f32, see uci_har.py to-f32)
+set -euo pipefail
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$HERE/../.." && pwd)"
+VENDOR="$ROOT/firmware/common"
+CSRC="$ROOT/MambaLite-Micro/csrc"
+UPIN="$ROOT/MambaLite-Micro/examples/mambahar-arduino-6/include"
+BATCH="$ROOT/firmware/host/logs/uci_test.f32"
+REF="$ROOT/firmware/host/logs/uci_test_logits_final.csv"
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+if [ ! -f "$BATCH" ]; then
+    echo "Thieu $BATCH — chay truoc: python firmware/host/uci_har.py to-f32 <dataset_root> $BATCH"
+    exit 1
+fi
+
+gcc -O2 -o "$TMP/run_c" "$HERE/host_main.c" -I"$VENDOR" -I"$CSRC" -I"$UPIN" -lm
+g++ -O2 -x c++ -o "$TMP/run_cpp" "$HERE/host_main.c" -I"$VENDOR" -I"$CSRC" -I"$UPIN" -lm
+
+"$TMP/run_c" --batch "$BATCH" "$TMP/out_c.csv" >/dev/null
+"$TMP/run_cpp" --batch "$BATCH" "$TMP/out_cpp.csv" >/dev/null
+
+if cmp -s "$TMP/out_c.csv" "$TMP/out_cpp.csv"; then
+    echo "KET QUA: gcc(C) == g++(C++) - bit-exact tren 2947 mau UCI ($(stat -c%s "$TMP/out_c.csv") B)"
+else
+    echo "KET QUA: gcc(C) vs g++(C++) KHAC - diff:"
+    diff "$TMP/out_c.csv" "$TMP/out_cpp.csv" | head -20 || true
+fi
+if [ -f "$REF" ] && cmp -s "$TMP/out_c.csv" "$REF"; then
+    echo "KET QUA: build gcc moi == bang chung logs/uci_test_logits_final.csv - bit-exact"
+fi
+```
+
+### 3.6 `run_upstream_cmp.sh` — A/B upstream 1:1 vs bản dev
+
+`firmware/host/run_upstream_cmp.sh`
+
+```bash
+#!/usr/bin/env bash
+# A/B: upstream 1:1 model sources vs the dev vendor copies, SAME host runner
+# (host_main.c), full UCI test set. Only the two model files differ:
+#   upstream: MambaLite-Micro/csrc/mamba.c + examples/mambahar-arduino-6/include/mambahar.c
+#   dev:      firmware/common/{mamba.c,mambahar.c}
+# Upstream returns the prediction only (no logits) -> built with -DUPSTREAM_ONLY;
+# compare the pred columns. Finite outputs only (UCI data has 0 NaN).
+# Usage: bash run_upstream_cmp.sh
+set -euo pipefail
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$HERE/../.." && pwd)"
+VENDOR="$ROOT/firmware/common"
+CSRC="$ROOT/MambaLite-Micro/csrc"
+UPIN="$ROOT/MambaLite-Micro/examples/mambahar-arduino-6/include"
+BATCH="$ROOT/firmware/host/logs/uci_test.f32"
+REF="$ROOT/firmware/host/logs/uci_test_logits_final.csv"
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+if [ ! -f "$BATCH" ]; then
+    echo "Thieu $BATCH — chay truoc: python firmware/host/uci_har.py to-f32 <dataset_root> $BATCH"
+    exit 1
+fi
+
+echo "sha256 (upstream / dev):"
+sha256sum "$CSRC/mamba.c" "$UPIN/mambahar.c" "$VENDOR/mamba.c" "$VENDOR/mambahar.c"
+
+gcc -O2 -DUPSTREAM_ONLY -o "$TMP/up" "$HERE/host_main.c" -I"$CSRC" -I"$UPIN" -lm
+gcc -O2 -o "$TMP/dev" "$HERE/host_main.c" -I"$VENDOR" -I"$CSRC" -I"$UPIN" -lm
+
+"$TMP/up" --batch "$BATCH" "$TMP/up.csv" >/dev/null
+"$TMP/dev" --batch "$BATCH" "$TMP/dev.csv" >/dev/null
+
+cut -d, -f1,2 "$TMP/up.csv" > "$TMP/up_pred.csv"
+cut -d, -f1,2 "$TMP/dev.csv" > "$TMP/dev_pred.csv"
+if cmp -s "$TMP/up_pred.csv" "$TMP/dev_pred.csv"; then
+    echo "KET QUA: upstream 1:1 == ban dev - pred bit-exact tren 2947 mau UCI"
+else
+    echo "KET QUA: upstream 1:1 vs ban dev KHAC pred - diff:"
+    diff "$TMP/up_pred.csv" "$TMP/dev_pred.csv" | head -20 || true
+fi
+if [ -f "$REF" ] && cmp -s "$TMP/dev.csv" "$REF"; then
+    echo "KET QUA: ban dev (chay moi) == bang chung logs/uci_test_logits_final.csv - bit-exact"
+fi
+```
+
+### 3.7 `uci_har.py` — chuyển UCI HAR sang .f32 + chấm điểm (confusion matrix, tên lớp)
 
 `firmware/host/uci_har.py`
 
@@ -323,6 +472,9 @@ from pathlib import Path
 
 N_FEAT = 570
 
+# UCI HAR activity labels (activity_labels.txt in the dataset root, 1..6)
+CLASS_NAMES = ["WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING"]
+
 
 def to_f32(root: Path, out: Path):
     src = root / "test" / "X_test.txt"
@@ -338,7 +490,7 @@ def to_f32(root: Path, out: Path):
 
 
 def score(csv_path: Path, root: Path):
-    # y_test.txt is 1..6; train.py uses sklearn LabelEncoder -> classes are 0-based
+    # y_test.txt holds 1..6; train.py maps labels to 0..5 with `- 1` (lines 37 and 39)
     labels = [int(v) - 1 for v in (root / "test" / "y_test.txt").read_text().split()]
     preds, nan_rows, invalid_rows = [], 0, 0
     with open(csv_path) as f:
@@ -366,6 +518,14 @@ def score(csv_path: Path, root: Path):
     print(f"accuracy: {acc:.4f}")
     print(f"macro-F1: {sum(f1s) / 6:.4f}")
     print("F1 per class: " + " ".join(f"c{c}={v:.4f}" for c, v in enumerate(f1s)))
+    print("classes: " + " ".join(f"{c}={n}" for c, n in enumerate(CLASS_NAMES)))
+    cm = [[0] * 6 for _ in range(6)]
+    for p, y in zip(preds, labels):
+        if 0 <= p < 6:
+            cm[y][p] += 1
+    print("confusion matrix (rows=true, cols=pred; pred<0 excluded):")
+    for y in range(6):
+        print(f"true {y}: " + " ".join(f"{v:5d}" for v in cm[y]))
 
 
 def main():
@@ -387,7 +547,7 @@ def main():
 main()
 ```
 
-### 3.6 `make_batch.py` — sinh lô mẫu kiểm thử
+### 3.8 `make_batch.py` — sinh lô mẫu kiểm thử
 
 `firmware/host/make_batch.py`
 
@@ -436,7 +596,7 @@ def main():
 main()
 ```
 
-### 3.7 `mamba_vs_upstream.diff` — thay đổi lõi `mamba.c` so với upstream (1 dòng)
+### 3.9 `mamba_vs_upstream.diff` — thay đổi lõi `mamba.c` (1 dòng)
 
 `firmware/common/mamba_vs_upstream.diff`
 
@@ -473,7 +633,161 @@ main()
                  int out_idx = di * (b * l) + (bi * l + li);
 ```
 
+### 3.10 `mambahar_vs_upstream.diff` — thay đổi wrapper
+
+`firmware/common/mambahar_vs_upstream.diff`
+
+```diff
+--- a/MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c
++++ b/firmware/common/mambahar.c
+@@ -1,17 +1,39 @@
+ /**
+  * @file mambahar.c
+- * @brief mambahar model
++ * @brief mambahar model — dev (vendor) copy for the DATN firmware.
+  * Copyright (c) 2025 MambaLite-Micro Authors
+  * Licensed under the MIT License.
++ *
++ * Upstream (unmodified, MIT, commit 44d51fc):
++ *   MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c
++ * Every change vs upstream is recorded with its diff in HUONG_PHAT_TRIEN.md,
++ * section "Diff cua ban vendor so voi upstream". Never edit the upstream file.
+  */
++#include <stdlib.h> /* free(): the csrc headers do not pull in <stdlib.h> */
++
+ #define B 1
+ #define T 10
+ #define F 57
+ #define H 64
+ #define C 6
+-int mambahar_forward(float *input)
++
++/**
++ * Same computation as upstream mambahar_forward(), plus the six pre-softmax
++ * logits (MT2). logits may be NULL.
++ * Return: argmax 0..C-1; -1 = allocation/kernel failure; -2 = non-finite
++ * logits (invalid output — must NOT be counted as class 0).
++ */
++int mambahar_forward_logits(float *input, float *logits)
+ {
+-    Tensor *mamba_input = tensor_zeros(B, T, H);
++    Tensor *mamba_input = NULL, *output = NULL, *output_T = NULL;
++    Matrix *pooled = NULL, *y = NULL;
++    Mamba_Variables *model = NULL;
++    int pred = -1;
++    int max_idx = 0;
++
++    mamba_input = tensor_zeros(B, T, H);
++    if (!mamba_input)
++        goto cleanup;
+     for (int b = 0; b < B; b++)
+     {
+         for (int t = 0; t < T; t++)
+@@ -30,10 +52,17 @@
+             }
+         }
+     }
+-    Mamba_Variables *model = Mamba_Init();
+-    Tensor *output = tensor_zeros(B, T, H);
+-    Mamba_Forward(model, mamba_input, output);
+-    Tensor *output_T = tensor_zeros(B, T, H);
++    model = Mamba_Init();
++    if (!model)
++        goto cleanup;
++    output = tensor_zeros(B, T, H);
++    if (!output)
++        goto cleanup;
++    if (Mamba_Forward(model, mamba_input, output) != Mamba_OK)
++        goto cleanup;
++    output_T = tensor_zeros(B, T, H);
++    if (!output_T)
++        goto cleanup;
+     for (int b = 0; b < B; b++)
+     {
+         for (int t = 0; t < T; t++)
+@@ -47,7 +76,9 @@
+         }
+     }
+ 
+-    Matrix *pooled = matrix_zeros(B, H);
++    pooled = matrix_zeros(B, H);
++    if (!pooled)
++        goto cleanup;
+     for (int b = 0; b < B; b++)
+     {
+         for (int h = 0; h < H; h++)
+@@ -61,7 +92,9 @@
+             pooled->data[b * H + h] = sum / T;
+         }
+     }
+-    Matrix *y = matrix_zeros(B, C);
++    y = matrix_zeros(B, C);
++    if (!y)
++        goto cleanup;
+     for (int b_idx = 0; b_idx < B; b_idx++)
+     {
+         for (int c = 0; c < C; c++)
+@@ -74,7 +107,18 @@
+             y->data[b_idx * C + c] = sum;
+         }
+     }
+-    int max_idx = 0;
++    for (int c = 0; c < C; c++)
++    {
++        if (logits)
++        {
++            logits[c] = y->data[c];
++        }
++        if (!isfinite(y->data[c]))
++        {
++            pred = -2; /* non-finite logits: report invalid, never a class */
++            goto cleanup;
++        }
++    }
+     for (int b = 0; b < B; b++)
+     {
+         max_idx = 0;
+@@ -89,5 +133,32 @@
+             }
+         }
+     }
+-    return max_idx;
+-}
+\ No newline at end of file
++    pred = max_idx;
++
++cleanup:
++    if (y)
++        matrix_free(y);
++    if (pooled)
++        matrix_free(pooled);
++    if (output_T)
++        tensor_free(output_T);
++    if (output)
++        tensor_free(output);
++    if (model)
++        free(model);
++    if (mamba_input)
++        tensor_free(mamba_input);
++    if (pred < 0 && logits)
++    {
++        for (int c = 0; c < C; c++)
++        {
++            logits[c] = NAN;
++        }
++    }
++    return pred;
++}
++
++int mambahar_forward(float *input)
++{
++    return mambahar_forward_logits(input, NULL);
++}
+```
+
 ## 4. Log thô (nguyên văn)
+
+*Ghi chú:* vài log ASan cũ (4.4–4.5) chứa các dòng `NativeCommandError` / `CategoryInfo` — đó là phần **PowerShell gói stderr của `wsl` khi đọc log**, không phải lỗi của chương trình; báo cáo ASan thật nằm ngay sau các dòng đó.
 
 ### 4.1 Rò rỉ: 1000 lượt trước sửa
 
@@ -785,7 +1099,7 @@ Host RSS: 7916 KB -> 8972 KB (delta 1056 KB over 1 run(s))
 === ASan done ===
 ```
 
-### 4.7 ASan cuối (sạch)
+### 4.7 ASan cuối (1 mẫu)
 
 `firmware/host/logs/asan_final.txt`
 
@@ -807,7 +1121,7 @@ Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
 === ASan done ===
 ```
 
-### 4.8 Chấm điểm UCI trước vendor mamba.c
+### 4.8 Chấm điểm UCI trước vendor mamba.c (có confusion matrix)
 
 `firmware/host/logs/uci_test_pre_mamba_score.txt`
 
@@ -817,10 +1131,18 @@ nan_rows (non-finite logits): 0
 invalid_rows (pred < 0): 0
 accuracy: 0.9267
 macro-F1: 0.9265
-F1 per class: c0=0.9365 c1=0.9132 c2=0.9489 c3=0.8786 c4=0.9035 c5=0.9782
+F1 per class: c0=0.9365 c1=0.9132 c2=0.9489 c3=0.8786 c4=0.9035 c5=0.9782
+classes: 0=WALKING 1=WALKING_UPSTAIRS 2=WALKING_DOWNSTAIRS 3=SITTING 4=STANDING 5=LAYING
+confusion matrix (rows=true, cols=pred; pred<0 excluded):
+true 0:   487     3     6     0     0     0
+true 1:    39   426     6     0     0     0
+true 2:    18    12   390     0     0     0
+true 3:     0     3     0   398    89     1
+true 4:     0     0     0    17   515     0
+true 5:     0    18     0     0     4   515
 ```
 
-### 4.9 Chấm điểm UCI cuối
+### 4.9 Chấm điểm UCI cuối (có confusion matrix)
 
 `firmware/host/logs/uci_test_final_score.txt`
 
@@ -830,7 +1152,15 @@ nan_rows (non-finite logits): 0
 invalid_rows (pred < 0): 0
 accuracy: 0.9267
 macro-F1: 0.9265
-F1 per class: c0=0.9365 c1=0.9132 c2=0.9489 c3=0.8786 c4=0.9035 c5=0.9782
+F1 per class: c0=0.9365 c1=0.9132 c2=0.9489 c3=0.8786 c4=0.9035 c5=0.9782
+classes: 0=WALKING 1=WALKING_UPSTAIRS 2=WALKING_DOWNSTAIRS 3=SITTING 4=STANDING 5=LAYING
+confusion matrix (rows=true, cols=pred; pred<0 excluded):
+true 0:   487     3     6     0     0     0
+true 1:    39   426     6     0     0     0
+true 2:    18    12   390     0     0     0
+true 3:     0     3     0   398    89     1
+true 4:     0     0     0    17   515     0
+true 5:     0    18     0     0     4   515
 ```
 
 ### 4.10 Lần chạy 1 mẫu cuối — báo đầu ra không hợp lệ
@@ -876,6 +1206,61 @@ Successfully created esp32s3 image.
 ========================= [SUCCESS] Took 99.27 seconds =========================
 ```
 
+### 4.13 A/B gcc(C) vs g++(C++) trên 2.947 mẫu
+
+`firmware/host/logs/cpp_vs_c_cmp_20261018.txt`
+
+```text
+KET QUA: gcc(C) == g++(C++) - bit-exact tren 2947 mau UCI (222906 B)
+KET QUA: build gcc moi == bang chung logs/uci_test_logits_final.csv - bit-exact
+```
+
+### 4.14 A/B upstream 1:1 vs bản dev trên 2.947 mẫu
+
+`firmware/host/logs/upstream_vs_final_cmp_20261018.txt`
+
+```text
+sha256 (upstream / dev):
+ba59a6af7f93027087f608d0351971bda685509c347d2f3d905a7d8b9e970da9  /mnt/d/DoanNhomQuy/MambaLite-Micro/csrc/mamba.c
+84ac465df0310dd09deac4423f11f625c6f352c4f3db6ccf03b947085bfe7957  /mnt/d/DoanNhomQuy/MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c
+a4a2aebb3d77cc5e5d8e8457cbfb8abb6f80e0f5ae54a38b5d31de41554fb5e3  /mnt/d/DoanNhomQuy/firmware/common/mamba.c
+c4e20633eceffaf8839611a81c63bf33706903ca09987091d900f0859d4ee19d  /mnt/d/DoanNhomQuy/firmware/common/mambahar.c
+KET QUA: upstream 1:1 == ban dev - pred bit-exact tren 2947 mau UCI
+KET QUA: ban dev (chay moi) == bang chung logs/uci_test_logits_final.csv - bit-exact
+```
+
+### 4.15 ASan mở rộng: 1 mẫu + 1.000 lượt + batch 2.947 mẫu
+
+`firmware/host/logs/asan_extended_20261018.txt`
+
+```text
+=== ASan run 1: default (first error stops the run), 1 sample ===
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 3272 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7924 KB -> 8944 KB (delta 1020 KB over 1 run(s))
+=== ASan run 2: recover mode (halt_on_error=0), 1 sample, leaks at exit ===
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 2882 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7864 KB -> 8848 KB (delta 984 KB over 1 run(s))
+=== ASan run 3: recover mode, 1000 continuous runs (same demo sample) ===
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 2870100 us (host wall clock, 1000 run(s), NOT MCU timing)
+Host RSS: 7884 KB -> 116176 KB (delta 108292 KB over 1000 run(s))
+=== ASan run 4: recover mode, full UCI batch (2947 finite samples) ===
+Batch: 2947 samples -> /tmp/asan_uci_batch.csv
+KET QUA: ASan build (-O1) == bang chung (-O2) - bit-exact tren 2947 mau
+=== ASan done ===
+```
+
 ## 5. File số liệu (nằm trong repo, không in vào phụ lục cho gọn)
 
 | File | Bytes | SHA-256 |
@@ -889,18 +1274,23 @@ Successfully created esp32s3 image.
 | `firmware/host/logs/uci_test_logits_final.csv` | 222,906 | 412A94B70EEF472A9620F31CA03324D5… |
 | `firmware/host/logs/batch_demo.f32` | 458,280 | C6A81AA2FD7FEEA7AF4043C5B856C261… |
 | `firmware/host/logs/uci_test.f32` | 6,719,160 | DE46EDE4BDE1BC4AE6D148428D754AD2… |
+| `firmware/mambahar-portenta-h7/logs/build_20261018_201729.txt` | 4,477 | C5C075C2A17B35ADBE5FEAF35090E485… |
+| `firmware/mambahar-esp32s3/logs/build_20261018_202030.txt` | 60,407 | 6C185C994B196C7CEB4003C7C19FD1D0… |
 
 ## 6. Checksum các file có mặt trong phụ lục này
 
 | File | SHA-256 |
 |---|---|
-| `firmware/host/host_main.c` | `B63C3DA7CF06A21C0CC9BA827D033F76CA7773A67D9BAAA47BB4E401DEC4DC05` |
+| `firmware/host/host_main.c` | `56E8E389AFB8F921EBC0E1CBB2D6217413EDDEE89D1A62EA248269813AFD2E44` |
 | `firmware/host/run_host_test.ps1` | `0732498B413B28F725A76CE491D62BDFE43ACD8A25F9109A9449A762F3607334` |
 | `firmware/host/run_host_test.sh` | `E8803361C2BAA757582EB01586BEBF1611453C070760FCE5A668D8C0792053CD` |
-| `firmware/host/run_asan.sh` | `A16CDEFEA7053BC46B59C42A0A24583286F9DD9081D1AD2E6E44A6B6E6D76BCA` |
-| `firmware/host/uci_har.py` | `741B026DF77EF112790E2E61DA65566313C6108CF103174F2D6F96F82DD04971` |
+| `firmware/host/run_asan.sh` | `7DF1B6FF38D5919EAECF81FE95046B84F024DFC7210051B3F208BA89DDB0DF09` |
+| `firmware/host/run_cpp_vs_c.sh` | `11C283188942EB033208D04114BCE13261DB0494404CC9A75CDEA95A32ACFE10` |
+| `firmware/host/run_upstream_cmp.sh` | `8A7E358BD0081089338762E409F4163C60C09F2DF20CF83CD8C5839FEB7C7CC2` |
+| `firmware/host/uci_har.py` | `C6E8D3A3F2FD855187F63B90BE4F0D2565BC4BF6075ED5851B7ED3194F6AA374` |
 | `firmware/host/make_batch.py` | `7B2831A54546F0982FDF8242B68C85C9D7C0D53EDCA4FBCDFBA7D991A59969D6` |
 | `firmware/common/mamba_vs_upstream.diff` | `3D2E8BCD9DA6539351B26B3428B80BE451C87DA2FE3CB4525CF05A4CFD649E1E` |
+| `firmware/common/mambahar_vs_upstream.diff` | `39CC03ED53E72AA5944F3498F5BA5423CEC4F3CEA13CBF8CE7DA5FAF6B96FA6F` |
 | `firmware/host/logs/baseline_leak_1000runs.txt` | `528672FDBADEDE64A863F221CBBF84A7A8CB8F9005934CD6AA3D3808BA2B2D39` |
 | `firmware/host/logs/baseline_leak_4000runs.txt` | `E7A3C2CFEF486069426ED8D845C0641E217AC5B1F63FCFF627D6A190F0572522` |
 | `firmware/host/logs/host_20261018_194955.txt` | `5FF14369A00BFCAC2EB98C21D8841F98A19594115CE4E6E4605DF5E2DCE0F828` |
@@ -908,8 +1298,11 @@ Successfully created esp32s3 image.
 | `firmware/host/logs/asan_fixed.txt` | `8610DEC8FB3331E51470469405F80A99D6246D37F88DFCA74DA31342960D2AF4` |
 | `firmware/host/logs/asan_vendored.txt` | `C987904FF8E9CA107231252388E5A27D559A540F0A38E5A7A9ECA4FB558375DB` |
 | `firmware/host/logs/asan_final.txt` | `D9E15A18C78A7344166242479EC3F3BB099848539A3E2E6A84AB5E011F79142A` |
-| `firmware/host/logs/uci_test_pre_mamba_score.txt` | `1C0AE724980FF71FB9FD0B1ABC88322CF0CC771E50FCCD8E34FA6F3EF5FE288F` |
-| `firmware/host/logs/uci_test_final_score.txt` | `1C0AE724980FF71FB9FD0B1ABC88322CF0CC771E50FCCD8E34FA6F3EF5FE288F` |
+| `firmware/host/logs/uci_test_pre_mamba_score.txt` | `26AAC468ABDD22B451AE28F323D72138B053D2D4F7BEB78E729DFEEFE22497B0` |
+| `firmware/host/logs/uci_test_final_score.txt` | `26AAC468ABDD22B451AE28F323D72138B053D2D4F7BEB78E729DFEEFE22497B0` |
 | `firmware/host/logs/host_20261018_202535.txt` | `A6B9269A4299DDB53F7EBB8AE7D793D80D2AF83693E62055AAE944032629FB0F` |
 | `firmware/mambahar-portenta-h7/logs/build_20261018_201729.txt` | `C5C075C2A17B35ADBE5FEAF35090E485752CAB2CFD5F10C0DDA8D22DE6555054` |
 | `firmware/mambahar-esp32s3/logs/build_20261018_202030.txt` | `6C185C994B196C7CEB4003C7C19FD1D04837CC9963D33C86DFBBE8DF5942851C` |
+| `firmware/host/logs/cpp_vs_c_cmp_20261018.txt` | `B30CD56BCA36E64AFCF77BD659E4E7AE25203F2145A83230DDCB0C355E727E6D` |
+| `firmware/host/logs/upstream_vs_final_cmp_20261018.txt` | `836DFAA6F13FF1D4121E10F135B8E64B22E2B20B7FC37F2750CD51FEF0193AAA` |
+| `firmware/host/logs/asan_extended_20261018.txt` | `EA946CEB686AFE4FA5FB52339869E6291E6227DFD8F244E5D6BF67C24393F450` |
