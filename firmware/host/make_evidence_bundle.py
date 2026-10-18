@@ -88,8 +88,9 @@ def git(*args: str) -> str:
 
 HEAD = git("rev-parse", "--short", "HEAD")
 OUT_REL = OUT.relative_to(ROOT).as_posix()
-DIRTY = [l for l in git("status", "--porcelain").splitlines() if OUT_REL not in l]
-TREE_STATE = "cây sạch (không tính chính file này)" if not DIRTY else f"CHƯA commit: {len(DIRTY)} mục khác file này"
+DIRTY = [l for l in git("status", "--porcelain", "--untracked-files=no").splitlines() if OUT_REL not in l]
+TREE_STATE = ("cây sạch (không tính file chưa được git theo dõi — gồm chính file này)" if not DIRTY
+              else f"CHƯA commit: {len(DIRTY)} mục (khác file này)")
 
 parts: list[str] = []
 A = parts.append
@@ -103,7 +104,7 @@ A("## 0. Phạm vi tài liệu này\n")
 A("- Môi trường: **máy tính của nhóm — Windows gọi qua PowerShell, chương trình chạy trong "
   "WSL Ubuntu 24.04, gcc/g++ 13.3.0, x86-64**. Không có bo nào tham gia.\n")
 A(f"- Sinh từ cây làm việc tại commit `{HEAD}` — trạng thái cây khi sinh: **{TREE_STATE}** "
-  "(`git rev-parse --short HEAD` + `git status --porcelain`).\n")
+  "(`git rev-parse --short HEAD` + `git status --porcelain --untracked-files=no`).\n")
 A("- Kiểm chứng **số học**: đúng/sai kết quả, rò rỉ bộ nhớ, hành vi với đầu vào lỗi, của cùng "
   "bộ mã nguồn mô hình sẽ nạp lên bo (`firmware/common/`).\n")
 A("- **Khác biệt nguồn lệch tầng B (compiler/ngôn ngữ):** firmware Portenta biên dịch mô hình bằng "
@@ -256,5 +257,6 @@ A("| File | SHA-256 |\n|---|---|\n" + "\n".join(
 
 OUT.parent.mkdir(exist_ok=True)
 OUT.write_text("\n".join(parts), encoding="utf-8")
+state = "clean" if not DIRTY else f"dirty {len(DIRTY)}"
 print(f"OK: {OUT.relative_to(ROOT).as_posix()} ({OUT.stat().st_size:,} bytes, {len(EMBEDDED)} file nhung, "
-      f"HEAD {HEAD}, {TREE_STATE})")
+      f"HEAD {HEAD}, {state})")
