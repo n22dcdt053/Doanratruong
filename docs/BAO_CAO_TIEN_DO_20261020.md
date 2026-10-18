@@ -23,4 +23,4 @@ Chia dữ liệu theo người (GroupShuffleSplit seed 42) → huấn luyện l�
 
 ## Phụ lục kèm theo
 
-`NGHIEM_THU_SO_HOC_HOST_20261020.md` — code kiểm chứng nguyên văn (mục 3), log thô (mục 4), checksum SHA-256 từng file (mục 6). Sinh tự động bằng `python firmware/host/make_evidence_bundle.py`.
+`docs/NGHIEM_THU_SO_HOC_HOST_20261020.md` — code kiểm chứng nguyên văn (mục 3), log thô (mục 4), checksum SHA-256 từng file (mục 6). Sinh tự động bằng `python firmware/host/make_evidence_bundle.py`.

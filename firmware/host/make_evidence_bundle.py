@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 HOST = ROOT / "firmware" / "host"
 LOGS = HOST / "logs"
-OUT = ROOT / "NGHIEM_THU_SO_HOC_HOST_20261020.md"
+OUT = ROOT / "docs" / "NGHIEM_THU_SO_HOC_HOST_20261020.md"
 
 EMBEDDED: list[Path] = []
 
@@ -176,5 +176,6 @@ A("## 6. Checksum các file có mặt trong phụ lục này\n")
 A("| File | SHA-256 |\n|---|---|\n" + "\n".join(
     f"| `{p.relative_to(ROOT).as_posix()}` | `{digest(p)}` |" for p in EMBEDDED) + "\n")
 
+OUT.parent.mkdir(exist_ok=True)
 OUT.write_text("\n".join(parts), encoding="utf-8")
 print(f"OK: {OUT.name} ({OUT.stat().st_size:,} bytes, {len(EMBEDDED)} file nhung)")
