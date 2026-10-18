@@ -1,6 +1,6 @@
 # TỔNG HỢP YÊU CẦU ĐỀ CƯƠNG CHI TIẾT — DATN Mamba HAR trên STM32H7
 
-> **Nguồn:** `De_cuong_chi_tiet_DATN_Mamba_HAR_STM32H7.docx` → bản trích `datn_docx.txt` (504 dòng).
+> **Nguồn:** `De_cuong_chi_tiet_DATN_Mamba_HAR_STM32H7.docx` → bản trích `datn_docx.txt` (504 dòng, đặt tại thư mục gốc repo — mọi số dòng trích trong file này trỏ về đó).
 > **Cách đọc:** 4 agent đọc song song 4 dải (§1–§5, §6–§8, §9–§12, §13–Phụ lục B) + đọc lại toàn văn. Số dòng trong ngoặc = dòng của bản trích.
 > **Ngày tổng hợp:** 18/10/2026. GVHD: TS. Nguyễn Thanh Bình.
 
@@ -282,38 +282,7 @@ Portenta H7 nạp firmware; chương trình chuẩn bị dữ liệu/huấn luy�
 
 ---
 
-# PHÂN TÍCH KHOẢNG CÁCH — HIỆN TRẠNG vs YÊU CẦU (18/10/2026)
-
-> Nguồn số liệu: build Portenta tại `firmware/mambahar-portenta-h7/logs/build_20261018_191542.txt` (307.096/786.432 B Flash; 77.256/523.624 B RAM); commit upstream `44d51fce…` ghi trong `source_manifest.json`. Các mục đánh dấu "quan sát ngoài đề cương" là kết quả làm việc của nhóm, không phải yêu cầu trong đề cương.
-
-## Đã có (khớp yêu cầu)
-
-| Yêu cầu | Trạng thái |
-|---|---|
-| Tuần 1 — khảo sát nguồn | ✅ Đã clone MambaLite-Micro @ `44d51fc` + `source_manifest.json` (còn thiếu **checksum trọng số**) |
-| Tuần 2 — biên dịch mẫu gốc | ✅ Build thành công **Portenta H7** (307.096/786.432 B Flash = 39,0%; 77.256/523.624 B RAM = 14,8%) + ESP32-S3 (bước đệm, ngoài phạm vi bắt buộc) |
-| Nguồn gốc không sửa + nhánh phát triển (§7.4) | ✅ Upstream clone nguyên bản; project dev tách riêng `firmware/mambahar-portenta-h7` + `firmware/mambahar-esp32s3` |
-| Giới hạn bộ nhớ (768 KB / 511,35 KB) | ✅ Số build khớp linker: 786.432 B = 768 KB, 523.624 B ≈ 511,4 KB |
-
-## Chưa làm — cần hành động
-
-| # | Việc | Thuộc | Hạn |
-|---|---|---|---|
-| 1 | Kiểm kê phần cứng: Portenta ABX00042; cáp USB-C data; **PPK2 (lab không có sẵn → phải mua hoặc mượn bộ tương đương)**; nguồn DC 5V; VOM; dây/adapter | Tuần 1 | Ngay |
-| 2 | **Xác nhận khả năng truy cập môi trường huấn luyện lại (GPU) — trong 2 tuần đầu** | §7.4 | Cuối tuần 2 |
-| 3 | Tải UCI HAR; kiểm số mẫu/nhãn **từ tệp thực** (không suy từ tỷ lệ người) | Tuần 1–2 | Cuối tuần 2 |
-| 4 | Kiểm tra **nguồn checkpoint** trọng số [8] → quyết định **dùng trọng số hay huấn luyện lại** (minh chứng tuần 2) | Tuần 2 | Cuối tuần 2 |
-| 5 | Bổ sung **checksum trọng số** vào `source_manifest.json` | §7.4/A1 | Cuối tuần 2 |
-| 6 | Firmware **chạy mẫu trên bo thật** (cần bo Portenta) | Tuần 2 | Khi có bo |
-
-## Điểm kỹ thuật phải nhớ khi viết code (từ đọc kỹ)
-
-- MT2: firmware phải xuất **6 logits + nhãn + trạng thái** — sửa `mambahar.c` (hiện chỉ argmax).
-- Nhiều mẫu + mã định danh + checksum + timeout + **không in log trong vùng đo** (Bảng 3).
-- Reset trạng thái giữa các mẫu (batch=1); vùng làm việc reset trước mỗi inference; ≥1.000 lượt liên tiếp không reset.
-- Bản C tham chiếu chạy trên PC **trước** khi so MCU (tuần 3).
-- Dung sai số học: chốt trên dev set **trước khi mở test** — ⚠️ cần GVHD xác nhận con số.
-- Bộ điều phối: gửi **570 FP32** mỗi mẫu; nhãn thật không vào hàm suy luận.
+*(Phần "Phân tích khoảng cách" trước đây đã bỏ — trạng thái và kế hoạch chỉ nằm ở `HUONG_PHAT_TRIEN.md`.)*
 
 ## Câu hỏi cần chốt với GVHD
 

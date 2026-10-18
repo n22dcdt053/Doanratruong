@@ -24,5 +24,17 @@
       "sha256": "A4A2AEBB3D77CC5E5D8E8457CBFB8ABB6F80E0F5AE54A38B5D31DE41554FB5E3",
       "note": "kernel; khác upstream 1 dòng OOB read; diff: mamba_vs_upstream.diff"
     }
+  ],
+  "upstream_files": [
+    {
+      "file": "MambaLite-Micro/csrc/mamba.c",
+      "sha256": "BA59A6AF7F93027087F608D0351971BDA685509C347D2F3D905A7D8B9E970DA9",
+      "note": "kernel upstream 1:1; đối chiếu A/B bằng run_upstream_cmp.sh"
+    },
+    {
+      "file": "MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c",
+      "sha256": "84AC465DF0310DD09DEAC4423F11F625C6F352C4F3DB6CCF03B947085BFE7957",
+      "note": "wrapper upstream 1:1 (đúng bản 1:1 đã ghi là 84AC465D…); đối chiếu A/B bằng run_upstream_cmp.sh"
+    }
   ]
 }

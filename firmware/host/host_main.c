@@ -25,6 +25,21 @@
 
 #define N_FEAT (10 * 57)
 
+/* A/B build (run_upstream_cmp.sh): the 1:1 upstream mambahar.c exposes only the
+ * prediction (no logits). Logits columns stay 0 in that CSV — compare pred only. */
+#ifdef UPSTREAM_ONLY
+static int model_forward(float *input, float *logits)
+{
+    (void)logits;
+    return mambahar_forward(input);
+}
+#else
+static int model_forward(float *input, float *logits)
+{
+    return mambahar_forward_logits(input, logits);
+}
+#endif
+
 static double now_us(void)
 {
     struct timespec ts;
@@ -67,7 +82,7 @@ static int run_batch(const char *in_path, const char *out_path)
     while (fread(sample, sizeof(float), N_FEAT, fin) == N_FEAT)
     {
         float logits[6] = {0};
-        int pred = mambahar_forward_logits(sample, logits);
+        int pred = model_forward(sample, logits);
         fprintf(fout, "%ld,%d,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g\n", idx, pred,
                 (double)logits[0], (double)logits[1], (double)logits[2],
                 (double)logits[3], (double)logits[4], (double)logits[5]);
@@ -97,9 +112,9 @@ int main(int argc, char **argv)
     long rss0 = rss_kb();
     double t0 = now_us();
     float logits[6] = {0};
-    int pred = mambahar_forward_logits(input_data, logits); /* first 570 floats = [1, 10, 57] */
+    int pred = model_forward(input_data, logits); /* first 570 floats = [1, 10, 57] */
     for (int i = 1; i < iterations; i++)
-        pred = mambahar_forward_logits(input_data, logits);
+        pred = model_forward(input_data, logits);
     double t1 = now_us();
     long rss1 = rss_kb();
 

@@ -12,7 +12,7 @@ Cách dùng: tick ✅ vào ô *Trạng thái* khi có minh chứng thật. Mọi
 
 | # | Tiêu chí (Bảng 8) | Trạng thái 18/10 | Minh chứng cần |
 |---|---|---|---|
-| 1 | Nguồn và khả năng tái lập: commit, license, checksum trọng số, môi trường, hướng dẫn build | 🟡 chuỗi commit 18/10 trên `master`; `source_manifest.json` còn **thiếu checksum trọng số** | lịch sử commit + `environment/` |
+| 1 | Nguồn và khả năng tái lập: commit, license, checksum trọng số, môi trường, hướng dẫn build | 🟡 chuỗi commit 18/10; `source_manifest.json` **đã có checksum trọng số + 2 file vendor + 2 file upstream 1:1** — còn thiếu duy nhất: checksum checkpoint retrain (chờ gate #1) | lịch sử commit + `environment/` |
 | 2 | Hoạt động trên phần cứng: Portenta H7 thật, nhiều mẫu, xuất logits/nhãn/lỗi | ❌ mới có bản 1 mẫu trên ESP32-S3 (proxy) | firmware H7 + log nhận gói |
 | 3 | Tương đương số học: bảng sai số, tỷ lệ khớp, hồ sơ mẫu khác biệt, dung sai chốt trước | ❌ | `predictions.csv` + bảng sai số |
 | 4 | Chất lượng phân loại: accuracy, macro-F1, F1/lớp, confusion matrix trên test + nêu trạng thái checkpoint | 🟡 host C + trọng số công khai: acc **0,9267** / macro-F1 **0,9265** trên 2.947 mẫu test (18/10) — **chỉ dùng MT1/MT3, không đưa vào bảng so sánh Mamba↔MLP** (checkpoint gốc chọn bằng val chia ngẫu nhiên); checkpoint chốt còn ở mục 2 | bảng chỉ số + hình |
@@ -65,7 +65,7 @@ Nếu vượt ngưỡng ngay từ lần so đầu → **nghi ánh xạ trọng s
 ## 3. Lộ trình P0 → P4 (mỗi bước ra một minh chứng)
 
 ### P0 — Tuần này, không cần bo
-- [ ] **Commit toàn bộ repo**; `.gitignore` cho `.pio/`; tách nhánh `dev` (đề cương 6.3 bắt buộc giữ bản gốc chưa sửa + nhánh phát triển). *(18/10: chuỗi commit trên `master`: `a72d025` baseline + log leak trước sửa → commit bản vendor sửa → commit vendor `mamba.c` + kiểm UCI; còn: tách nhánh `dev`, checksum trọng số.)*
+- [ ] **Commit toàn bộ repo**; `.gitignore` cho `.pio/`; tách nhánh `dev` (đề cương 6.3 bắt buộc giữ bản gốc chưa sửa + nhánh phát triển). *(18/10: chuỗi commit: `a72d025` baseline + log leak trước sửa → bản vendor sửa → vendor `mamba.c` + kiểm UCI; tag `baseline-upstream-44d51fc` + nhánh `dev` đã tạo; checksum trọng số + 2 vendor + 2 upstream đã ghi trong `source_manifest.json` — còn: checksum checkpoint retrain (gate #1).)*
 - [ ] Tải UCI HAR; sinh `split_manifest.csv` (sample_id, subject_id, nhãn, tập) bằng GroupShuffleSplit seed 42; kiểm tra danh sách người không giao nhau giữa các tập. *(18/10: đã tải về `data/UCI HAR Dataset/`; đã chuyển + chấm điểm **tập test** — acc 0,9267, xem mục 6; còn `split_manifest.csv`.)*
 - [x] **Vendor wrapper mô hình**: copy `mambahar.c` → `firmware/common/mambahar.c` (1:1, sha256 `84AC465D…`), trỏ ESP32-S3 sang bản vendor; upstream giữ nguyên. *(18/10/2026)*
 - [x] **Dựng bản C tham chiếu trên PC**: `MambaLite-Micro/csrc/*.c` + **`firmware/common/mambahar.c`** (dùng chung bản vendor với firmware để MT3 so đúng một nguồn), biên dịch native (gcc), chạy N mẫu, in 6 logits. *(18/10/2026 — `firmware/host/`: `run_host_test.ps1` chạy 1 mẫu/1000/4000 lượt; `--batch` đọc file .f32 → CSV 6 logits; ASan qua `run_asan.sh`. Bằng chứng: `firmware/host/logs/`.)*
@@ -105,7 +105,7 @@ Nếu vượt ngưỡng ngay từ lần so đầu → **nghi ánh xạ trọng s
 | Mua **Portenta H7 (ABX00042)** + cáp USB-C truyền dữ liệu | Lead time; không có bo = không nghiệm thu. ESP32 chỉ là proxy, đề cương ghi rõ **không thay thế**. | ❌ chưa có |
 | Chốt **trọng số công khai vs huấn luyện lại** | Chặn MT5 + mọi số liệu so sánh. | ❌ chưa chốt (xem mục 2) |
 | **PPK2 / bộ đo năng lượng** | Mắt xích dài nhất: mượn phòng lab / mua / dựng mạch INA226. | ❌ chưa có |
-| **Git commit** | Sản phẩm bàn giao yêu cầu commit + checksum; hiện bằng 0. | 🟡 chuỗi commit 18/10 (baseline → bản vendor sửa → vendor `mamba.c` + kiểm UCI); còn checksum trọng số + nhánh `dev` |
+| **Git commit** | Sản phẩm bàn giao yêu cầu commit + checksum; hiện bằng 0. | 🟡 đã có: chuỗi commit 18/10 (baseline → vendor sửa → vendor `mamba.c` + kiểm UCI), tag `baseline-upstream-44d51fc`, nhánh `dev`, checksum trọng số + 2 vendor + 2 upstream trong `source_manifest.json`; còn: checksum checkpoint retrain |
 
 ---
 
@@ -139,6 +139,11 @@ Nguyên tắc giữ nguyên (mục 12.3): nghiệm thu theo **quy trình + độ
 | 18/10/2026 | **Chốt dung sai MT3 (trước khi so số thật)** — hai tầng: A) C-PC ↔ PyTorch max\|Δlogit\| ≤ 1e-3, MAE ≤ 1e-4; B) MCU ↔ C-PC max ≤ 1e-4, MAE ≤ 1e-5 (cùng mã nguồn, chỉ khác libm/compiler). Nhãn khớp 100% **trừ** mẫu có biên top-2 < ngưỡng tầng → liệt kê riêng ("hồ sơ mẫu khác biệt", tiêu chí #3). Vượt ngưỡng ngay lần đầu → nghi **ánh xạ trọng số** trước khi nghi code C. | Dung sai gộp một tầng không phân biệt được lỗi mô hình vs lỗi nền tảng; mẫu biên hẹp không nên bị tính là sai. Chi tiết + layout nạp ngược: mục 2. | |
 | 18/10/2026 | **92,67% chỉ là điểm tham chiếu cho MT1/MT3** (trọng số công khai) — **không** đưa vào bảng so sánh Mamba↔MLP; mọi so sánh chất lượng dùng checkpoint retrain gate #1 cùng split/seed. | Checkpoint công khai được chọn bằng accuracy val chia ngẫu nhiên → không công bằng với MLP (giữ kỷ luật gate #1). | |
 | 18/10/2026 | Tạo tag `baseline-upstream-44d51fc` tại `a72d025` (trước mọi thay đổi bản vendor) + nhánh `dev` tại `c081e3e`; từ đây phát triển trên `dev`, `master` giữ làm mốc tổng hợp. Bản gốc chưa sửa đầy đủ = clone `MambaLite-Micro/` @ `44d51fce` (nguồn ngoài, ghi trong `source_manifest.json`); tại commit được tag, `firmware/common/mambahar.c` vẫn là bản 1:1 chưa commit (sha `84AC465D…`). | Đề cương 6.3 yêu cầu giữ bản gốc chưa sửa + một nhánh phát triển. | |
+| 18/10/2026 | **A/B compiler C vs C++** (firmware Portenta biên dịch mô hình bằng C++ qua `main.cpp`): build host `g++ -x c++` ≡ `gcc` **bit-exact trên 2.947 mẫu** (`firmware/host/logs/cpp_vs_c_cmp_20261018.txt`); xác nhận `mambahar_forward()` gọi đúng `mambahar_forward_logits(input, NULL)` — cùng một thân hàm. | Loại trừ nguồn lệch ngôn ngữ/compiler của tầng B (còn lại: target ARM Cortex-M7 + newlib/FPU — chỉ chốt được khi có bo). | |
+| 18/10/2026 | **A/B upstream 1:1 vs bản dev** (cùng runner host, chỉ khác 2 file mô hình; `-DUPSTREAM_ONLY` vì upstream không lộ logits): pred **bit-exact trên 2.947 mẫu thật** (`firmware/host/logs/upstream_vs_final_cmp_20261018.txt`). Chốt câu đúng phạm vi: chỉ khẳng định bit-exact cho **đầu ra hữu hạn**; lô 201 mẫu chỉ là bằng chứng phụ. | Tuyên bố "sửa 2 lỗi… bit-exact trên 2.947 mẫu" cũ quá rộng so với bằng chứng. | |
+| 18/10/2026 | **ASan/LSan mở rộng độ phủ**: 1 mẫu (2 chế độ) + **1.000 lượt liên tiếp** + **batch 2.947 mẫu UCI hữu hạn** — không còn report nào (`firmware/host/logs/asan_extended_20261018.txt`); build ASan (-O1) cũng bit-exact với bằng chứng (-O2). RSS tăng trong ASan là artifact allocator (quarantine/redzone), không phải rò rỉ. | Một lượt 1 mẫu chưa đủ để nói "sạch hoàn toàn". | |
+| 18/10/2026 | **Đổi tên phụ lục** `docs/NGHIEM_THU_SO_HOC_HOST_20261020.md` → `docs/KIEM_CHUNG_SO_HOC_PC_20261020.md` (tránh chữ "nghiệm thu" mâu thuẫn mục 0/Bảng 8: bằng chứng PC không phải nghiệm thu). `YEU_CAU_DE_CUONG.md` bỏ phần "Phân tích khoảng cách" (trùng lặp, lệch số build cũ) — chỉ còn tóm tắt đề cương + câu hỏi GVHD; trạng thái duy nhất ở file này. `datn_docx.txt` (toàn văn đề cương 504 dòng) đặt tại gốc repo để trích dẫn kiểm được. | Một nguồn sự thật cho trạng thái; tránh hiểu sai. | |
+| 18/10/2026 | `uci_har.py score` in thêm **confusion matrix + tên lớp**; sửa chú thích sai "sklearn LabelEncoder" → đúng: `train.py` trừ 1 ở dòng 37/39 (không dùng LabelEncoder). `source_manifest.json` thêm sha256 **2 file upstream 1:1** (`BA59A6AF…` mamba.c, `84AC465D…` mambahar.c). | Tiêu chí 4 (tái lập) + hết chỗ ghi "thiếu checksum" sai thực tế. | |
 
 ### Diff của bản vendor so với upstream
 
@@ -164,10 +169,10 @@ Nghiệm thu (bằng chứng trong `firmware/host/logs/`):
 | RSS 1000 lượt | +8.416 KB (tuyến tính 8,4 KB/lượt) | **+496 KB** |
 | RSS 4000 lượt | +32.460 KB | **+500 KB** (tăng 4 KB so với 1000 lượt) |
 | LSan | `8128 byte(s) leaked in 6 allocation(s)` (`asan_prefix.txt`) | không còn report (`asan_fixed.txt`) |
-| Bit-exact logits (201 mẫu) | `baseline_logits.csv` | `fixed_logits.csv` — **`cmp` khớp từng byte** |
+| Bit-exact logits (201 mẫu — *lô phụ: 1 mẫu demo NaN + 200 mẫu ngẫu nhiên*) | `baseline_logits.csv` | `fixed_logits.csv` — **`cmp` khớp từng byte**; phạm vi chặt dùng cặp 2.947 mẫu thật (2 dòng dưới) |
 | `isfinite` (thay đổi #3) — mẫu demo | `Prediction: 0` (argmax trên NaN) | `Prediction: -2` + dòng `Output: INVALID (non-finite logits)` |
 | Test 2.947 mẫu (trọng số công khai) | — | acc **0,9267** / macro-F1 **0,9265**, 0 NaN, 0 invalid (`uci_test_logits_final.csv`) |
-| Bit-exact sau thay đổi #3 (201 mẫu) | `v2_batch201_logits.csv` | `v3_batch201_logits.csv` — khác **duy nhất** cột `pred` mẫu 0 (0 → −2); 2.947 mẫu test giữ nguyên bit-exact |
+| Bit-exact sau thay đổi #3 (201 mẫu) | `v2_batch201_logits.csv` | `v3_batch201_logits.csv` — khác 1 dòng (mẫu 0): cột `pred` (0 → −2) **và cả 6 cột logit** (`-nan` → `nan`); kích thước 15.052 → 15.047 B (khớp −6 ký tự logit +1 ký tự pred); 2.947 mẫu test: pre/post/final giữ nguyên bit-exact từng byte |
 
 Rebuild 2 target với bản vendor (18/10, sau khi sửa lỗi `-I` + lỗi C++ — xem nhật ký): Portenta H7 `SUCCESS` **Flash 307.368 B (+272 B so với bản upstream)** / **RAM tĩnh 77.256 B (.data+.bss — heap đỉnh/stack đo riêng ở P2)**; ESP32-S3 `SUCCESS` **Flash 375.332 B (+160 B)** / RAM tĩnh 29.124 B. *(Ba lần build trước đó ghi "flash 307.096 B y hệt" thực chất biên dịch bản upstream do lỗi đường `-I` — số đó không còn giá trị minh chứng.)*
 

@@ -16,6 +16,9 @@ from pathlib import Path
 
 N_FEAT = 570
 
+# UCI HAR activity labels (activity_labels.txt in the dataset root, 1..6)
+CLASS_NAMES = ["WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING"]
+
 
 def to_f32(root: Path, out: Path):
     src = root / "test" / "X_test.txt"
@@ -31,7 +34,7 @@ def to_f32(root: Path, out: Path):
 
 
 def score(csv_path: Path, root: Path):
-    # y_test.txt is 1..6; train.py uses sklearn LabelEncoder -> classes are 0-based
+    # y_test.txt holds 1..6; train.py maps labels to 0..5 with `- 1` (lines 37 and 39)
     labels = [int(v) - 1 for v in (root / "test" / "y_test.txt").read_text().split()]
     preds, nan_rows, invalid_rows = [], 0, 0
     with open(csv_path) as f:
@@ -59,6 +62,14 @@ def score(csv_path: Path, root: Path):
     print(f"accuracy: {acc:.4f}")
     print(f"macro-F1: {sum(f1s) / 6:.4f}")
     print("F1 per class: " + " ".join(f"c{c}={v:.4f}" for c, v in enumerate(f1s)))
+    print("classes: " + " ".join(f"{c}={n}" for c, n in enumerate(CLASS_NAMES)))
+    cm = [[0] * 6 for _ in range(6)]
+    for p, y in zip(preds, labels):
+        if 0 <= p < 6:
+            cm[y][p] += 1
+    print("confusion matrix (rows=true, cols=pred; pred<0 excluded):")
+    for y in range(6):
+        print(f"true {y}: " + " ".join(f"{v:5d}" for v in cm[y]))
 
 
 def main():

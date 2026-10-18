@@ -1,0 +1,2 @@
+﻿KET QUA: gcc(C) == g++(C++) ΓÇö bit-exact tren 2947 mau UCI (222906 B)
+KET QUA: build gcc moi == bang chung logs/uci_test_logits_final.csv ΓÇö bit-exact
