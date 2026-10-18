@@ -1,0 +1,113 @@
+﻿=== ASan run 1: default (first error stops the run) ===
+wsl : =================================================================
+At line:1 char:6
++ $o = wsl -e bash /mnt/d/DoanNhomQuy/firmware/host/run_asan.sh 2>&1; $ ...
++      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (===============...===============:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+==658==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x5e74a44c8ef8 bp 0x7fffa2f91f20 
+sp 0x7fffa2f91f10
+READ of size 4 at 0x51e000000a90 thread T0
+    #0 0x5e74a44c8ef7 in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
+    #1 0x5e74a44d1a56 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:58
+    #2 0x5e74a44d3184 in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
+    #3 0x784acfa2a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x784acfa2a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x5e74a44c55a4 in _start (/tmp/asan_hard+0x1b5a4) (BuildId: 4c275885f80d13793cc9783ae3c16bebda47af14)
+
+0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
+allocated by thread T0 here:
+    #0 0x784ad06fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5e74a44c7fa2 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
+in Mamba_Forward
+Shadow bytes around the buggy address:
+  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==658==ABORTING
+=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
+=================================================================
+==666==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x51e000000a90 at pc 0x5f2fc1d3b140 bp 0x7ffe79b9e960 
+sp 0x7ffe79b9e950
+READ of size 4 at 0x51e000000a90 thread T0
+    #0 0x5f2fc1d3b13f in Mamba_Forward /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94
+    #1 0x5f2fc1d443c5 in mambahar_forward_logits /mnt/d/DoanNhomQuy/firmware/common/mambahar.c:58
+    #2 0x5f2fc1d45bff in main /mnt/d/DoanNhomQuy/firmware/host/host_main.c:100
+    #3 0x77750122a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x77750122a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #5 0x5f2fc1d375a4 in _start (/tmp/asan_soft+0x1b5a4) (BuildId: f6467fbfe8d5373aa6f07e3bf4e701e9b4d93a62)
+
+0x51e000000a90 is located 0 bytes after 2576-byte region [0x51e000000080,0x51e000000a90)
+allocated by thread T0 here:
+    #0 0x777501efd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5f2fc1d3a154 in tensor_zeros /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/tensor.c:21
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/d/DoanNhomQuy/firmware/host/../../MambaLite-Micro/csrc/mamba.c:94 
+in Mamba_Forward
+Shadow bytes around the buggy address:
+  0x51e000000800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x51e000000a80: 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x51e000000c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x51e000000d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+Model_Forward completed.
+Prediction: 0
+Logits: -nan -nan -nan -nan -nan -nan
+Elapsed time: 101071 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7880 KB -> 39484 KB (delta 31604 KB over 1 run(s))
+=== ASan done ===

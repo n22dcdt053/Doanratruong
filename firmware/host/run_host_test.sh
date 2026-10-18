@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
-# Host build + run of the same C model code used by the Portenta H7 firmware.
-# Usage: bash run_host_test.sh [iterations]   (default 1)
+# Host build + run of the repo's dev C model chain (no MCU needed). See host_main.c.
+#   bash run_host_test.sh [iterations]
+#   bash run_host_test.sh --batch IN.f32 OUT.csv
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$HERE/../.." && pwd)"                                  # repo root
-INC="$ROOT/MambaLite-Micro/examples/mambahar-arduino-6/include"
-ITER="${1:-1}"
+ROOT="$(cd "$HERE/../.." && pwd)"
+VENDOR="$ROOT/firmware/common"
+UPSTREAM_INC="$ROOT/MambaLite-Micro/examples/mambahar-arduino-6/include"
 BIN="$(mktemp /tmp/mambahar_host.XXXXXX)"
 trap 'rm -f "$BIN"' EXIT
-gcc -O2 -o "$BIN" "$HERE/host_main.c" -I"$INC" -lm
-"$BIN" "$ITER"
+# -I order matters: vendor mambahar.c first, then upstream headers (weights, sample)
+gcc -O2 -o "$BIN" "$HERE/host_main.c" -I"$VENDOR" -I"$UPSTREAM_INC" -lm
+if [ "$#" -eq 0 ]; then set -- 1; fi
+"$BIN" "$@"

@@ -1,0 +1,136 @@
+--- a/MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c
++++ b/firmware/common/mambahar.c
+@@ -1,17 +1,36 @@
+ /**
+  * @file mambahar.c
+- * @brief mambahar model
++ * @brief mambahar model — dev (vendor) copy for the DATN firmware.
+  * Copyright (c) 2025 MambaLite-Micro Authors
+  * Licensed under the MIT License.
++ *
++ * Upstream (unmodified, MIT, commit 44d51fc):
++ *   MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c
++ * Every change vs upstream is recorded with its diff in HUONG_PHAT_TRIEN.md,
++ * section "Diff cua ban vendor so voi upstream". Never edit the upstream file.
+  */
++#include <stdlib.h> /* free(): the csrc headers do not pull in <stdlib.h> */
++
+ #define B 1
+ #define T 10
+ #define F 57
+ #define H 64
+ #define C 6
+-int mambahar_forward(float *input)
++
++/**
++ * Same computation as upstream mambahar_forward(), plus the six pre-softmax
++ * logits (MT2). logits may be NULL. Return: argmax 0..C-1, or -1 on failure.
++ */
++int mambahar_forward_logits(float *input, float *logits)
+ {
+-    Tensor *mamba_input = tensor_zeros(B, T, H);
++    Tensor *mamba_input = NULL, *output = NULL, *output_T = NULL;
++    Matrix *pooled = NULL, *y = NULL;
++    Mamba_Variables *model = NULL;
++    int pred = -1;
++
++    mamba_input = tensor_zeros(B, T, H);
++    if (!mamba_input)
++        goto cleanup;
+     for (int b = 0; b < B; b++)
+     {
+         for (int t = 0; t < T; t++)
+@@ -30,10 +49,17 @@
+             }
+         }
+     }
+-    Mamba_Variables *model = Mamba_Init();
+-    Tensor *output = tensor_zeros(B, T, H);
+-    Mamba_Forward(model, mamba_input, output);
+-    Tensor *output_T = tensor_zeros(B, T, H);
++    model = Mamba_Init();
++    if (!model)
++        goto cleanup;
++    output = tensor_zeros(B, T, H);
++    if (!output)
++        goto cleanup;
++    if (Mamba_Forward(model, mamba_input, output) != Mamba_OK)
++        goto cleanup;
++    output_T = tensor_zeros(B, T, H);
++    if (!output_T)
++        goto cleanup;
+     for (int b = 0; b < B; b++)
+     {
+         for (int t = 0; t < T; t++)
+@@ -47,7 +73,9 @@
+         }
+     }
+ 
+-    Matrix *pooled = matrix_zeros(B, H);
++    pooled = matrix_zeros(B, H);
++    if (!pooled)
++        goto cleanup;
+     for (int b = 0; b < B; b++)
+     {
+         for (int h = 0; h < H; h++)
+@@ -61,7 +89,9 @@
+             pooled->data[b * H + h] = sum / T;
+         }
+     }
+-    Matrix *y = matrix_zeros(B, C);
++    y = matrix_zeros(B, C);
++    if (!y)
++        goto cleanup;
+     for (int b_idx = 0; b_idx < B; b_idx++)
+     {
+         for (int c = 0; c < C; c++)
+@@ -74,6 +104,13 @@
+             y->data[b_idx * C + c] = sum;
+         }
+     }
++    if (logits)
++    {
++        for (int c = 0; c < C; c++)
++        {
++            logits[c] = y->data[c];
++        }
++    }
+     int max_idx = 0;
+     for (int b = 0; b < B; b++)
+     {
+@@ -89,5 +126,32 @@
+             }
+         }
+     }
+-    return max_idx;
+-}
+\ No newline at end of file
++    pred = max_idx;
++
++cleanup:
++    if (y)
++        matrix_free(y);
++    if (pooled)
++        matrix_free(pooled);
++    if (output_T)
++        tensor_free(output_T);
++    if (output)
++        tensor_free(output);
++    if (model)
++        free(model);
++    if (mamba_input)
++        tensor_free(mamba_input);
++    if (pred < 0 && logits)
++    {
++        for (int c = 0; c < C; c++)
++        {
++            logits[c] = NAN;
++        }
++    }
++    return pred;
++}
++
++int mambahar_forward(float *input)
++{
++    return mambahar_forward_logits(input, NULL);
++}

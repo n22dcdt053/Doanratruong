@@ -1,18 +1,20 @@
 /**
  * @file host_main.c
- * @brief PC (host) build of the exact C inference chain used by the
- *        Portenta H7 firmware (firmware/mambahar-portenta-h7/src/main.cpp).
+ * @brief PC (host) build of the C inference chain used by the Portenta H7
+ *        firmware (firmware/mambahar-portenta-h7/src/main.cpp).
  *
- * Purpose: smoke-test the C model without any MCU — same sources, same call:
- *   upstream csrc/{matrix,tensor,mamba}.c + example mambahar.c + sample_input.h
- * Build/run via run_host_test.ps1 (WSL gcc). Timing here is host wall clock,
- * NOT MCU evidence — board numbers still require the Portenta H7.
- * When firmware/common/mambahar.c becomes the modified dev copy, add its
- * directory as an earlier -I so this build picks it up instead of upstream.
+ * Sources: firmware/common/mambahar.c (vendor dev copy) + upstream
+ * csrc/{matrix,tensor,mamba}.c + upstream weights/sample headers.
+ * Timing here is host wall clock, NOT MCU evidence.
+ *
+ * Modes (via run_host_test.ps1 / run_host_test.sh):
+ *   host_main <iterations>            single-sample: prediction, logits, RSS
+ *   host_main --batch IN.f32 OUT.csv  N x 570 float32 (LE) -> idx,pred,6 logits
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <time.h>
 
 #include "../../MambaLite-Micro/csrc/matrix.c"
@@ -20,6 +22,8 @@
 #include "../../MambaLite-Micro/csrc/mamba.c"
 #include "mambahar.c"
 #include "sample_input.h"
+
+#define N_FEAT (10 * 57)
 
 static double now_us(void)
 {
@@ -40,25 +44,73 @@ static long rss_kb(void)
     return resident < 0 ? -1 : resident * 4; /* Linux page = 4 KiB */
 }
 
+static int run_batch(const char *in_path, const char *out_path)
+{
+    FILE *fin = fopen(in_path, "rb");
+    if (!fin)
+    {
+        fprintf(stderr, "cannot open input %s\n", in_path);
+        return 1;
+    }
+    FILE *fout = fopen(out_path, "w");
+    if (!fout)
+    {
+        fprintf(stderr, "cannot open output %s\n", out_path);
+        fclose(fin);
+        return 1;
+    }
+
+    float sample[N_FEAT];
+    long idx = 0;
+    int bad = 0;
+    fprintf(fout, "sample_index,pred,logit0,logit1,logit2,logit3,logit4,logit5\n");
+    while (fread(sample, sizeof(float), N_FEAT, fin) == N_FEAT)
+    {
+        float logits[6] = {0};
+        int pred = mambahar_forward_logits(sample, logits);
+        fprintf(fout, "%ld,%d,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g\n", idx, pred,
+                (double)logits[0], (double)logits[1], (double)logits[2],
+                (double)logits[3], (double)logits[4], (double)logits[5]);
+        idx++;
+    }
+    if (!feof(fin))
+    {
+        fprintf(stderr, "trailing partial sample in %s\n", in_path);
+        bad = 1;
+    }
+    fclose(fin);
+    fclose(fout);
+    printf("Batch: %ld samples -> %s%s\n", idx, out_path,
+           bad ? " (PARTIAL TRAILING DATA)" : "");
+    return bad;
+}
+
 int main(int argc, char **argv)
 {
+    if (argc == 4 && strcmp(argv[1], "--batch") == 0)
+        return run_batch(argv[2], argv[3]);
+
     int iterations = argc > 1 ? atoi(argv[1]) : 1;
     if (iterations < 1)
         iterations = 1;
 
     long rss0 = rss_kb();
     double t0 = now_us();
-    int pred = mambahar_forward(input_data); /* first 570 floats = [1, 10, 57] */
+    float logits[6] = {0};
+    int pred = mambahar_forward_logits(input_data, logits); /* first 570 floats = [1, 10, 57] */
     for (int i = 1; i < iterations; i++)
-        pred = mambahar_forward(input_data);
+        pred = mambahar_forward_logits(input_data, logits);
     double t1 = now_us();
     long rss1 = rss_kb();
 
     printf("Model_Forward completed.\n");
     printf("Prediction: %d\n", pred);
+    printf("Logits: %.9g %.9g %.9g %.9g %.9g %.9g\n",
+           (double)logits[0], (double)logits[1], (double)logits[2],
+           (double)logits[3], (double)logits[4], (double)logits[5]);
     printf("Elapsed time: %.0f us (host wall clock, %d run(s), NOT MCU timing)\n",
            t1 - t0, iterations);
     printf("Host RSS: %ld KB -> %ld KB (delta %ld KB over %d run(s))\n",
            rss0, rss1, rss1 - rss0, iterations);
-    return 0;
+    return pred < 0 ? 1 : 0;
 }
