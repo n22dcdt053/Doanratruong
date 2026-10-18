@@ -24,7 +24,7 @@ if [ -f "$UCI" ]; then
     echo "=== ASan run 4: recover mode, full UCI batch (2947 finite samples) ==="
     ASAN_OPTIONS=halt_on_error=0:detect_leaks=1 /tmp/asan_soft --batch "$UCI" /tmp/asan_uci_batch.csv || true
     if [ -f "$REF" ] && cmp -s /tmp/asan_uci_batch.csv "$REF"; then
-        echo "KET QUA: ASan build (-O1) == bang chung (-O2) — bit-exact tren 2947 mau"
+        echo "KET QUA: ASan build (-O1) == bang chung (-O2) - bit-exact tren 2947 mau"
     else
         echo "KET QUA: ASan build CSV khac bang chung (kiem tay neu can)"
     fi

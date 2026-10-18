@@ -3,5 +3,5 @@ ba59a6af7f93027087f608d0351971bda685509c347d2f3d905a7d8b9e970da9  /mnt/d/DoanNho
 84ac465df0310dd09deac4423f11f625c6f352c4f3db6ccf03b947085bfe7957  /mnt/d/DoanNhomQuy/MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c
 a4a2aebb3d77cc5e5d8e8457cbfb8abb6f80e0f5ae54a38b5d31de41554fb5e3  /mnt/d/DoanNhomQuy/firmware/common/mamba.c
 c4e20633eceffaf8839611a81c63bf33706903ca09987091d900f0859d4ee19d  /mnt/d/DoanNhomQuy/firmware/common/mambahar.c
-KET QUA: upstream 1:1 == ban dev ΓÇö pred bit-exact tren 2947 mau UCI
-KET QUA: ban dev (chay moi) == bang chung logs/uci_test_logits_final.csv ΓÇö bit-exact
+KET QUA: upstream 1:1 == ban dev - pred bit-exact tren 2947 mau UCI
+KET QUA: ban dev (chay moi) == bang chung logs/uci_test_logits_final.csv - bit-exact

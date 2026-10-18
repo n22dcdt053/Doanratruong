@@ -3,23 +3,23 @@ Model_Forward completed.
 Prediction: -2
 Output: INVALID (non-finite logits), pred=-2 is not a class
 Logits: nan nan nan nan nan nan
-Elapsed time: 2550 us (host wall clock, 1 run(s), NOT MCU timing)
-Host RSS: 7916 KB -> 8936 KB (delta 1020 KB over 1 run(s))
+Elapsed time: 3272 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7924 KB -> 8944 KB (delta 1020 KB over 1 run(s))
 === ASan run 2: recover mode (halt_on_error=0), 1 sample, leaks at exit ===
 Model_Forward completed.
 Prediction: -2
 Output: INVALID (non-finite logits), pred=-2 is not a class
 Logits: nan nan nan nan nan nan
-Elapsed time: 3817 us (host wall clock, 1 run(s), NOT MCU timing)
-Host RSS: 7884 KB -> 8844 KB (delta 960 KB over 1 run(s))
+Elapsed time: 2882 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7864 KB -> 8848 KB (delta 984 KB over 1 run(s))
 === ASan run 3: recover mode, 1000 continuous runs (same demo sample) ===
 Model_Forward completed.
 Prediction: -2
 Output: INVALID (non-finite logits), pred=-2 is not a class
 Logits: nan nan nan nan nan nan
-Elapsed time: 3019352 us (host wall clock, 1000 run(s), NOT MCU timing)
-Host RSS: 7872 KB -> 116252 KB (delta 108380 KB over 1000 run(s))
+Elapsed time: 2870100 us (host wall clock, 1000 run(s), NOT MCU timing)
+Host RSS: 7884 KB -> 116176 KB (delta 108292 KB over 1000 run(s))
 === ASan run 4: recover mode, full UCI batch (2947 finite samples) ===
 Batch: 2947 samples -> /tmp/asan_uci_batch.csv
-KET QUA: ASan build (-O1) == bang chung (-O2) ΓÇö bit-exact tren 2947 mau
+KET QUA: ASan build (-O1) == bang chung (-O2) - bit-exact tren 2947 mau
 === ASan done ===

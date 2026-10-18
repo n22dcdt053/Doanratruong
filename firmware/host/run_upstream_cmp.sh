@@ -34,11 +34,11 @@ gcc -O2 -o "$TMP/dev" "$HERE/host_main.c" -I"$VENDOR" -I"$CSRC" -I"$UPIN" -lm
 cut -d, -f1,2 "$TMP/up.csv" > "$TMP/up_pred.csv"
 cut -d, -f1,2 "$TMP/dev.csv" > "$TMP/dev_pred.csv"
 if cmp -s "$TMP/up_pred.csv" "$TMP/dev_pred.csv"; then
-    echo "KET QUA: upstream 1:1 == ban dev — pred bit-exact tren 2947 mau UCI"
+    echo "KET QUA: upstream 1:1 == ban dev - pred bit-exact tren 2947 mau UCI"
 else
-    echo "KET QUA: upstream 1:1 vs ban dev KHAC pred — diff:"
+    echo "KET QUA: upstream 1:1 vs ban dev KHAC pred - diff:"
     diff "$TMP/up_pred.csv" "$TMP/dev_pred.csv" | head -20 || true
 fi
 if [ -f "$REF" ] && cmp -s "$TMP/dev.csv" "$REF"; then
-    echo "KET QUA: ban dev (chay moi) == bang chung logs/uci_test_logits_final.csv — bit-exact"
+    echo "KET QUA: ban dev (chay moi) == bang chung logs/uci_test_logits_final.csv - bit-exact"
 fi

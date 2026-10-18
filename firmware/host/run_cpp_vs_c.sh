@@ -27,11 +27,11 @@ g++ -O2 -x c++ -o "$TMP/run_cpp" "$HERE/host_main.c" -I"$VENDOR" -I"$CSRC" -I"$U
 "$TMP/run_cpp" --batch "$BATCH" "$TMP/out_cpp.csv" >/dev/null
 
 if cmp -s "$TMP/out_c.csv" "$TMP/out_cpp.csv"; then
-    echo "KET QUA: gcc(C) == g++(C++) — bit-exact tren 2947 mau UCI ($(stat -c%s "$TMP/out_c.csv") B)"
+    echo "KET QUA: gcc(C) == g++(C++) - bit-exact tren 2947 mau UCI ($(stat -c%s "$TMP/out_c.csv") B)"
 else
-    echo "KET QUA: gcc(C) vs g++(C++) KHAC — diff:"
+    echo "KET QUA: gcc(C) vs g++(C++) KHAC - diff:"
     diff "$TMP/out_c.csv" "$TMP/out_cpp.csv" | head -20 || true
 fi
 if [ -f "$REF" ] && cmp -s "$TMP/out_c.csv" "$REF"; then
-    echo "KET QUA: build gcc moi == bang chung logs/uci_test_logits_final.csv — bit-exact"
+    echo "KET QUA: build gcc moi == bang chung logs/uci_test_logits_final.csv - bit-exact"
 fi
