@@ -3,8 +3,8 @@
  * @brief PC (host) build of the C inference chain used by the Portenta H7
  *        firmware (firmware/mambahar-portenta-h7/src/main.cpp).
  *
- * Sources: firmware/common/mambahar.c (vendor dev copy) + upstream
- * csrc/{matrix,tensor,mamba}.c + upstream weights/sample headers.
+ * Sources: firmware/common/mamba.c + mambahar.c (vendored dev copies) +
+ * upstream csrc/{matrix,tensor}.c + upstream weights/sample headers.
  * Timing here is host wall clock, NOT MCU evidence.
  *
  * Modes (via run_host_test.ps1 / run_host_test.sh):
@@ -19,7 +19,7 @@
 
 #include "../../MambaLite-Micro/csrc/matrix.c"
 #include "../../MambaLite-Micro/csrc/tensor.c"
-#include "../../MambaLite-Micro/csrc/mamba.c"
+#include "mamba.c"
 #include "mambahar.c"
 #include "sample_input.h"
 
@@ -105,6 +105,9 @@ int main(int argc, char **argv)
 
     printf("Model_Forward completed.\n");
     printf("Prediction: %d\n", pred);
+    if (pred < 0)
+        printf("Output: INVALID (%s), pred=%d is not a class\n",
+               pred == -2 ? "non-finite logits" : "allocation/kernel failure", pred);
     printf("Logits: %.9g %.9g %.9g %.9g %.9g %.9g\n",
            (double)logits[0], (double)logits[1], (double)logits[2],
            (double)logits[3], (double)logits[4], (double)logits[5]);
@@ -112,5 +115,5 @@ int main(int argc, char **argv)
            t1 - t0, iterations);
     printf("Host RSS: %ld KB -> %ld KB (delta %ld KB over %d run(s))\n",
            rss0, rss1, rss1 - rss0, iterations);
-    return pred < 0 ? 1 : 0;
+    return pred == -1 ? 1 : 0; /* -2 = invalid input/output, run itself completed */
 }

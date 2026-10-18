@@ -1,0 +1,6 @@
+# Local dataset (re-downloadable — see firmware/host/uci_har.py header for URL)
+data/
+# Large derived binary inputs/outputs for the host runner (regenerable)
+*.f32
+# PlatformIO compile database (generated)
+compile_commands.json

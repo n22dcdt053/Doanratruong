@@ -1,0 +1,28 @@
+{
+  "source_url": "https://github.com/Whiten-Rock/MambaLite-Micro",
+  "commit": "44d51fce0f17ddadb6111c5e5554d1f7f6c67aff",
+  "commit_date": "2025-09-08T20:47:28-05:00",
+  "received_date": "2026-10-18",
+  "license": "MIT",
+  "paper": "arXiv:2509.05488 (MambaLite-Micro: Memory-Optimized Mamba Inference on MCUs)",
+  "local_checkout": "MambaLite-Micro/",
+  "target_example": "examples/mambahar-arduino-6",
+  "weights": {
+    "file": "examples/mambahar-arduino-6/include/mamba_weights.h",
+    "sha256": "187182024B94491BE836EC359660D45B5E8207358F2A3A8714C29C3D269C0DB7",
+    "bytes": 653235,
+    "note": "653.235 B là kích thước file header dạng text (số float viết dạng chữ). Mô hình ~36,7 nghìn tham số FP32 -> trọng số nhị phân chỉ ~147 KB, khớp flash firmware Portenta 307 KB."
+  },
+  "vendored": [
+    {
+      "file": "firmware/common/mambahar.c",
+      "sha256": "C4E20633ECEFFAF8839611A81C63BF33706903CA09987091D900F0859D4EE19D",
+      "note": "wrapper HAR; khác upstream (leak fix, 6 logits, isfinite -> -2); diff: mambahar_vs_upstream.diff"
+    },
+    {
+      "file": "firmware/common/mamba.c",
+      "sha256": "A4A2AEBB3D77CC5E5D8E8457CBFB8ABB6F80E0F5AE54A38B5D31DE41554FB5E3",
+      "note": "kernel; khác upstream 1 dòng OOB read; diff: mamba_vs_upstream.diff"
+    }
+  ]
+}

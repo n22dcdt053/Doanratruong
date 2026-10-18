@@ -12,14 +12,14 @@ Cách dùng: tick ✅ vào ô *Trạng thái* khi có minh chứng thật. Mọi
 
 | # | Tiêu chí (Bảng 8) | Trạng thái 18/10 | Minh chứng cần |
 |---|---|---|---|
-| 1 | Nguồn và khả năng tái lập: commit, license, checksum trọng số, môi trường, hướng dẫn build | ❌ git **chưa có commit nào**; còn lại đã có (`source_manifest.json`) | lịch sử commit + `environment/` |
+| 1 | Nguồn và khả năng tái lập: commit, license, checksum trọng số, môi trường, hướng dẫn build | 🟡 chuỗi commit 18/10 trên `master`; `source_manifest.json` còn **thiếu checksum trọng số** | lịch sử commit + `environment/` |
 | 2 | Hoạt động trên phần cứng: Portenta H7 thật, nhiều mẫu, xuất logits/nhãn/lỗi | ❌ mới có bản 1 mẫu trên ESP32-S3 (proxy) | firmware H7 + log nhận gói |
 | 3 | Tương đương số học: bảng sai số, tỷ lệ khớp, hồ sơ mẫu khác biệt, dung sai chốt trước | ❌ | `predictions.csv` + bảng sai số |
-| 4 | Chất lượng phân loại: accuracy, macro-F1, F1/lớp, confusion matrix trên test + nêu trạng thái checkpoint | ❌ | bảng chỉ số + hình |
+| 4 | Chất lượng phân loại: accuracy, macro-F1, F1/lớp, confusion matrix trên test + nêu trạng thái checkpoint | 🟡 host C + trọng số công khai: acc **0,9267** / macro-F1 **0,9265** trên 2.947 mẫu test (18/10); checkpoint chốt còn ở mục 2 | bảng chỉ số + hình |
 | 5 | Đối chứng MLP chạy cùng bo, kiểm chứng riêng | ❌ | firmware MLP + bảng so sánh |
-| 6 | Độ ổn định: ≥1.000 lượt không reset ngoài dự kiến, theo dõi bộ nhớ/lỗi đầu vào/NaN | 🟡 host PC: 1000/4000 lượt RSS phẳng sau sửa leak; chờ bo thật | nhật ký stability test trên H7 |
+| 6 | Độ ổn định: ≥1.000 lượt không reset ngoài dự kiến, theo dõi bộ nhớ/lỗi đầu vào/NaN | 🟡 host PC: 1000/4000 lượt RSS phẳng sau sửa leak; wrapper báo `-2` khi logits có NaN/inf (18/10); chờ bo thật | nhật ký stability test trên H7 |
 | 7 | Năng lượng: dữ liệu nguồn thô, GPIO, sơ đồ cấp nguồn, điều kiện đo, mJ/lượt | ❌ | `raw_measurements/` + `hardware_manifest.md` |
-| 8 | Tài nguyên và thống kê: Flash, RAM theo phương pháp, phân bố thời gian, biến thiên giữa phiên | 🟡 có build log ESP32 (proxy, không thay thế H7) | map file + linker script H7 |
+| 8 | Tài nguyên và thống kê: Flash, RAM theo phương pháp, phân bố thời gian, biến thiên giữa phiên | 🟡 có build log ESP32-S3 + Portenta (số PlatformIO, **chưa phải map file**; ESP32 không thay thế H7) | map file + linker script H7 |
 | 9 | Báo cáo: phân biệt kết quả / giới hạn / giả thuyết / hướng phát triển | ❌ | thuyết minh 5 chương (mục 13.2) |
 
 ---
@@ -42,16 +42,17 @@ Cách dùng: tick ✅ vào ô *Trạng thái* khi có minh chứng thật. Mọi
 ## 3. Lộ trình P0 → P4 (mỗi bước ra một minh chứng)
 
 ### P0 — Tuần này, không cần bo
-- [ ] **Commit toàn bộ repo**; `.gitignore` cho `.pio/`; tách nhánh `dev` (đề cương 6.3 bắt buộc giữ bản gốc chưa sửa + nhánh phát triển). *(18/10: đã có commit `a72d025` — baseline host + log leak trước sửa; phần còn lại chưa commit.)*
-- [ ] Tải UCI HAR; sinh `split_manifest.csv` (sample_id, subject_id, nhãn, tập) bằng GroupShuffleSplit seed 42; kiểm tra danh sách người không giao nhau giữa các tập.
+- [ ] **Commit toàn bộ repo**; `.gitignore` cho `.pio/`; tách nhánh `dev` (đề cương 6.3 bắt buộc giữ bản gốc chưa sửa + nhánh phát triển). *(18/10: chuỗi commit trên `master`: `a72d025` baseline + log leak trước sửa → commit bản vendor sửa → commit vendor `mamba.c` + kiểm UCI; còn: tách nhánh `dev`, checksum trọng số.)*
+- [ ] Tải UCI HAR; sinh `split_manifest.csv` (sample_id, subject_id, nhãn, tập) bằng GroupShuffleSplit seed 42; kiểm tra danh sách người không giao nhau giữa các tập. *(18/10: đã tải về `data/UCI HAR Dataset/`; đã chuyển + chấm điểm **tập test** — acc 0,9267, xem mục 6; còn `split_manifest.csv`.)*
 - [x] **Vendor wrapper mô hình**: copy `mambahar.c` → `firmware/common/mambahar.c` (1:1, sha256 `84AC465D…`), trỏ ESP32-S3 sang bản vendor; upstream giữ nguyên. *(18/10/2026)*
 - [x] **Dựng bản C tham chiếu trên PC**: `MambaLite-Micro/csrc/*.c` + **`firmware/common/mambahar.c`** (dùng chung bản vendor với firmware để MT3 so đúng một nguồn), biên dịch native (gcc), chạy N mẫu, in 6 logits. *(18/10/2026 — `firmware/host/`: `run_host_test.ps1` chạy 1 mẫu/1000/4000 lượt; `--batch` đọc file .f32 → CSV 6 logits; ASan qua `run_asan.sh`. Bằng chứng: `firmware/host/logs/`.)*
-- [ ] Đối chiếu logits C-PC ↔ PyTorch (`mamba_ssm` + trọng số công khai) → xác nhận tuyên bố "100% khớp" của paper bằng số liệu của nhóm.
+- [ ] Đối chiếu logits C-PC ↔ PyTorch (`mamba_ssm` + trọng số công khai) → xác nhận tuyên bố "100% khớp" của paper bằng số liệu của nhóm. *(18/10: repo upstream **không có file `.pth` công khai** (chỉ placeholder trong `train.py`/`export_weights.py`) → phải nạp ngược từ `mamba_weights.h` vào `state_dict` hoặc dùng checkpoint nhóm tự train. **Đề xuất dung sai chờ GVHD chốt trước**: |Δlogit| ≤ 1e-3, MAE ≤ 1e-4, khớp nhãn 100% trên 2.947 mẫu test; C dùng `logf(1+expf(x))` vs `log1p` của PyTorch là nguồn lệch nhỏ chấp nhận được.)*
 - [ ] Huấn luyện lại Mamba (gate #1) → lưu checkpoint + lịch sử train.
 
 ### P1 — Firmware (ESP32 tiếp tục, chuyển H7 khi bo về)
 - [x] Sửa **`firmware/common/mambahar.c`** (bản vendor — không sửa upstream): forward trả **cả 6 logits** trước softmax (hiện trả `int` argmax); ghi diff so với upstream vào mục 6. *(18/10/2026 — kèm sửa leak 8.128 B/lượt; đối chiếu bit-exact trước/sau: `firmware/host/logs/baseline_logits.csv` ≡ `fixed_logits.csv`; xem mục 6.)*
-- [ ] Giao thức nhận gói PC→MCU: `[sample_id | 570 float | checksum]`; từ chối gói sai độ dài/checksum; quản lý timeout.
+- [x] **Vendor `csrc/mamba.c`**: sửa 1 dòng vòng chép `xz` (`di < d` thay `di < self->d_inner`) — hết đọc quá biên (ASan), bit-exact giữ nguyên. Diff: `firmware/common/mamba_vs_upstream.diff`. *(18/10/2026)*
+- [ ] Giao thức nhận gói PC→MCU: `[sample_id | 570 float | checksum]`; từ chối gói sai độ dài/checksum; quản lý timeout; kiểm đầu vào không hữu hạn/vượt khoảng giá trị → log là **mẫu không hợp lệ**, không đưa vào thống kê (đáp lại yêu cầu "kiểm khoảng giá trị đầu vào" của tồn đọng #2).
 - [ ] Bỏ vòng `NVIC_SystemReset` sau 1 mẫu → vòng lặp nhiều mẫu có mã định danh.
 - [ ] Thêm GPIO marker bao vùng suy luận; **không in log trong vùng đo**.
 - [ ] Chạy thử 1.000 lượt liên tiếp, giám sát reset ngoài dự kiến / đầu ra không hữu hạn / mức dùng bộ nhớ.
@@ -81,7 +82,7 @@ Cách dùng: tick ✅ vào ô *Trạng thái* khi có minh chứng thật. Mọi
 | Mua **Portenta H7 (ABX00042)** + cáp USB-C truyền dữ liệu | Lead time; không có bo = không nghiệm thu. ESP32 chỉ là proxy, đề cương ghi rõ **không thay thế**. | ❌ chưa có |
 | Chốt **trọng số công khai vs huấn luyện lại** | Chặn MT5 + mọi số liệu so sánh. | ❌ chưa chốt (xem mục 2) |
 | **PPK2 / bộ đo năng lượng** | Mắt xích dài nhất: mượn phòng lab / mua / dựng mạch INA226. | ❌ chưa có |
-| **Git commit** | Sản phẩm bàn giao yêu cầu commit + checksum; hiện bằng 0. | 🟡 1 commit baseline (`a72d025`) + commit bản vendor sửa; chưa commit toàn bộ repo |
+| **Git commit** | Sản phẩm bàn giao yêu cầu commit + checksum; hiện bằng 0. | 🟡 chuỗi commit 18/10 (baseline → bản vendor sửa → vendor `mamba.c` + kiểm UCI); còn checksum trọng số + nhánh `dev` |
 
 ---
 
@@ -108,6 +109,10 @@ Nguyên tắc giữ nguyên (mục 12.3): nghiệm thu theo **quy trình + độ
 | 18/10/2026 | **Dựng runner host PC** (`firmware/host/`) — cùng chuỗi nguồn C của firmware, chạy bằng gcc trong WSL, chế độ batch + 6 logits. Phát hiện **rò rỉ 8.128 B/lượt** (ASan/LSan `8128 byte(s) leaked in 6 allocation(s)`; RSS +8,4 MB/1000 lượt, +32,5 MB/4000 lượt). | Bằng chứng leak **trước** khi sửa đã commit riêng: `a72d025` (log `baseline_leak_1000runs.txt`, `baseline_leak_4000runs.txt`). | |
 | 18/10/2026 | **Sửa bản vendor `mambahar.c`**: free toàn bộ cấp phát (3 tensor + 2 matrix + model), kiểm tra NULL mọi cấp phát, kiểm tra `Mamba_Forward != Mamba_OK`, trả `-1` khi lỗi (logits = NaN); thêm `mambahar_forward_logits()` lộ 6 logits (MT2). Diff: `firmware/common/mambahar_vs_upstream.diff`. | Yêu cầu ≥1.000 lượt không reset (Bảng 8 #6) không thể đạt nếu giữ leak ~8 KB/lượt (RAM H7 hết sau ~60 lượt). MT2 cần logits. Upstream không sửa. | |
 | 18/10/2026 | Không vendor `csrc/mamba.c`: ASan xác nhận đọc quá biên tại `mamba.c:94` (vòng chép `xz`), nhưng **không đổi kết quả** (giá trị đọc thừa không được dùng) và bit-exact đã chứng minh. Ghi vào tồn đọng. | Sửa cần vendor thêm file lõi — chốt sau khi có số đo trên bo hoặc khi bắt buộc. | |
+| 18/10/2026 | **Đảo quyết định trên — vendor `csrc/mamba.c`**: copy → `firmware/common/mamba.c`, sửa 1 dòng `di < d` (hết đọc quá biên). Nghiệm thu: `cmp` **bit-exact** 201 mẫu (`fixed_logits.csv` ≡ `v2_batch201_logits.csv`) **và** 2.947 mẫu UCI (`uci_test_logits_pre_mamba.csv` ≡ `uci_test_logits_post_mamba.csv`); ASan/LSan sạch hẳn. Diff: `firmware/common/mamba_vs_upstream.diff`. | UB thật (ASan xác nhận); sửa 1 dòng; hàng `xz` ≥ `d_model` không bao giờ được dùng → không thể đổi kết quả, kiểm chứng bằng bit-exact. | |
+| 18/10/2026 | Chạy **toàn bộ 2.947 mẫu test UCI HAR** trên runner host với trọng số công khai: acc **0,9267**, macro-F1 **0,9265**, **0 mẫu NaN**; F1/lớp 0,879–0,978. Nhãn `y_test.txt` (1..6) phải trừ 1 khi chấm (khớp `train.py` dòng 39). Công cụ: `firmware/host/uci_har.py` (to-f32 / score). | Kiểm tra sớm chất lượng mô hình; xác nhận NaN của mẫu demo là do **sai thang đầu vào**, dữ liệu chuẩn hóa không NaN. | |
+| 18/10/2026 | **Thay đổi #3 của bản vendor `mambahar.c`**: kiểm `isfinite` cả 6 logits → trả **`-2`** ("đầu ra không hợp lệ") + logits = NaN; `mambahar_forward` cũng trả -2. Host + firmware ESP32 in rõ dòng `Output: INVALID`. | `val > max_val` với NaN luôn sai → mọi mẫu hỏng trước đây **âm thầm thành lớp 0 (WALKING)** và làm đẹp số liệu; Bảng 8 #6 yêu cầu theo dõi NaN. | |
+| 18/10/2026 | **Đính chính lỗi cấu hình**: `-I../../common` trong `platformio.ini` Portenta trỏ `D:\DoanNhomQuy\common` (**không tồn tại**) → 3 lần build trước đó PlatformIO lặng lẽ bỏ qua cờ và biên dịch bản **upstream**, không phải bản vendor. Phát hiện vì flash size không đổi qua 3 phiên bản code; xác nhận bằng `compile_commands.json` + probe `-H`. Sửa thành `-I../common`, include đã trỏ đúng `firmware/common/{mamba,mambahar}.c`; flash 307.096 → **307.368 B**. Kèm sửa lỗi C++: `goto` vượt khởi tạo `int max_idx` (khai báo lên đầu hàm). | Các số build cũ (307.096 B "y hệt") **không chứng minh bản vendor**; đã thay bằng build log mới. Bài học: flash size không đổi = dấu hiệu nghi vấn, phải soi đường include. | |
 | | | | |
 
 ### Diff của bản vendor so với upstream
@@ -115,14 +120,15 @@ Nguyên tắc giữ nguyên (mục 12.3): nghiệm thu theo **quy trình + độ
 - Upstream: `MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c`
 - Upstream commit: `44d51fce0f17ddadb6111c5e5554d1f7f6c67aff` (MIT)
 - Diff đầy đủ (unified, chuẩn hóa CRLF): **`firmware/common/mambahar_vs_upstream.diff`**
-- sha256 bản vendor: ban đầu `84AC465D…` (= upstream, copy 1:1); sau thay đổi 18/10/2026: `8FC09A4A932552046F4F31E271022704382C36E631CFDA59EE328C2AFB594A20`
+- sha256 bản vendor: ban đầu `84AC465D…` (= upstream, copy 1:1); sau thay đổi 18/10/2026: `8FC09A4A932552046F4F31E271022704382C36E631CFDA59EE328C2AFB594A20`; sau thay đổi #3 (`isfinite`): `C4E20633ECEFFAF8839611A81C63BF33706903CA09987091D900F0859D4EE19D`
 
-**18/10/2026 — hai nhóm thay đổi: (1) hết rò rỉ bộ nhớ + phòng lỗi cấp phát, (2) lộ 6 logits (MT2).**
+**18/10/2026 — ba nhóm thay đổi: (1) hết rò rỉ bộ nhớ + phòng lỗi cấp phát, (2) lộ 6 logits (MT2), (3) báo đầu ra không hợp lệ khi logits không hữu hạn.**
 
 | Thay đổi | Chi tiết | Vì sao |
 |---|---|---|
 | `mambahar_forward_logits(input, logits)` | Bản mở rộng của `mambahar_forward`; điền 6 logits trước softmax; `mambahar_forward` giữ nguyên chữ ký (gọi wrapper, `logits = NULL`). Vòng tính toán giữ nguyên từng dòng so với upstream. | MT2 yêu cầu xuất 6 logits |
 | Trả `-1` khi thất bại; logits = NaN | Mọi `tensor_zeros`/`matrix_zeros`/`Mamba_Init` được kiểm NULL; `Mamba_Forward` được kiểm `!= Mamba_OK`. Trước đây: cấp phát lỗi → gọi vào NULL. | Chống undefined behavior khi hết RAM |
+| Kiểm `isfinite` 6 logits → trả `-2` | Logits có NaN/inf → `pred = -2` ("đầu ra không hợp lệ"), logits điền NaN; áp dụng cho cả `mambahar_forward`. `int max_idx` khai báo đầu hàm (C++ không cho `goto` vượt qua khởi tạo). | `val > max_val` với NaN luôn sai → mẫu hỏng trước đây thành lớp 0 (WALKING) âm thầm; Bảng 8 #6 yêu cầu theo dõi NaN |
 | `cleanup:` free toàn bộ | `matrix_free(y, pooled)`; `tensor_free(output_T, output, mamba_input)`; `free(model)` | LSan: 8.128 B/lượt × ~60 lượt = chết RAM H7 (511 KB) |
 | `#include <stdlib.h>` | csrc không kéo stdlib vào | dùng `free()` tường minh, hết implicit declaration |
 
@@ -134,14 +140,32 @@ Nghiệm thu (bằng chứng trong `firmware/host/logs/`):
 | RSS 4000 lượt | +32.460 KB | **+500 KB** (tăng 4 KB so với 1000 lượt) |
 | LSan | `8128 byte(s) leaked in 6 allocation(s)` (`asan_prefix.txt`) | không còn report (`asan_fixed.txt`) |
 | Bit-exact logits (201 mẫu) | `baseline_logits.csv` | `fixed_logits.csv` — **`cmp` khớp từng byte** |
+| `isfinite` (thay đổi #3) — mẫu demo | `Prediction: 0` (argmax trên NaN) | `Prediction: -2` + dòng `Output: INVALID (non-finite logits)` |
+| Test 2.947 mẫu (trọng số công khai) | — | acc **0,9267** / macro-F1 **0,9265**, 0 NaN, 0 invalid (`uci_test_logits_final.csv`) |
+| Bit-exact sau thay đổi #3 (201 mẫu) | `v2_batch201_logits.csv` | `v3_batch201_logits.csv` — khác **duy nhất** cột `pred` mẫu 0 (0 → −2); 2.947 mẫu test giữ nguyên bit-exact |
 
-Rebuild 2 target với bản vendor sửa (18/10): Portenta H7 `SUCCESS` Flash 307.096 B / RAM 77.256 B (y hệt trước), ESP32-S3 `SUCCESS` Flash 375.172 B (+252 B do code logits/free) / RAM 29.124 B.
+Rebuild 2 target với bản vendor (18/10, sau khi sửa lỗi `-I` + lỗi C++ — xem nhật ký): Portenta H7 `SUCCESS` **Flash 307.368 B (+272 B so với bản upstream)** / RAM 77.256 B; ESP32-S3 `SUCCESS` **Flash 375.332 B (+160 B)** / RAM 29.124 B. *(Ba lần build trước đó ghi "flash 307.096 B y hệt" thực chất biên dịch bản upstream do lỗi đường `-I` — số đó không còn giá trị minh chứng.)*
 
-#### Tồn đọng đã biết (chưa sửa — chờ quyết định vendor `csrc/mamba.c`)
+### Diff của bản vendor `mamba.c` so với upstream
 
-1. `csrc/mamba.c:94` **đọc quá biên** tensor (ASan: heap-buffer-overflow, đọc 4 B ngay sau vùng 2.576 B). Vòng chép `xz` chạy tới `d_inner` trong khi chiều đọc chỉ có `d_model`; giá trị đọc thừa **không được dùng** nên kết quả không đổi (bit-exact đã chứng minh). Sửa cần vendor `mamba.c` (diff 1 dòng).
-2. `softplus()` trong `mamba.c` không có nhánh chống tràn (bản guard đã bị comment trong upstream) — nghi vấn liên quan finding #3.
-3. Mẫu demo `sample_input.h` (thang thô ~ -39) cho **logits NaN** trên cả đường host; 200 mẫu N(0,1) còn lại hữu hạn → nghi đầu vào chưa chuẩn hóa/khác tiền xử lý. Cần đối chiếu PyTorch khi khóa checkpoint (P0). Trước đây log "Prediction: 0" của mẫu này thực chất là argmax trên NaN — không phải dự đoán thật.
+- Upstream: `MambaLite-Micro/csrc/mamba.c` (commit `44d51fc`, MIT)
+- Bản vendor: `firmware/common/mamba.c` — sha256 `A4A2AEBB3D77CC5E5D8E8457CBFB8ABB6F80E0F5AE54A38B5D31DE41554FB5E3`
+- Diff đầy đủ: **`firmware/common/mamba_vs_upstream.diff`** (1 dòng chức năng + chú thích đầu file)
+
+**18/10/2026 — sửa đọc quá biên (tồn đọng #1):** vòng chép `xz` chạy `di < self->d_inner` trong khi `hidden_states` chỉ có `d_model` chiều → ASan heap-buffer-overflow (đọc 4 B) tại dòng upstream 94. Đổi thành `di < d`. Các hàng `xz` từ `d_model` trở lên **không bao giờ được đọc** về sau → kết quả không đổi.
+
+| Kiểm tra | Kết quả |
+|---|---|
+| Bit-exact 201 mẫu | `fixed_logits.csv` ≡ `v2_batch201_logits.csv` (`cmp`) |
+| Bit-exact 2.947 mẫu UCI | `uci_test_logits_pre_mamba.csv` ≡ `uci_test_logits_post_mamba.csv` (`cmp`) |
+| ASan/LSan | sạch hẳn, không còn finding (`asan_vendored.txt`; trước sửa: heap-buffer-overflow `mamba.c:94`) |
+| Build | Portenta + ESP32-S3 `SUCCESS` (số ở trên) |
+
+#### Tồn đọng đã biết
+
+1. ✅ **Đã xử lý 18/10/2026**: `csrc/mamba.c:94` đọc quá biên — vendor `mamba.c`, sửa 1 dòng (xem mục trên); bit-exact + ASan sạch.
+2. `softplus()` trong `mamba.c` không có nhánh chống tràn (bản guard đã bị comment trong upstream). **Cập nhật 18/10**: 2.947 mẫu test chuẩn hóa cho **0 NaN** → tràn chỉ xảy ra với đầu vào sai thang (mẫu demo). Giữ nguyên (gần PyTorch hơn nếu thêm guard, nhưng chưa cần); theo dõi qua kiểm `isfinite` (mã `-2`).
+3. Mẫu demo `sample_input.h` (thang thô ~ -39) cho **logits NaN** — **đã rõ nguyên nhân 18/10**: đầu vào sai thang/khác tiền xử lý, dữ liệu UCI chuẩn hóa không NaN; wrapper giờ báo `-2` thay vì âm thầm trả lớp 0. Còn nợ: đối chiếu PyTorch khi khóa checkpoint (P0).
 4. `Mamba_Init()` không tự kiểm `malloc` nội bộ (chỉ kiểm được sau khi trả về) — hết RAM sâu vẫn crash bất định; chấp nhận trong phạm vi hiện tại.
 
 Quy tắc: từ đây **chỉ sửa bản vendor**. Mỗi lần sửa, thêm một mục con bên dưới ghi: ngày, mục tiêu (MT…), và diff unified so với upstream. Không bao giờ sửa `MambaLite-Micro/**`.

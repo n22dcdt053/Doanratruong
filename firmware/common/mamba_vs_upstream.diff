@@ -1,0 +1,30 @@
+--- a/MambaLite-Micro/csrc/mamba.c
++++ b/firmware/common/mamba.c
+@@ -1,8 +1,17 @@
+ /**
+  * @file mamba.c
+- * @brief mamba inference kernel
++ * @brief mamba inference kernel — dev (vendor) copy for the DATN firmware.
+  * Copyright (c) 2025 MambaLite-Micro Authors
+  * Licensed under the MIT License.
++ *
++ * Upstream (unmodified, MIT, commit 44d51fc):
++ *   MambaLite-Micro/csrc/mamba.c
++ * Diff vs upstream (1 line), recorded in HUONG_PHAT_TRIEN.md:
++ *   18/10/2026 — xz copy loop read past hidden_states (ASan heap-buffer-overflow
++ *   at upstream line 94): bound is now `di < d` (d_model). Rows >= d_model of xz
++ *   were never consumed by the following projection, so results are unchanged
++ *   (bit-exact, 2947 UCI HAR test samples + 201-sample A/B batch).
++ * Never edit the upstream file.
+  */
+ #pragma once
+ #include "matrix.h"
+@@ -87,7 +96,7 @@
+     {
+         for (int li = 0; li < l; li++)
+         {
+-            for (int di = 0; di < self->d_inner; di++)
++            for (int di = 0; di < d; di++) /* vendor: was self->d_inner (OOB read) */
+             {
+                 int in_idx = bi * l * d + li * d + di;
+                 int out_idx = di * (b * l) + (bi * l + li);

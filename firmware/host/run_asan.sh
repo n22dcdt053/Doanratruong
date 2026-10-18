@@ -5,7 +5,7 @@
 set -u
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
-INC="-I$ROOT/firmware/common -I$ROOT/MambaLite-Micro/examples/mambahar-arduino-6/include"
+INC="-I$ROOT/firmware/common -I$ROOT/MambaLite-Micro/csrc -I$ROOT/MambaLite-Micro/examples/mambahar-arduino-6/include"
 
 gcc -O1 -g -fsanitize=address,undefined -o /tmp/asan_hard "$HERE/host_main.c" $INC -lm
 echo "=== ASan run 1: default (first error stops the run) ==="

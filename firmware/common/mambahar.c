@@ -19,7 +19,9 @@
 
 /**
  * Same computation as upstream mambahar_forward(), plus the six pre-softmax
- * logits (MT2). logits may be NULL. Return: argmax 0..C-1, or -1 on failure.
+ * logits (MT2). logits may be NULL.
+ * Return: argmax 0..C-1; -1 = allocation/kernel failure; -2 = non-finite
+ * logits (invalid output — must NOT be counted as class 0).
  */
 int mambahar_forward_logits(float *input, float *logits)
 {
@@ -27,6 +29,7 @@ int mambahar_forward_logits(float *input, float *logits)
     Matrix *pooled = NULL, *y = NULL;
     Mamba_Variables *model = NULL;
     int pred = -1;
+    int max_idx = 0;
 
     mamba_input = tensor_zeros(B, T, H);
     if (!mamba_input)
@@ -104,14 +107,18 @@ int mambahar_forward_logits(float *input, float *logits)
             y->data[b_idx * C + c] = sum;
         }
     }
-    if (logits)
+    for (int c = 0; c < C; c++)
     {
-        for (int c = 0; c < C; c++)
+        if (logits)
         {
             logits[c] = y->data[c];
         }
+        if (!isfinite(y->data[c]))
+        {
+            pred = -2; /* non-finite logits: report invalid, never a class */
+            goto cleanup;
+        }
     }
-    int max_idx = 0;
     for (int b = 0; b < B; b++)
     {
         max_idx = 0;
