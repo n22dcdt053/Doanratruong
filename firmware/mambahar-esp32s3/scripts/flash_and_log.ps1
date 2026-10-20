@@ -73,19 +73,44 @@ $sp.RtsEnable = $false
 $sp.Open()
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 $sb = New-Object System.Text.StringBuilder
+$readErrors = 0
 while ($sw.Elapsed.TotalSeconds -lt $DurationSec) {
-    $chunk = $sp.ReadExisting()
-    if ($chunk) { [void]$sb.Append($chunk); Write-Host -NoNewline $chunk }
+    if (-not $sp.IsOpen) {
+        # USB-serial hiccup: reopen (keep DTR/RTS low so the board is not reset).
+        try {
+            $sp.DtrEnable = $false
+            $sp.RtsEnable = $false
+            $sp.Open()
+            Write-Host ""
+            Write-Host "== serial port reopened =="
+        } catch {
+            Start-Sleep -Milliseconds 500
+            continue
+        }
+    }
+    try {
+        $chunk = $sp.ReadExisting()
+        if ($chunk) { [void]$sb.Append($chunk); Write-Host -NoNewline $chunk }
+    } catch {
+        $readErrors++
+        Write-Host ""
+        Write-Host ("WARNING: serial read error #" + $readErrors + ": " + $_.Exception.Message)
+        try { $sp.Close() } catch { }
+        if ($readErrors -ge 5) { break }
+        Start-Sleep -Seconds 1
+    }
     Start-Sleep -Milliseconds 50
 }
-$sp.Close()
+try { $sp.Close() } catch { }
 $sb.ToString() | Out-File -FilePath $logFile -Encoding utf8
 Write-Host ""
 Write-Host "== saved: $logFile =="
 
-$preds = [regex]::Matches($sb.ToString(), "Prediction:\s*(-?\d+)")
+$preds = [regex]::Matches($sb.ToString(), "(?:Prediction:\s*|pred=)(-?\d+)")
 if ($preds.Count -eq 0) {
-    Write-Host "WARNING: no 'Prediction:' line captured. Check port, baud rate, and that the board booted."
+    Write-Host "WARNING: no prediction line captured. Check port, baud rate, and that the board booted."
 } else {
-    foreach ($m in $preds) { Write-Host ("Prediction seen: " + $m.Groups[1].Value) }
+    $vals = $preds | ForEach-Object { $_.Groups[1].Value }
+    $summary = ($vals | Group-Object | Sort-Object Name | ForEach-Object { "$($_.Name):$($_.Count)" }) -join " "
+    Write-Host ("Predictions seen: " + $preds.Count + " -> " + $summary)
 }

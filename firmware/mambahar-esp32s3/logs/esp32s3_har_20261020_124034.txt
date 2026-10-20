@@ -1,0 +1,1257 @@
+﻿starting in 0 seconds...
+Stability test: 1000 runs, 20 rotating UCI samples, single boot
+Free heap at start: 389756 bytes
+run 0: pred=4 t=123434 us heap=389756 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 1: pred=4 t=123230 us heap=389540 bytes
+run 2: pred=4 t=123236 us heap=389540 bytes
+run 3: pred=4 t=123193 us heap=389540 bytes
+run 4: pred=4 t=123190 us heap=389540 bytes
+run 5: pred=4 t=123198 us heap=389540 bytes
+run 6: pred=4 t=123189 us heap=389540 bytes
+run 7: pred=4 t=123180 us heap=389540 bytes
+run 8: pred=4 t=123186 us heap=389540 bytes
+run 9: pred=4 t=123180 us heap=389540 bytes
+run 10: pred=4 t=123187 us heap=389540 bytes
+run 11: pred=4 t=123189 us heap=389540 bytes
+run 12: pred=4 t=123188 us heap=389540 bytes
+run 13: pred=4 t=123183 us heap=389540 bytes
+run 14: pred=4 t=123200 us heap=389540 bytes
+run 15: pred=4 t=123182 us heap=389540 bytes
+run 16: pred=4 t=123172 us heap=389540 bytes
+run 17: pred=4 t=123186 us heap=389540 bytes
+run 18: pred=4 t=123179 us heap=389540 bytes
+run 19: pred=4 t=123186 us heap=389540 bytes
+run 20: pred=4 t=123169 us heap=389540 bytes
+run 21: pred=4 t=123192 us heap=389540 bytes
+run 22: pred=4 t=123189 us heap=389540 bytes
+run 23: pred=4 t=123196 us heap=389540 bytes
+run 24: pred=4 t=123189 us heap=389540 bytes
+run 25: pred=4 t=123189 us heap=389540 bytes
+run 26: pred=4 t=123199 us heap=389540 bytes
+run 27: pred=4 t=123181 us heap=389540 bytes
+run 28: pred=4 t=123177 us heap=389540 bytes
+run 29: pred=4 t=123188 us heap=389540 bytes
+run 30: pred=4 t=123188 us heap=389540 bytes
+run 31: pred=4 t=123180 us heap=389540 bytes
+run 32: pred=4 t=123195 us heap=389540 bytes
+run 33: pred=4 t=123185 us heap=389540 bytes
+run 34: pred=4 t=123191 us heap=389540 bytes
+run 35: pred=4 t=123190 us heap=389540 bytes
+run 36: pred=4 t=123174 us heap=389540 bytes
+run 37: pred=4 t=123179 us heap=389540 bytes
+run 38: pred=4 t=123187 us heap=389540 bytes
+run 39: pred=4 t=123187 us heap=389540 bytes
+[0;31mE (9329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (9329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (9329) task_wdt: Tasks currently running:[0m
+[0;31mE (9329) task_wdt: CPU 0: main[0m
+[0;31mE (9329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (9329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x420019B6:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 40: pred=4 t=161887 us heap=389540 bytes
+run 41: pred=4 t=123254 us heap=389540 bytes
+run 42: pred=4 t=123185 us heap=389540 bytes
+run 43: pred=4 t=123193 us heap=389540 bytes
+run 44: pred=4 t=123195 us heap=389540 bytes
+run 45: pred=4 t=123192 us heap=389540 bytes
+run 46: pred=4 t=123184 us heap=389540 bytes
+run 47: pred=4 t=123197 us heap=389540 bytes
+run 48: pred=4 t=123172 us heap=389540 bytes
+run 49: pred=4 t=123186 us heap=389540 bytes
+run 50: pred=4 t=123192 us heap=389540 bytes
+run 51: pred=4 t=123185 us heap=389540 bytes
+run 52: pred=4 t=123182 us heap=389540 bytes
+run 53: pred=4 t=123197 us heap=389540 bytes
+run 54: pred=4 t=123185 us heap=389540 bytes
+run 55: pred=4 t=123185 us heap=389540 bytes
+run 56: pred=4 t=123178 us heap=389540 bytes
+run 57: pred=4 t=123183 us heap=389540 bytes
+run 58: pred=4 t=123174 us heap=389540 bytes
+run 59: pred=4 t=123200 us heap=389540 bytes
+run 60: pred=4 t=123157 us heap=389540 bytes
+run 61: pred=4 t=123195 us heap=389540 bytes
+run 62: pred=4 t=123192 us heap=389540 bytes
+run 63: pred=4 t=123192 us heap=389540 bytes
+run 64: pred=4 t=123186 us heap=389540 bytes
+run 65: pred=4 t=123202 us heap=389540 bytes
+run 66: pred=4 t=123187 us heap=389540 bytes
+run 67: pred=4 t=123187 us heap=389540 bytes
+run 68: pred=4 t=123179 us heap=389540 bytes
+run 69: pred=4 t=123185 us heap=389540 bytes
+run 70: pred=4 t=123184 us heap=389540 bytes
+run 71: pred=4 t=123184 us heap=389540 bytes
+run 72: pred=4 t=123183 us heap=389540 bytes
+run 73: pred=4 t=123197 us heap=389540 bytes
+run 74: pred=4 t=123184 us heap=389540 bytes
+run 75: pred=4 t=123186 us heap=389540 bytes
+run 76: pred=4 t=123179 us heap=389540 bytes
+run 77: pred=4 t=123182 us heap=389540 bytes
+run 78: pred=4 t=123174 us heap=389540 bytes
+run 79: pred=4 t=123201 us heap=389540 bytes
+[0;31mE (14329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (14329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (14329) task_wdt: Tasks currently running:[0m
+[0;31mE (14329) task_wdt: CPU 0: main[0m
+[0;31mE (14329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (14329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x420135B4:0x3FC97F00 0x42001AED:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 80: pred=4 t=164279 us heap=389540 bytes
+run 81: pred=4 t=123206 us heap=389540 bytes
+run 82: pred=4 t=123194 us heap=389540 bytes
+run 83: pred=4 t=123193 us heap=389540 bytes
+run 84: pred=4 t=123186 us heap=389540 bytes
+run 85: pred=4 t=123202 us heap=389540 bytes
+run 86: pred=4 t=123186 us heap=389540 bytes
+run 87: pred=4 t=123184 us heap=389540 bytes
+run 88: pred=4 t=123181 us heap=389540 bytes
+run 89: pred=4 t=123184 us heap=389540 bytes
+run 90: pred=4 t=123182 us heap=389540 bytes
+run 91: pred=4 t=123193 us heap=389540 bytes
+run 92: pred=4 t=123183 us heap=389540 bytes
+run 93: pred=4 t=123189 us heap=389540 bytes
+run 94: pred=4 t=123194 us heap=389540 bytes
+run 95: pred=4 t=123185 us heap=389540 bytes
+run 96: pred=4 t=123168 us heap=389540 bytes
+run 97: pred=4 t=123191 us heap=389540 bytes
+run 98: pred=4 t=123174 us heap=389540 bytes
+run 99: pred=4 t=123192 us heap=389540 bytes
+run 100: pred=4 t=123165 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 101: pred=4 t=123235 us heap=389540 bytes
+run 102: pred=4 t=123208 us heap=389540 bytes
+run 103: pred=4 t=123192 us heap=389540 bytes
+run 104: pred=4 t=123185 us heap=389540 bytes
+run 105: pred=4 t=123194 us heap=389540 bytes
+run 106: pred=4 t=123185 us heap=389540 bytes
+run 107: pred=4 t=123188 us heap=389540 bytes
+run 108: pred=4 t=123179 us heap=389540 bytes
+run 109: pred=4 t=123184 us heap=389540 bytes
+run 110: pred=4 t=123183 us heap=389540 bytes
+run 111: pred=4 t=123194 us heap=389540 bytes
+run 112: pred=4 t=123182 us heap=389540 bytes
+run 113: pred=4 t=123189 us heap=389540 bytes
+run 114: pred=4 t=123195 us heap=389540 bytes
+run 115: pred=4 t=123185 us heap=389540 bytes
+run 116: pred=4 t=123169 us heap=389540 bytes
+run 117: pred=4 t=123192 us heap=389540 bytes
+run 118: pred=4 t=123174 us heap=389540 bytes
+run 119: pred=4 t=123190 us heap=389540 bytes
+[0;31mE (19329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (19329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (19329) task_wdt: Tasks currently running:[0m
+[0;31mE (19329) task_wdt: CPU 0: main[0m
+[0;31mE (19329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (19329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001CAC:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 120: pred=4 t=162436 us heap=389540 bytes
+run 121: pred=4 t=123253 us heap=389540 bytes
+run 122: pred=4 t=123186 us heap=389540 bytes
+run 123: pred=4 t=123202 us heap=389540 bytes
+run 124: pred=4 t=123186 us heap=389540 bytes
+run 125: pred=4 t=123194 us heap=389540 bytes
+run 126: pred=4 t=123193 us heap=389540 bytes
+run 127: pred=4 t=123186 us heap=389540 bytes
+run 128: pred=4 t=123172 us heap=389540 bytes
+run 129: pred=4 t=123193 us heap=389540 bytes
+run 130: pred=4 t=123181 us heap=389540 bytes
+run 131: pred=4 t=123185 us heap=389540 bytes
+run 132: pred=4 t=123191 us heap=389540 bytes
+run 133: pred=4 t=123188 us heap=389540 bytes
+run 134: pred=4 t=123185 us heap=389540 bytes
+run 135: pred=4 t=123194 us heap=389540 bytes
+run 136: pred=4 t=123168 us heap=389540 bytes
+run 137: pred=4 t=123182 us heap=389540 bytes
+run 138: pred=4 t=123183 us heap=389540 bytes
+run 139: pred=4 t=123191 us heap=389540 bytes
+run 140: pred=4 t=123156 us heap=389540 bytes
+run 141: pred=4 t=123204 us heap=389540 bytes
+run 142: pred=4 t=123185 us heap=389540 bytes
+run 143: pred=4 t=123192 us heap=389540 bytes
+run 144: pred=4 t=123193 us heap=389540 bytes
+run 145: pred=4 t=123193 us heap=389540 bytes
+run 146: pred=4 t=123185 us heap=389540 bytes
+run 147: pred=4 t=123196 us heap=389540 bytes
+run 148: pred=4 t=123172 us heap=389540 bytes
+run 149: pred=4 t=123183 us heap=389540 bytes
+run 150: pred=4 t=123191 us heap=389540 bytes
+run 151: pred=4 t=123185 us heap=389540 bytes
+run 152: pred=4 t=123180 us heap=389540 bytes
+run 153: pred=4 t=123198 us heap=389540 bytes
+run 154: pred=4 t=123185 us heap=389540 bytes
+run 155: pred=4 t=123186 us heap=389540 bytes
+run 156: pred=4 t=123179 us heap=389540 bytes
+run 157: pred=4 t=123183 us heap=389540 bytes
+run 158: pred=4 t=123173 us heap=389540 bytes
+run 159: pred=4 t=123200 us heap=389540 bytes
+run 160: pred=4 t=123156 us heap=389540 bytes
+[0;31mE (24329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (24329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (24329) task_wdt: Tasks currently running:[0m
+[0;31mE (24329) task_wdt: CPU 0: main[0m
+[0;31mE (24329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (24329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001481:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 161: pred=4 t=162412 us heap=389540 bytes
+run 162: pred=4 t=123208 us heap=389540 bytes
+run 163: pred=4 t=123192 us heap=389540 bytes
+run 164: pred=4 t=123191 us heap=389540 bytes
+run 165: pred=4 t=123202 us heap=389540 bytes
+run 166: pred=4 t=123189 us heap=389540 bytes
+run 167: pred=4 t=123187 us heap=389540 bytes
+run 168: pred=4 t=123184 us heap=389540 bytes
+run 169: pred=4 t=123184 us heap=389540 bytes
+run 170: pred=4 t=123186 us heap=389540 bytes
+run 171: pred=4 t=123195 us heap=389540 bytes
+run 172: pred=4 t=123188 us heap=389540 bytes
+run 173: pred=4 t=123188 us heap=389540 bytes
+run 174: pred=4 t=123200 us heap=389540 bytes
+run 175: pred=4 t=123186 us heap=389540 bytes
+run 176: pred=4 t=123173 us heap=389540 bytes
+run 177: pred=4 t=123191 us heap=389540 bytes
+run 178: pred=4 t=123178 us heap=389540 bytes
+run 179: pred=4 t=123191 us heap=389540 bytes
+run 180: pred=4 t=123169 us heap=389540 bytes
+run 181: pred=4 t=123197 us heap=389540 bytes
+run 182: pred=4 t=123190 us heap=389540 bytes
+run 183: pred=4 t=123201 us heap=389540 bytes
+run 184: pred=4 t=123192 us heap=389540 bytes
+run 185: pred=4 t=123193 us heap=389540 bytes
+run 186: pred=4 t=123198 us heap=389540 bytes
+run 187: pred=4 t=123187 us heap=389540 bytes
+run 188: pred=4 t=123176 us heap=389540 bytes
+run 189: pred=4 t=123193 us heap=389540 bytes
+run 190: pred=4 t=123187 us heap=389540 bytes
+run 191: pred=4 t=123185 us heap=389540 bytes
+run 192: pred=4 t=123195 us heap=389540 bytes
+run 193: pred=4 t=123189 us heap=389540 bytes
+run 194: pred=4 t=123189 us heap=389540 bytes
+run 195: pred=4 t=123194 us heap=389540 bytes
+run 196: pred=4 t=123174 us heap=389540 bytes
+run 197: pred=4 t=123183 us heap=389540 bytes
+run 198: pred=4 t=123187 us heap=389540 bytes
+run 199: pred=4 t=123191 us heap=389540 bytes
+run 200: pred=4 t=123161 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+[0;31mE (29329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (29329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (29329) task_wdt: Tasks currently running:[0m
+[0;31mE (29329) task_wdt: CPU 0: main[0m
+[0;31mE (29329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (29329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x4200146A:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 201: pred=4 t=162478 us heap=389540 bytes
+run 202: pred=4 t=123225 us heap=389540 bytes
+run 203: pred=4 t=123193 us heap=389540 bytes
+run 204: pred=4 t=123191 us heap=389540 bytes
+run 205: pred=4 t=123193 us heap=389540 bytes
+run 206: pred=4 t=123199 us heap=389540 bytes
+run 207: pred=4 t=123186 us heap=389540 bytes
+run 208: pred=4 t=123177 us heap=389540 bytes
+run 209: pred=4 t=123192 us heap=389540 bytes
+run 210: pred=4 t=123185 us heap=389540 bytes
+run 211: pred=4 t=123185 us heap=389540 bytes
+run 212: pred=4 t=123196 us heap=389540 bytes
+run 213: pred=4 t=123188 us heap=389540 bytes
+run 214: pred=4 t=123191 us heap=389540 bytes
+run 215: pred=4 t=123195 us heap=389540 bytes
+run 216: pred=4 t=123174 us heap=389540 bytes
+run 217: pred=4 t=123184 us heap=389540 bytes
+run 218: pred=4 t=123187 us heap=389540 bytes
+run 219: pred=4 t=123191 us heap=389540 bytes
+run 220: pred=4 t=123162 us heap=389540 bytes
+run 221: pred=4 t=123205 us heap=389540 bytes
+run 222: pred=4 t=123190 us heap=389540 bytes
+run 223: pred=4 t=123192 us heap=389540 bytes
+run 224: pred=4 t=123200 us heap=389540 bytes
+run 225: pred=4 t=123193 us heap=389540 bytes
+run 226: pred=4 t=123190 us heap=389540 bytes
+run 227: pred=4 t=123197 us heap=389540 bytes
+run 228: pred=4 t=123175 us heap=389540 bytes
+run 229: pred=4 t=123185 us heap=389540 bytes
+run 230: pred=4 t=123197 us heap=389540 bytes
+run 231: pred=4 t=123183 us heap=389540 bytes
+run 232: pred=4 t=123187 us heap=389540 bytes
+run 233: pred=4 t=123197 us heap=389540 bytes
+run 234: pred=4 t=123191 us heap=389540 bytes
+run 235: pred=4 t=123187 us heap=389540 bytes
+run 236: pred=4 t=123182 us heap=389540 bytes
+run 237: pred=4 t=123183 us heap=389540 bytes
+run 238: pred=4 t=123179 us heap=389540 bytes
+run 239: pred=4 t=123200 us heap=389540 bytes
+run 240: pred=4 t=123162 us heap=389540 bytes
+[0;31mE (34329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (34329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (34329) task_wdt: Tasks currently running:[0m
+[0;31mE (34329) task_wdt: CPU 0: main[0m
+[0;31mE (34329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (34329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x4005616F:0x3FC97EC0 0x420137BD:0x3FC97ED0 0x4201359B:0x3FC97F00 0x42001A41:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 241: pred=4 t=168162 us heap=389540 bytes
+run 242: pred=4 t=123208 us heap=389540 bytes
+run 243: pred=4 t=123200 us heap=389540 bytes
+run 244: pred=4 t=123190 us heap=389540 bytes
+run 245: pred=4 t=123193 us heap=389540 bytes
+run 246: pred=4 t=123198 us heap=389540 bytes
+run 247: pred=4 t=123187 us heap=389540 bytes
+run 248: pred=4 t=123176 us heap=389540 bytes
+run 249: pred=4 t=123193 us heap=389540 bytes
+run 250: pred=4 t=123185 us heap=389540 bytes
+run 251: pred=4 t=123185 us heap=389540 bytes
+run 252: pred=4 t=123196 us heap=389540 bytes
+run 253: pred=4 t=123188 us heap=389540 bytes
+run 254: pred=4 t=123192 us heap=389540 bytes
+run 255: pred=4 t=123195 us heap=389540 bytes
+run 256: pred=4 t=123175 us heap=389540 bytes
+run 257: pred=4 t=123183 us heap=389540 bytes
+run 258: pred=4 t=123187 us heap=389540 bytes
+run 259: pred=4 t=123191 us heap=389540 bytes
+run 260: pred=4 t=123162 us heap=389540 bytes
+run 261: pred=4 t=123207 us heap=389540 bytes
+run 262: pred=4 t=123188 us heap=389540 bytes
+run 263: pred=4 t=123193 us heap=389540 bytes
+run 264: pred=4 t=123200 us heap=389540 bytes
+run 265: pred=4 t=123193 us heap=389540 bytes
+run 266: pred=4 t=123190 us heap=389540 bytes
+run 267: pred=4 t=123195 us heap=389540 bytes
+run 268: pred=4 t=123176 us heap=389540 bytes
+run 269: pred=4 t=123184 us heap=389540 bytes
+run 270: pred=4 t=123196 us heap=389540 bytes
+run 271: pred=4 t=123185 us heap=389540 bytes
+run 272: pred=4 t=123187 us heap=389540 bytes
+run 273: pred=4 t=123198 us heap=389540 bytes
+run 274: pred=4 t=123191 us heap=389540 bytes
+run 275: pred=4 t=123186 us heap=389540 bytes
+run 276: pred=4 t=123182 us heap=389540 bytes
+run 277: pred=4 t=123183 us heap=389540 bytes
+run 278: pred=4 t=123177 us heap=389540 bytes
+run 279: pred=4 t=123198 us heap=389540 bytes
+run 280: pred=4 t=123162 us heap=389540 bytes
+[0;31mE (39329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (39329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (39329) task_wdt: Tasks currently running:[0m
+[0;31mE (39329) task_wdt: CPU 0: main[0m
+[0;31mE (39329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (39329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001B2F:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 281: pred=4 t=162414 us heap=389540 bytes
+run 282: pred=4 t=123206 us heap=389540 bytes
+run 283: pred=4 t=123191 us heap=389540 bytes
+run 284: pred=4 t=123191 us heap=389540 bytes
+run 285: pred=4 t=123202 us heap=389540 bytes
+run 286: pred=4 t=123191 us heap=389540 bytes
+run 287: pred=4 t=123187 us heap=389540 bytes
+run 288: pred=4 t=123184 us heap=389540 bytes
+run 289: pred=4 t=123183 us heap=389540 bytes
+run 290: pred=4 t=123186 us heap=389540 bytes
+run 291: pred=4 t=123193 us heap=389540 bytes
+run 292: pred=4 t=123187 us heap=389540 bytes
+run 293: pred=4 t=123188 us heap=389540 bytes
+run 294: pred=4 t=123199 us heap=389540 bytes
+run 295: pred=4 t=123186 us heap=389540 bytes
+run 296: pred=4 t=123174 us heap=389540 bytes
+run 297: pred=4 t=123192 us heap=389540 bytes
+run 298: pred=4 t=123179 us heap=389540 bytes
+run 299: pred=4 t=123191 us heap=389540 bytes
+run 300: pred=4 t=123169 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 301: pred=4 t=123238 us heap=389540 bytes
+run 302: pred=4 t=123224 us heap=389540 bytes
+run 303: pred=4 t=123191 us heap=389540 bytes
+run 304: pred=4 t=123190 us heap=389540 bytes
+run 305: pred=4 t=123203 us heap=389540 bytes
+run 306: pred=4 t=123190 us heap=389540 bytes
+run 307: pred=4 t=123186 us heap=389540 bytes
+run 308: pred=4 t=123186 us heap=389540 bytes
+run 309: pred=4 t=123185 us heap=389540 bytes
+run 310: pred=4 t=123186 us heap=389540 bytes
+run 311: pred=4 t=123194 us heap=389540 bytes
+run 312: pred=4 t=123186 us heap=389540 bytes
+run 313: pred=4 t=123188 us heap=389540 bytes
+run 314: pred=4 t=123200 us heap=389540 bytes
+run 315: pred=4 t=123184 us heap=389540 bytes
+run 316: pred=4 t=123174 us heap=389540 bytes
+run 317: pred=4 t=123192 us heap=389540 bytes
+run 318: pred=4 t=123178 us heap=389540 bytes
+run 319: pred=4 t=123193 us heap=389540 bytes
+run 320: pred=4 t=123170 us heap=389540 bytes
+[0;31mE (44329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (44329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (44329) task_wdt: Tasks currently running:[0m
+[0;31mE (44329) task_wdt: CPU 0: main[0m
+[0;31mE (44329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (44329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001BA9:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 321: pred=4 t=162438 us heap=389540 bytes
+run 322: pred=4 t=123235 us heap=389540 bytes
+run 323: pred=4 t=123201 us heap=389540 bytes
+run 324: pred=4 t=123189 us heap=389540 bytes
+run 325: pred=4 t=123193 us heap=389540 bytes
+run 326: pred=4 t=123198 us heap=389540 bytes
+run 327: pred=4 t=123187 us heap=389540 bytes
+run 328: pred=4 t=123176 us heap=389540 bytes
+run 329: pred=4 t=123195 us heap=389540 bytes
+run 330: pred=4 t=123187 us heap=389540 bytes
+run 331: pred=4 t=123186 us heap=389540 bytes
+run 332: pred=4 t=123196 us heap=389540 bytes
+run 333: pred=4 t=123186 us heap=389540 bytes
+run 334: pred=4 t=123192 us heap=389540 bytes
+run 335: pred=4 t=123193 us heap=389540 bytes
+run 336: pred=4 t=123172 us heap=389540 bytes
+run 337: pred=4 t=123182 us heap=389540 bytes
+run 338: pred=4 t=123187 us heap=389540 bytes
+run 339: pred=4 t=123191 us heap=389540 bytes
+run 340: pred=4 t=123162 us heap=389540 bytes
+run 341: pred=4 t=123205 us heap=389540 bytes
+run 342: pred=4 t=123190 us heap=389540 bytes
+run 343: pred=4 t=123193 us heap=389540 bytes
+run 344: pred=4 t=123198 us heap=389540 bytes
+run 345: pred=4 t=123194 us heap=389540 bytes
+run 346: pred=4 t=123191 us heap=389540 bytes
+run 347: pred=4 t=123195 us heap=389540 bytes
+run 348: pred=4 t=123178 us heap=389540 bytes
+run 349: pred=4 t=123185 us heap=389540 bytes
+run 350: pred=4 t=123195 us heap=389540 bytes
+run 351: pred=4 t=123186 us heap=389540 bytes
+run 352: pred=4 t=123186 us heap=389540 bytes
+run 353: pred=4 t=123196 us heap=389540 bytes
+run 354: pred=4 t=123191 us heap=389540 bytes
+run 355: pred=4 t=123186 us heap=389540 bytes
+run 356: pred=4 t=123183 us heap=389540 bytes
+run 357: pred=4 t=123183 us heap=389540 bytes
+run 358: pred=4 t=123179 us heap=389540 bytes
+run 359: pred=4 t=123201 us heap=389540 bytes
+run 360: pred=4 t=123162 us heap=389540 bytes
+run 361: pred=4 t=123196 us heap=389540 bytes
+[0;31mE (49329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (49329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (49329) task_wdt: Tasks currently running:[0m
+[0;31mE (49329) task_wdt: CPU 0: main[0m
+[0;31mE (49329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (49329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001DBB:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 362: pred=4 t=160500 us heap=389540 bytes
+run 363: pred=4 t=123196 us heap=389540 bytes
+run 364: pred=4 t=123192 us heap=389540 bytes
+run 365: pred=4 t=123203 us heap=389540 bytes
+run 366: pred=4 t=123190 us heap=389540 bytes
+run 367: pred=4 t=123188 us heap=389540 bytes
+run 368: pred=4 t=123186 us heap=389540 bytes
+run 369: pred=4 t=123184 us heap=389540 bytes
+run 370: pred=4 t=123187 us heap=389540 bytes
+run 371: pred=4 t=123194 us heap=389540 bytes
+run 372: pred=4 t=123185 us heap=389540 bytes
+run 373: pred=4 t=123190 us heap=389540 bytes
+run 374: pred=4 t=123199 us heap=389540 bytes
+run 375: pred=4 t=123184 us heap=389540 bytes
+run 376: pred=4 t=123173 us heap=389540 bytes
+run 377: pred=4 t=123191 us heap=389540 bytes
+run 378: pred=4 t=123178 us heap=389540 bytes
+run 379: pred=4 t=123191 us heap=389540 bytes
+run 380: pred=4 t=123168 us heap=389540 bytes
+run 381: pred=4 t=123196 us heap=389540 bytes
+run 382: pred=4 t=123189 us heap=389540 bytes
+run 383: pred=4 t=123200 us heap=389540 bytes
+run 384: pred=4 t=123189 us heap=389540 bytes
+run 385: pred=4 t=123194 us heap=389540 bytes
+run 386: pred=4 t=123197 us heap=389540 bytes
+run 387: pred=4 t=123187 us heap=389540 bytes
+run 388: pred=4 t=123176 us heap=389540 bytes
+run 389: pred=4 t=123193 us heap=389540 bytes
+run 390: pred=4 t=123185 us heap=389540 bytes
+run 391: pred=4 t=123186 us heap=389540 bytes
+run 392: pred=4 t=123195 us heap=389540 bytes
+run 393: pred=4 t=123188 us heap=389540 bytes
+run 394: pred=4 t=123190 us heap=389540 bytes
+run 395: pred=4 t=123194 us heap=389540 bytes
+run 396: pred=4 t=123174 us heap=389540 bytes
+run 397: pred=4 t=123183 us heap=389540 bytes
+run 398: pred=4 t=123188 us heap=389540 bytes
+run 399: pred=4 t=123192 us heap=389540 bytes
+run 400: pred=4 t=123161 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 401: pred=4 t=123246 us heap=389540 bytes
+[0;31mE (54329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (54329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (54329) task_wdt: Tasks currently running:[0m
+[0;31mE (54329) task_wdt: CPU 0: main[0m
+[0;31mE (54329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (54329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x4200147E:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 402: pred=4 t=162479 us heap=389540 bytes
+run 403: pred=4 t=123215 us heap=389540 bytes
+run 404: pred=4 t=123199 us heap=389540 bytes
+run 405: pred=4 t=123194 us heap=389540 bytes
+run 406: pred=4 t=123190 us heap=389540 bytes
+run 407: pred=4 t=123195 us heap=389540 bytes
+run 408: pred=4 t=123175 us heap=389540 bytes
+run 409: pred=4 t=123186 us heap=389540 bytes
+run 410: pred=4 t=123195 us heap=389540 bytes
+run 411: pred=4 t=123186 us heap=389540 bytes
+run 412: pred=4 t=123188 us heap=389540 bytes
+run 413: pred=4 t=123197 us heap=389540 bytes
+run 414: pred=4 t=123191 us heap=389540 bytes
+run 415: pred=4 t=123186 us heap=389540 bytes
+run 416: pred=4 t=123183 us heap=389540 bytes
+run 417: pred=4 t=123184 us heap=389540 bytes
+run 418: pred=4 t=123177 us heap=389540 bytes
+run 419: pred=4 t=123200 us heap=389540 bytes
+run 420: pred=4 t=123162 us heap=389540 bytes
+run 421: pred=4 t=123197 us heap=389540 bytes
+run 422: pred=4 t=123196 us heap=389540 bytes
+run 423: pred=4 t=123193 us heap=389540 bytes
+run 424: pred=4 t=123190 us heap=389540 bytes
+run 425: pred=4 t=123193 us heap=389540 bytes
+run 426: pred=4 t=123191 us heap=389540 bytes
+run 427: pred=4 t=123195 us heap=389540 bytes
+run 428: pred=4 t=123177 us heap=389540 bytes
+run 429: pred=4 t=123185 us heap=389540 bytes
+run 430: pred=4 t=123196 us heap=389540 bytes
+run 431: pred=4 t=123183 us heap=389540 bytes
+run 432: pred=4 t=123187 us heap=389540 bytes
+run 433: pred=4 t=123197 us heap=389540 bytes
+run 434: pred=4 t=123190 us heap=389540 bytes
+run 435: pred=4 t=123186 us heap=389540 bytes
+run 436: pred=4 t=123181 us heap=389540 bytes
+run 437: pred=4 t=123183 us heap=389540 bytes
+run 438: pred=4 t=123179 us heap=389540 bytes
+run 439: pred=4 t=123200 us heap=389540 bytes
+run 440: pred=4 t=123159 us heap=389540 bytes
+run 441: pred=4 t=123196 us heap=389540 bytes
+[0;31mE (59329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (59329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (59329) task_wdt: Tasks currently running:[0m
+[0;31mE (59329) task_wdt: CPU 0: main[0m
+[0;31mE (59329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (59329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x420135A8:0x3FC97ED0 0x4200135E:0x3FC97F00 0x420019C9:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 442: pred=4 t=166235 us heap=389540 bytes
+run 443: pred=4 t=123199 us heap=389540 bytes
+run 444: pred=4 t=123200 us heap=389540 bytes
+run 445: pred=4 t=123192 us heap=389540 bytes
+run 446: pred=4 t=123190 us heap=389540 bytes
+run 447: pred=4 t=123195 us heap=389540 bytes
+run 448: pred=4 t=123176 us heap=389540 bytes
+run 449: pred=4 t=123184 us heap=389540 bytes
+run 450: pred=4 t=123197 us heap=389540 bytes
+run 451: pred=4 t=123185 us heap=389540 bytes
+run 452: pred=4 t=123187 us heap=389540 bytes
+run 453: pred=4 t=123197 us heap=389540 bytes
+run 454: pred=4 t=123190 us heap=389540 bytes
+run 455: pred=4 t=123186 us heap=389540 bytes
+run 456: pred=4 t=123181 us heap=389540 bytes
+run 457: pred=4 t=123183 us heap=389540 bytes
+run 458: pred=4 t=123177 us heap=389540 bytes
+run 459: pred=4 t=123201 us heap=389540 bytes
+run 460: pred=4 t=123162 us heap=389540 bytes
+run 461: pred=4 t=123195 us heap=389540 bytes
+run 462: pred=4 t=123198 us heap=389540 bytes
+run 463: pred=4 t=123193 us heap=389540 bytes
+run 464: pred=4 t=123191 us heap=389540 bytes
+run 465: pred=4 t=123201 us heap=389540 bytes
+run 466: pred=4 t=123191 us heap=389540 bytes
+run 467: pred=4 t=123186 us heap=389540 bytes
+run 468: pred=4 t=123184 us heap=389540 bytes
+run 469: pred=4 t=123185 us heap=389540 bytes
+run 470: pred=4 t=123187 us heap=389540 bytes
+run 471: pred=4 t=123193 us heap=389540 bytes
+run 472: pred=4 t=123187 us heap=389540 bytes
+run 473: pred=4 t=123188 us heap=389540 bytes
+run 474: pred=4 t=123200 us heap=389540 bytes
+run 475: pred=4 t=123187 us heap=389540 bytes
+run 476: pred=4 t=123173 us heap=389540 bytes
+run 477: pred=4 t=123190 us heap=389540 bytes
+run 478: pred=4 t=123179 us heap=389540 bytes
+run 479: pred=4 t=123191 us heap=389540 bytes
+run 480: pred=4 t=123169 us heap=389540 bytes
+run 481: pred=4 t=123197 us heap=389540 bytes
+[0;31mE (64329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (64329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (64329) task_wdt: Tasks currently running:[0m
+[0;31mE (64329) task_wdt: CPU 0: main[0m
+[0;31mE (64329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (64329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001ACE:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 482: pred=4 t=162408 us heap=389540 bytes
+run 483: pred=4 t=123209 us heap=389540 bytes
+run 484: pred=4 t=123192 us heap=389540 bytes
+run 485: pred=4 t=123193 us heap=389540 bytes
+run 486: pred=4 t=123200 us heap=389540 bytes
+run 487: pred=4 t=123187 us heap=389540 bytes
+run 488: pred=4 t=123175 us heap=389540 bytes
+run 489: pred=4 t=123194 us heap=389540 bytes
+run 490: pred=4 t=123187 us heap=389540 bytes
+run 491: pred=4 t=123183 us heap=389540 bytes
+run 492: pred=4 t=123194 us heap=389540 bytes
+run 493: pred=4 t=123189 us heap=389540 bytes
+run 494: pred=4 t=123190 us heap=389540 bytes
+run 495: pred=4 t=123195 us heap=389540 bytes
+run 496: pred=4 t=123174 us heap=389540 bytes
+run 497: pred=4 t=123183 us heap=389540 bytes
+run 498: pred=4 t=123188 us heap=389540 bytes
+run 499: pred=4 t=123194 us heap=389540 bytes
+run 500: pred=4 t=123160 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 501: pred=4 t=123241 us heap=389540 bytes
+run 502: pred=4 t=123213 us heap=389540 bytes
+run 503: pred=4 t=123201 us heap=389540 bytes
+run 504: pred=4 t=123190 us heap=389540 bytes
+run 505: pred=4 t=123192 us heap=389540 bytes
+run 506: pred=4 t=123200 us heap=389540 bytes
+run 507: pred=4 t=123187 us heap=389540 bytes
+run 508: pred=4 t=123177 us heap=389540 bytes
+run 509: pred=4 t=123194 us heap=389540 bytes
+run 510: pred=4 t=123186 us heap=389540 bytes
+run 511: pred=4 t=123184 us heap=389540 bytes
+run 512: pred=4 t=123196 us heap=389540 bytes
+run 513: pred=4 t=123188 us heap=389540 bytes
+run 514: pred=4 t=123191 us heap=389540 bytes
+run 515: pred=4 t=123196 us heap=389540 bytes
+run 516: pred=4 t=123174 us heap=389540 bytes
+run 517: pred=4 t=123183 us heap=389540 bytes
+run 518: pred=4 t=123187 us heap=389540 bytes
+run 519: pred=4 t=123191 us heap=389540 bytes
+run 520: pred=4 t=123162 us heap=389540 bytes
+run 521: pred=4 t=123206 us heap=389540 bytes
+[0;31mE (69329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (69329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (69329) task_wdt: Tasks currently running:[0m
+[0;31mE (69329) task_wdt: CPU 0: main[0m
+[0;31mE (69329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (69329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x40056148:0x3FC97EC0 0x42001334:0x3FC97ED0 0x42001345:0x3FC97F00 0x42001BD5:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 522: pred=4 t=168159 us heap=389540 bytes
+run 523: pred=4 t=123239 us heap=389540 bytes
+run 524: pred=4 t=123192 us heap=389540 bytes
+run 525: pred=4 t=123204 us heap=389540 bytes
+run 526: pred=4 t=123192 us heap=389540 bytes
+run 527: pred=4 t=123187 us heap=389540 bytes
+run 528: pred=4 t=123188 us heap=389540 bytes
+run 529: pred=4 t=123184 us heap=389540 bytes
+run 530: pred=4 t=123187 us heap=389540 bytes
+run 531: pred=4 t=123193 us heap=389540 bytes
+run 532: pred=4 t=123187 us heap=389540 bytes
+run 533: pred=4 t=123188 us heap=389540 bytes
+run 534: pred=4 t=123200 us heap=389540 bytes
+run 535: pred=4 t=123186 us heap=389540 bytes
+run 536: pred=4 t=123173 us heap=389540 bytes
+run 537: pred=4 t=123191 us heap=389540 bytes
+run 538: pred=4 t=123177 us heap=389540 bytes
+run 539: pred=4 t=123193 us heap=389540 bytes
+run 540: pred=4 t=123171 us heap=389540 bytes
+run 541: pred=4 t=123195 us heap=389540 bytes
+run 542: pred=4 t=123188 us heap=389540 bytes
+run 543: pred=4 t=123202 us heap=389540 bytes
+run 544: pred=4 t=123190 us heap=389540 bytes
+run 545: pred=4 t=123193 us heap=389540 bytes
+run 546: pred=4 t=123199 us heap=389540 bytes
+run 547: pred=4 t=123186 us heap=389540 bytes
+run 548: pred=4 t=123178 us heap=389540 bytes
+run 549: pred=4 t=123196 us heap=389540 bytes
+run 550: pred=4 t=123186 us heap=389540 bytes
+run 551: pred=4 t=123186 us heap=389540 bytes
+run 552: pred=4 t=123195 us heap=389540 bytes
+run 553: pred=4 t=123188 us heap=389540 bytes
+run 554: pred=4 t=123191 us heap=389540 bytes
+run 555: pred=4 t=123194 us heap=389540 bytes
+run 556: pred=4 t=123174 us heap=389540 bytes
+run 557: pred=4 t=123183 us heap=389540 bytes
+run 558: pred=4 t=123188 us heap=389540 bytes
+run 559: pred=4 t=123192 us heap=389540 bytes
+run 560: pred=4 t=123161 us heap=389540 bytes
+run 561: pred=4 t=123204 us heap=389540 bytes
+[0;31mE (74329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (74329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (74329) task_wdt: Tasks currently running:[0m
+[0;31mE (74329) task_wdt: CPU 0: main[0m
+[0;31mE (74329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (74329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001CA9:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 562: pred=4 t=162404 us heap=389540 bytes
+run 563: pred=4 t=123210 us heap=389540 bytes
+run 564: pred=4 t=123191 us heap=389540 bytes
+run 565: pred=4 t=123192 us heap=389540 bytes
+run 566: pred=4 t=123199 us heap=389540 bytes
+run 567: pred=4 t=123187 us heap=389540 bytes
+run 568: pred=4 t=123176 us heap=389540 bytes
+run 569: pred=4 t=123193 us heap=389540 bytes
+run 570: pred=4 t=123185 us heap=389540 bytes
+run 571: pred=4 t=123186 us heap=389540 bytes
+run 572: pred=4 t=123195 us heap=389540 bytes
+run 573: pred=4 t=123189 us heap=389540 bytes
+run 574: pred=4 t=123190 us heap=389540 bytes
+run 575: pred=4 t=123195 us heap=389540 bytes
+run 576: pred=4 t=123172 us heap=389540 bytes
+run 577: pred=4 t=123183 us heap=389540 bytes
+run 578: pred=4 t=123187 us heap=389540 bytes
+run 579: pred=4 t=123192 us heap=389540 bytes
+run 580: pred=4 t=123162 us heap=389540 bytes
+run 581: pred=4 t=123205 us heap=389540 bytes
+run 582: pred=4 t=123190 us heap=389540 bytes
+run 583: pred=4 t=123193 us heap=389540 bytes
+run 584: pred=4 t=123198 us heap=389540 bytes
+run 585: pred=4 t=123194 us heap=389540 bytes
+run 586: pred=4 t=123189 us heap=389540 bytes
+run 587: pred=4 t=123196 us heap=389540 bytes
+run 588: pred=4 t=123176 us heap=389540 bytes
+run 589: pred=4 t=123184 us heap=389540 bytes
+run 590: pred=4 t=123195 us heap=389540 bytes
+run 591: pred=4 t=123186 us heap=389540 bytes
+run 592: pred=4 t=123187 us heap=389540 bytes
+run 593: pred=4 t=123195 us heap=389540 bytes
+run 594: pred=4 t=123192 us heap=389540 bytes
+run 595: pred=4 t=123186 us heap=389540 bytes
+run 596: pred=4 t=123172 us heap=389540 bytes
+run 597: pred=4 t=123183 us heap=389540 bytes
+run 598: pred=4 t=123189 us heap=389540 bytes
+run 599: pred=4 t=123192 us heap=389540 bytes
+run 600: pred=4 t=123163 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 601: pred=4 t=123249 us heap=389540 bytes
+run 602: pred=4 t=123213 us heap=389540 bytes
+[0;31mE (79329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (79329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (79329) task_wdt: Tasks currently running:[0m
+[0;31mE (79329) task_wdt: CPU 0: main[0m
+[0;31mE (79329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (79329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x4200147B:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 603: pred=4 t=162460 us heap=389540 bytes
+run 604: pred=4 t=123224 us heap=389540 bytes
+run 605: pred=4 t=123192 us heap=389540 bytes
+run 606: pred=4 t=123189 us heap=389540 bytes
+run 607: pred=4 t=123195 us heap=389540 bytes
+run 608: pred=4 t=123176 us heap=389540 bytes
+run 609: pred=4 t=123185 us heap=389540 bytes
+run 610: pred=4 t=123196 us heap=389540 bytes
+run 611: pred=4 t=123187 us heap=389540 bytes
+run 612: pred=4 t=123185 us heap=389540 bytes
+run 613: pred=4 t=123198 us heap=389540 bytes
+run 614: pred=4 t=123191 us heap=389540 bytes
+run 615: pred=4 t=123186 us heap=389540 bytes
+run 616: pred=4 t=123182 us heap=389540 bytes
+run 617: pred=4 t=123182 us heap=389540 bytes
+run 618: pred=4 t=123178 us heap=389540 bytes
+run 619: pred=4 t=123201 us heap=389540 bytes
+run 620: pred=4 t=123159 us heap=389540 bytes
+run 621: pred=4 t=123197 us heap=389540 bytes
+run 622: pred=4 t=123198 us heap=389540 bytes
+run 623: pred=4 t=123193 us heap=389540 bytes
+run 624: pred=4 t=123190 us heap=389540 bytes
+run 625: pred=4 t=123202 us heap=389540 bytes
+run 626: pred=4 t=123191 us heap=389540 bytes
+run 627: pred=4 t=123188 us heap=389540 bytes
+run 628: pred=4 t=123186 us heap=389540 bytes
+run 629: pred=4 t=123185 us heap=389540 bytes
+run 630: pred=4 t=123185 us heap=389540 bytes
+run 631: pred=4 t=123194 us heap=389540 bytes
+run 632: pred=4 t=123186 us heap=389540 bytes
+run 633: pred=4 t=123188 us heap=389540 bytes
+run 634: pred=4 t=123200 us heap=389540 bytes
+run 635: pred=4 t=123186 us heap=389540 bytes
+run 636: pred=4 t=123174 us heap=389540 bytes
+run 637: pred=4 t=123190 us heap=389540 bytes
+run 638: pred=4 t=123178 us heap=389540 bytes
+run 639: pred=4 t=123191 us heap=389540 bytes
+run 640: pred=4 t=123171 us heap=389540 bytes
+run 641: pred=4 t=123197 us heap=389540 bytes
+run 642: pred=4 t=123190 us heap=389540 bytes
+[0;31mE (84329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (84329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (84329) task_wdt: Tasks currently running:[0m
+[0;31mE (84329) task_wdt: CPU 0: main[0m
+[0;31mE (84329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (84329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x420016FE:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 643: pred=4 t=162420 us heap=389540 bytes
+run 644: pred=4 t=123197 us heap=389540 bytes
+run 645: pred=4 t=123193 us heap=389540 bytes
+run 646: pred=4 t=123200 us heap=389540 bytes
+run 647: pred=4 t=123186 us heap=389540 bytes
+run 648: pred=4 t=123175 us heap=389540 bytes
+run 649: pred=4 t=123193 us heap=389540 bytes
+run 650: pred=4 t=123186 us heap=389540 bytes
+run 651: pred=4 t=123185 us heap=389540 bytes
+run 652: pred=4 t=123196 us heap=389540 bytes
+run 653: pred=4 t=123188 us heap=389540 bytes
+run 654: pred=4 t=123191 us heap=389540 bytes
+run 655: pred=4 t=123195 us heap=389540 bytes
+run 656: pred=4 t=123175 us heap=389540 bytes
+run 657: pred=4 t=123183 us heap=389540 bytes
+run 658: pred=4 t=123187 us heap=389540 bytes
+run 659: pred=4 t=123191 us heap=389540 bytes
+run 660: pred=4 t=123160 us heap=389540 bytes
+run 661: pred=4 t=123205 us heap=389540 bytes
+run 662: pred=4 t=123189 us heap=389540 bytes
+run 663: pred=4 t=123191 us heap=389540 bytes
+run 664: pred=4 t=123197 us heap=389540 bytes
+run 665: pred=4 t=123193 us heap=389540 bytes
+run 666: pred=4 t=123190 us heap=389540 bytes
+run 667: pred=4 t=123193 us heap=389540 bytes
+run 668: pred=4 t=123177 us heap=389540 bytes
+run 669: pred=4 t=123187 us heap=389540 bytes
+run 670: pred=4 t=123194 us heap=389540 bytes
+run 671: pred=4 t=123186 us heap=389540 bytes
+run 672: pred=4 t=123188 us heap=389540 bytes
+run 673: pred=4 t=123188 us heap=389540 bytes
+run 674: pred=4 t=123191 us heap=389540 bytes
+run 675: pred=4 t=123193 us heap=389540 bytes
+run 676: pred=4 t=123173 us heap=389540 bytes
+run 677: pred=4 t=123182 us heap=389540 bytes
+run 678: pred=4 t=123187 us heap=389540 bytes
+run 679: pred=4 t=123192 us heap=389540 bytes
+run 680: pred=4 t=123162 us heap=389540 bytes
+run 681: pred=4 t=123204 us heap=389540 bytes
+run 682: pred=4 t=123188 us heap=389540 bytes
+[0;31mE (89329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (89329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (89329) task_wdt: Tasks currently running:[0m
+[0;31mE (89329) task_wdt: CPU 0: main[0m
+[0;31mE (89329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (89329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001ACB:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 683: pred=4 t=162413 us heap=389540 bytes
+run 684: pred=4 t=123198 us heap=389540 bytes
+run 685: pred=4 t=123201 us heap=389540 bytes
+run 686: pred=4 t=123191 us heap=389540 bytes
+run 687: pred=4 t=123187 us heap=389540 bytes
+run 688: pred=4 t=123176 us heap=389540 bytes
+run 689: pred=4 t=123184 us heap=389540 bytes
+run 690: pred=4 t=123196 us heap=389540 bytes
+run 691: pred=4 t=123185 us heap=389540 bytes
+run 692: pred=4 t=123187 us heap=389540 bytes
+run 693: pred=4 t=123198 us heap=389540 bytes
+run 694: pred=4 t=123192 us heap=389540 bytes
+run 695: pred=4 t=123186 us heap=389540 bytes
+run 696: pred=4 t=123183 us heap=389540 bytes
+run 697: pred=4 t=123182 us heap=389540 bytes
+run 698: pred=4 t=123179 us heap=389540 bytes
+run 699: pred=4 t=123201 us heap=389540 bytes
+run 700: pred=4 t=123161 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 701: pred=4 t=123249 us heap=389540 bytes
+run 702: pred=4 t=123222 us heap=389540 bytes
+run 703: pred=4 t=123192 us heap=389540 bytes
+run 704: pred=4 t=123189 us heap=389540 bytes
+run 705: pred=4 t=123202 us heap=389540 bytes
+run 706: pred=4 t=123190 us heap=389540 bytes
+run 707: pred=4 t=123186 us heap=389540 bytes
+run 708: pred=4 t=123186 us heap=389540 bytes
+run 709: pred=4 t=123185 us heap=389540 bytes
+run 710: pred=4 t=123187 us heap=389540 bytes
+run 711: pred=4 t=123194 us heap=389540 bytes
+run 712: pred=4 t=123187 us heap=389540 bytes
+run 713: pred=4 t=123188 us heap=389540 bytes
+run 714: pred=4 t=123200 us heap=389540 bytes
+run 715: pred=4 t=123187 us heap=389540 bytes
+run 716: pred=4 t=123174 us heap=389540 bytes
+run 717: pred=4 t=123192 us heap=389540 bytes
+run 718: pred=4 t=123180 us heap=389540 bytes
+run 719: pred=4 t=123191 us heap=389540 bytes
+run 720: pred=4 t=123170 us heap=389540 bytes
+run 721: pred=4 t=123197 us heap=389540 bytes
+run 722: pred=4 t=123190 us heap=389540 bytes
+[0;31mE (94329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (94329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (94329) task_wdt: Tasks currently running:[0m
+[0;31mE (94329) task_wdt: CPU 0: main[0m
+[0;31mE (94329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (94329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42013794:0x3FC97ED0 0x4201359B:0x3FC97F00 0x42001AED:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 723: pred=4 t=166264 us heap=389540 bytes
+run 724: pred=4 t=123237 us heap=389540 bytes
+run 725: pred=4 t=123201 us heap=389540 bytes
+run 726: pred=4 t=123190 us heap=389540 bytes
+run 727: pred=4 t=123188 us heap=389540 bytes
+run 728: pred=4 t=123186 us heap=389540 bytes
+run 729: pred=4 t=123184 us heap=389540 bytes
+run 730: pred=4 t=123187 us heap=389540 bytes
+run 731: pred=4 t=123194 us heap=389540 bytes
+run 732: pred=4 t=123187 us heap=389540 bytes
+run 733: pred=4 t=123189 us heap=389540 bytes
+run 734: pred=4 t=123199 us heap=389540 bytes
+run 735: pred=4 t=123187 us heap=389540 bytes
+run 736: pred=4 t=123174 us heap=389540 bytes
+run 737: pred=4 t=123187 us heap=389540 bytes
+run 738: pred=4 t=123178 us heap=389540 bytes
+run 739: pred=4 t=123192 us heap=389540 bytes
+run 740: pred=4 t=123162 us heap=389540 bytes
+run 741: pred=4 t=123197 us heap=389540 bytes
+run 742: pred=4 t=123197 us heap=389540 bytes
+run 743: pred=4 t=123190 us heap=389540 bytes
+run 744: pred=4 t=123190 us heap=389540 bytes
+run 745: pred=4 t=123203 us heap=389540 bytes
+run 746: pred=4 t=123190 us heap=389540 bytes
+run 747: pred=4 t=123186 us heap=389540 bytes
+run 748: pred=4 t=123186 us heap=389540 bytes
+run 749: pred=4 t=123184 us heap=389540 bytes
+run 750: pred=4 t=123187 us heap=389540 bytes
+run 751: pred=4 t=123193 us heap=389540 bytes
+run 752: pred=4 t=123184 us heap=389540 bytes
+run 753: pred=4 t=123188 us heap=389540 bytes
+run 754: pred=4 t=123199 us heap=389540 bytes
+run 755: pred=4 t=123186 us heap=389540 bytes
+run 756: pred=4 t=123175 us heap=389540 bytes
+run 757: pred=4 t=123193 us heap=389540 bytes
+run 758: pred=4 t=123178 us heap=389540 bytes
+run 759: pred=4 t=123191 us heap=389540 bytes
+run 760: pred=4 t=123170 us heap=389540 bytes
+run 761: pred=4 t=123196 us heap=389540 bytes
+run 762: pred=4 t=123191 us heap=389540 bytes
+[0;31mE (99329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (99329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (99329) task_wdt: Tasks currently running:[0m
+[0;31mE (99329) task_wdt: CPU 0: main[0m
+[0;31mE (99329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (99329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x42001C96:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 763: pred=4 t=162463 us heap=389540 bytes
+run 764: pred=4 t=123198 us heap=389540 bytes
+run 765: pred=4 t=123193 us heap=389540 bytes
+run 766: pred=4 t=123199 us heap=389540 bytes
+run 767: pred=4 t=123186 us heap=389540 bytes
+run 768: pred=4 t=123175 us heap=389540 bytes
+run 769: pred=4 t=123194 us heap=389540 bytes
+run 770: pred=4 t=123185 us heap=389540 bytes
+run 771: pred=4 t=123185 us heap=389540 bytes
+run 772: pred=4 t=123196 us heap=389540 bytes
+run 773: pred=4 t=123188 us heap=389540 bytes
+run 774: pred=4 t=123192 us heap=389540 bytes
+run 775: pred=4 t=123195 us heap=389540 bytes
+run 776: pred=4 t=123174 us heap=389540 bytes
+run 777: pred=4 t=123183 us heap=389540 bytes
+run 778: pred=4 t=123187 us heap=389540 bytes
+run 779: pred=4 t=123191 us heap=389540 bytes
+run 780: pred=4 t=123161 us heap=389540 bytes
+run 781: pred=4 t=123205 us heap=389540 bytes
+run 782: pred=4 t=123189 us heap=389540 bytes
+run 783: pred=4 t=123193 us heap=389540 bytes
+run 784: pred=4 t=123199 us heap=389540 bytes
+run 785: pred=4 t=123194 us heap=389540 bytes
+run 786: pred=4 t=123189 us heap=389540 bytes
+run 787: pred=4 t=123196 us heap=389540 bytes
+run 788: pred=4 t=123176 us heap=389540 bytes
+run 789: pred=4 t=123183 us heap=389540 bytes
+run 790: pred=4 t=123197 us heap=389540 bytes
+run 791: pred=4 t=123185 us heap=389540 bytes
+run 792: pred=4 t=123188 us heap=389540 bytes
+run 793: pred=4 t=123196 us heap=389540 bytes
+run 794: pred=4 t=123191 us heap=389540 bytes
+run 795: pred=4 t=123186 us heap=389540 bytes
+run 796: pred=4 t=123183 us heap=389540 bytes
+run 797: pred=4 t=123182 us heap=389540 bytes
+run 798: pred=4 t=123177 us heap=389540 bytes
+run 799: pred=4 t=123200 us heap=389540 bytes
+run 800: pred=4 t=123162 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 801: pred=4 t=123243 us heap=389540 bytes
+run 802: pred=4 t=123211 us heap=389540 bytes
+run 803: pred=4 t=123193 us heap=389540 bytes
+[0;31mE (104329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (104329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (104329) task_wdt: Tasks currently running:[0m
+[0;31mE (104329) task_wdt: CPU 0: main[0m
+[0;31mE (104329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (104329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x4200147B:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 804: pred=4 t=162977 us heap=389540 bytes
+run 805: pred=4 t=123216 us heap=389540 bytes
+run 806: pred=4 t=123191 us heap=389540 bytes
+run 807: pred=4 t=123195 us heap=389540 bytes
+run 808: pred=4 t=123176 us heap=389540 bytes
+run 809: pred=4 t=123185 us heap=389540 bytes
+run 810: pred=4 t=123196 us heap=389540 bytes
+run 811: pred=4 t=123186 us heap=389540 bytes
+run 812: pred=4 t=123188 us heap=389540 bytes
+run 813: pred=4 t=123198 us heap=389540 bytes
+run 814: pred=4 t=123192 us heap=389540 bytes
+run 815: pred=4 t=123185 us heap=389540 bytes
+run 816: pred=4 t=123182 us heap=389540 bytes
+run 817: pred=4 t=123183 us heap=389540 bytes
+run 818: pred=4 t=123179 us heap=389540 bytes
+run 819: pred=4 t=123201 us heap=389540 bytes
+run 820: pred=4 t=123160 us heap=389540 bytes
+run 821: pred=4 t=123197 us heap=389540 bytes
+run 822: pred=4 t=123197 us heap=389540 bytes
+run 823: pred=4 t=123192 us heap=389540 bytes
+run 824: pred=4 t=123191 us heap=389540 bytes
+run 825: pred=4 t=123203 us heap=389540 bytes
+run 826: pred=4 t=123189 us heap=389540 bytes
+run 827: pred=4 t=123186 us heap=389540 bytes
+run 828: pred=4 t=123186 us heap=389540 bytes
+run 829: pred=4 t=123185 us heap=389540 bytes
+run 830: pred=4 t=123186 us heap=389540 bytes
+run 831: pred=4 t=123195 us heap=389540 bytes
+run 832: pred=4 t=123186 us heap=389540 bytes
+run 833: pred=4 t=123188 us heap=389540 bytes
+run 834: pred=4 t=123200 us heap=389540 bytes
+run 835: pred=4 t=123185 us heap=389540 bytes
+run 836: pred=4 t=123173 us heap=389540 bytes
+run 837: pred=4 t=123192 us heap=389540 bytes
+run 838: pred=4 t=123179 us heap=389540 bytes
+run 839: pred=4 t=123191 us heap=389540 bytes
+run 840: pred=4 t=123170 us heap=389540 bytes
+run 841: pred=4 t=123196 us heap=389540 bytes
+run 842: pred=4 t=123190 us heap=389540 bytes
+run 843: pred=4 t=123201 us heap=389540 bytes
+[0;31mE (109329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (109329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (109329) task_wdt: Tasks currently running:[0m
+[0;31mE (109329) task_wdt: CPU 0: main[0m
+[0;31mE (109329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (109329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x4201380F:0x3FC97E70 0x4201359B:0x3FC97EA0 0x4200131C:0x3FC97ED0 0x42001345:0x3FC97F00 0x42001639:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 844: pred=4 t=170571 us heap=389540 bytes
+run 845: pred=4 t=123200 us heap=389540 bytes
+run 846: pred=4 t=123190 us heap=389540 bytes
+run 847: pred=4 t=123195 us heap=389540 bytes
+run 848: pred=4 t=123176 us heap=389540 bytes
+run 849: pred=4 t=123186 us heap=389540 bytes
+run 850: pred=4 t=123196 us heap=389540 bytes
+run 851: pred=4 t=123186 us heap=389540 bytes
+run 852: pred=4 t=123187 us heap=389540 bytes
+run 853: pred=4 t=123187 us heap=389540 bytes
+run 854: pred=4 t=123190 us heap=389540 bytes
+run 855: pred=4 t=123186 us heap=389540 bytes
+run 856: pred=4 t=123173 us heap=389540 bytes
+run 857: pred=4 t=123183 us heap=389540 bytes
+run 858: pred=4 t=123186 us heap=389540 bytes
+run 859: pred=4 t=123192 us heap=389540 bytes
+run 860: pred=4 t=123162 us heap=389540 bytes
+run 861: pred=4 t=123204 us heap=389540 bytes
+run 862: pred=4 t=123188 us heap=389540 bytes
+run 863: pred=4 t=123193 us heap=389540 bytes
+run 864: pred=4 t=123199 us heap=389540 bytes
+run 865: pred=4 t=123193 us heap=389540 bytes
+run 866: pred=4 t=123189 us heap=389540 bytes
+run 867: pred=4 t=123195 us heap=389540 bytes
+run 868: pred=4 t=123176 us heap=389540 bytes
+run 869: pred=4 t=123184 us heap=389540 bytes
+run 870: pred=4 t=123197 us heap=389540 bytes
+run 871: pred=4 t=123184 us heap=389540 bytes
+run 872: pred=4 t=123187 us heap=389540 bytes
+run 873: pred=4 t=123198 us heap=389540 bytes
+run 874: pred=4 t=123192 us heap=389540 bytes
+run 875: pred=4 t=123187 us heap=389540 bytes
+run 876: pred=4 t=123182 us heap=389540 bytes
+run 877: pred=4 t=123182 us heap=389540 bytes
+run 878: pred=4 t=123178 us heap=389540 bytes
+run 879: pred=4 t=123200 us heap=389540 bytes
+run 880: pred=4 t=123159 us heap=389540 bytes
+run 881: pred=4 t=123196 us heap=389540 bytes
+run 882: pred=4 t=123200 us heap=389540 bytes
+run 883: pred=4 t=123192 us heap=389540 bytes
+[0;31mE (114329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (114329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (114329) task_wdt: Tasks currently running:[0m
+[0;31mE (114329) task_wdt: CPU 0: main[0m
+[0;31mE (114329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (114329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x420137BD:0x3FC97ED0 0x4201359B:0x3FC97F00 0x42001A41:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 884: pred=4 t=166757 us heap=389540 bytes
+run 885: pred=4 t=123200 us heap=389540 bytes
+run 886: pred=4 t=123189 us heap=389540 bytes
+run 887: pred=4 t=123195 us heap=389540 bytes
+run 888: pred=4 t=123178 us heap=389540 bytes
+run 889: pred=4 t=123184 us heap=389540 bytes
+run 890: pred=4 t=123196 us heap=389540 bytes
+run 891: pred=4 t=123186 us heap=389540 bytes
+run 892: pred=4 t=123187 us heap=389540 bytes
+run 893: pred=4 t=123198 us heap=389540 bytes
+run 894: pred=4 t=123191 us heap=389540 bytes
+run 895: pred=4 t=123188 us heap=389540 bytes
+run 896: pred=4 t=123183 us heap=389540 bytes
+run 897: pred=4 t=123183 us heap=389540 bytes
+run 898: pred=4 t=123181 us heap=389540 bytes
+run 899: pred=4 t=123200 us heap=389540 bytes
+run 900: pred=4 t=123161 us heap=389540 bytes
+  logits: -8.880632 -6.193292 -3.396970 2.071888 10.757054 -6.310842
+run 901: pred=4 t=123241 us heap=389540 bytes
+run 902: pred=4 t=123212 us heap=389540 bytes
+run 903: pred=4 t=123193 us heap=389540 bytes
+run 904: pred=4 t=123199 us heap=389540 bytes
+run 905: pred=4 t=123193 us heap=389540 bytes
+run 906: pred=4 t=123188 us heap=389540 bytes
+run 907: pred=4 t=123194 us heap=389540 bytes
+run 908: pred=4 t=123175 us heap=389540 bytes
+run 909: pred=4 t=123184 us heap=389540 bytes
+run 910: pred=4 t=123196 us heap=389540 bytes
+run 911: pred=4 t=123185 us heap=389540 bytes
+run 912: pred=4 t=123187 us heap=389540 bytes
+run 913: pred=4 t=123198 us heap=389540 bytes
+run 914: pred=4 t=123191 us heap=389540 bytes
+run 915: pred=4 t=123186 us heap=389540 bytes
+run 916: pred=4 t=123183 us heap=389540 bytes
+run 917: pred=4 t=123182 us heap=389540 bytes
+run 918: pred=4 t=123178 us heap=389540 bytes
+run 919: pred=4 t=123201 us heap=389540 bytes
+run 920: pred=4 t=123161 us heap=389540 bytes
+run 921: pred=4 t=123195 us heap=389540 bytes
+run 922: pred=4 t=123197 us heap=389540 bytes
+run 923: pred=4 t=123193 us heap=389540 bytes
+[0;31mE (119329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (119329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (119329) task_wdt: Tasks currently running:[0m
+[0;31mE (119329) task_wdt: CPU 0: main[0m
+[0;31mE (119329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (119329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x4201367D:0x3FC97ED0 0x4201359B:0x3FC97F00 0x42001AED:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 924: pred=4 t=166782 us heap=389540 bytes
+run 925: pred=4 t=123240 us heap=389540 bytes
+run 926: pred=4 t=123190 us heap=389540 bytes
+run 927: pred=4 t=123195 us heap=389540 bytes
+run 928: pred=4 t=123177 us heap=389540 bytes
+run 929: pred=4 t=123184 us heap=389540 bytes
+run 930: pred=4 t=123197 us heap=389540 bytes
+run 931: pred=4 t=123185 us heap=389540 bytes
+run 932: pred=4 t=123188 us heap=389540 bytes
+run 933: pred=4 t=123198 us heap=389540 bytes
+run 934: pred=4 t=123192 us heap=389540 bytes
+run 935: pred=4 t=123187 us heap=389540 bytes
+run 936: pred=4 t=123183 us heap=389540 bytes
+run 937: pred=4 t=123183 us heap=389540 bytes
+run 938: pred=4 t=123180 us heap=389540 bytes
+run 939: pred=4 t=123199 us heap=389540 bytes
+run 940: pred=4 t=123163 us heap=389540 bytes
+run 941: pred=4 t=123197 us heap=389540 bytes
+run 942: pred=4 t=123198 us heap=389540 bytes
+run 943: pred=4 t=123193 us heap=389540 bytes
+run 944: pred=4 t=123190 us heap=389540 bytes
+run 945: pred=4 t=123202 us heap=389540 bytes
+run 946: pred=4 t=123189 us heap=389540 bytes
+run 947: pred=4 t=123187 us heap=389540 bytes
+run 948: pred=4 t=123184 us heap=389540 bytes
+run 949: pred=4 t=123185 us heap=389540 bytes
+run 950: pred=4 t=123186 us heap=389540 bytes
+run 951: pred=4 t=123193 us heap=389540 bytes
+run 952: pred=4 t=123186 us heap=389540 bytes
+run 953: pred=4 t=123190 us heap=389540 bytes
+run 954: pred=4 t=123199 us heap=389540 bytes
+run 955: pred=4 t=123188 us heap=389540 bytes
+run 956: pred=4 t=123173 us heap=389540 bytes
+run 957: pred=4 t=123183 us heap=389540 bytes
+run 958: pred=4 t=123178 us heap=389540 bytes
+run 959: pred=4 t=123201 us heap=389540 bytes
+run 960: pred=4 t=123160 us heap=389540 bytes
+run 961: pred=4 t=123196 us heap=389540 bytes
+run 962: pred=4 t=123198 us heap=389540 bytes
+run 963: pred=4 t=123193 us heap=389540 bytes
+[0;31mE (124329) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (124329) task_wdt:  - IDLE0 (CPU 0)[0m
+[0;31mE (124329) task_wdt: Tasks currently running:[0m
+[0;31mE (124329) task_wdt: CPU 0: main[0m
+[0;31mE (124329) task_wdt: CPU 1: IDLE1[0m
+[0;31mE (124329) task_wdt: Print CPU 0 (current core) backtrace[0m
+
+
+Backtrace: 0x42005447:0x3FC93290 0x42005864:0x3FC932B0 0x40377A11:0x3FC932E0 0x4201378B:0x3FC97ED0 0x4201359B:0x3FC97F00 0x42001AED:0x3FC97F30 0x42001E15:0x3FC97FA0 0x420020DC:0x3FC97FD0 0x4201868B:0x3FC98030 0x4037A321:0x3FC98060
+
+run 964: pred=4 t=166757 us heap=389540 bytes
+run 965: pred=4 t=123199 us heap=389540 bytes
+run 966: pred=4 t=123191 us heap=389540 bytes
+run 967: pred=4 t=123195 us heap=389540 bytes
+run 968: pred=4 t=123176 us heap=389540 bytes
+run 969: pred=4 t=123185 us heap=389540 bytes
+run 970: pred=4 t=123194 us heap=389540 bytes
+run 971: pred=4 t=123184 us heap=389540 bytes
+run 972: pred=4 t=123186 us heap=389540 bytes
+run 973: pred=4 t=123196 us heap=389540 bytes
+run 974: pred=4 t=123191 us heap=389540 bytes
+run 975: pred=4 t=123185 us heap=389540 bytes
+run 976: pred=4 t=123182 us heap=389540 bytes
+run 977: pred=4 t=123184 us heap=389540 bytes
+run 978: pred=4 t=123179 us heap=389540 bytes
+run 979: pred=4 t=123202 us heap=389540 bytes
+run 980: pred=4 t=123161 us heap=389540 bytes
+run 981: pred=4 t=123196 us heap=389540 bytes
+run 982: pred=4 t=123197 us heap=389540 bytes
+run 983: pred=4 t=123193 us heap=389540 bytes
+run 984: pred=4 t=123189 us heap=389540 bytes
+run 985: pred=4 t=123203 us heap=389540 bytes
+run 986: pred=4 t=123189 us heap=389540 bytes
+run 987: pred=4 t=123187 us heap=389540 bytes
+run 988: pred=4 t=123185 us heap=389540 bytes
+run 989: pred=4 t=123184 us heap=389540 bytes
+run 990: pred=4 t=123186 us heap=389540 bytes
+run 991: pred=4 t=123194 us heap=389540 bytes
+run 992: pred=4 t=123187 us heap=389540 bytes
+run 993: pred=4 t=123188 us heap=389540 bytes
+run 994: pred=4 t=123200 us heap=389540 bytes
+run 995: pred=4 t=123186 us heap=389540 bytes
+run 996: pred=4 t=123173 us heap=389540 bytes
+run 997: pred=4 t=123191 us heap=389540 bytes
+run 998: pred=4 t=123179 us heap=389540 bytes
+run 999: pred=4 t=123191 us heap=389540 bytes
+DONE: runs=1000 invalid=0 avg=124171 us heap=389540 min_ever=346068
+No reset during test.
+[0;32mI (128719) main_task: Returned from app_main()[0m
+
