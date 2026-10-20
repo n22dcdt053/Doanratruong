@@ -9,14 +9,17 @@
  * model wrapper + mamba kernel are vendored under firmware/common/ so thesis
  * changes stay outside the upstream checkout (see HUONG_PHAT_TRIEN.md).
  *
- * Scope: ESP32-S3 bring-up only (protocol + numerics smoke test). This is NOT
- * acceptance evidence: the thesis criteria (1.000-run stability, Flash/RAM map
- * file, energy) require the Portenta H7 target.
+ * Scope: ESP32-S3 bring-up only. The numbers here are PROXY numerics
+ * (Xtensa / ESP-IDF / C build), not tier-B acceptance: tier-B needs the
+ * Portenta H7 (C++ build via main.cpp) and tolerance thresholds confirmed by
+ * the advisor. Not acceptance evidence for any thesis criterion.
  *
  * Mode: 1000 consecutive inferences on 20 rotating UCI samples (all 6 classes),
  * single boot, no per-run prints inside the timing loop, WDT fed by a one-tick
- * delay outside the measured window. Host reference logits are embedded so the
- * board prints tier-B error (max|dlogit|, MAE, label mismatches) on-device.
+ * delay outside the measured window. Firmware prints its git commit + build
+ * time, esp_reset_reason(), and an RTC_NOINIT boot counter so "no reset" is
+ * evidence, not a fixed string. Host reference logits are embedded, so the
+ * board reports max|dlogit| / MAE / label mismatches on-device.
  */
 #include <math.h>
 #include <stdio.h>
@@ -25,17 +28,27 @@
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_timer.h"
+#include "esp_attr.h"
 #include "esp_system.h"
+#include "esp_timer.h"
 #include "../../../MambaLite-Micro/csrc/matrix.c"
 #include "../../common/mamba.c"
 #include "../../common/mambahar.c"
+#include "build_info.h"
 #include "uci_samples.h"
 
 #define N_SAMPLES 20
 #define N_RUNS 1000
+#define HEAP_EVERY 50
+#define BOOT_MAGIC 0x48415231u /* "HAR1" */
 
 static uint32_t t_us[N_RUNS]; // 4 KB .bss; sorted in place for percentiles
+static uint32_t heap_samples[N_RUNS / HEAP_EVERY + 1];
+
+// Survives software/WDT resets (not a power cycle): lets the log prove whether
+// the board rebooted between the start and the end of the test.
+RTC_NOINIT_ATTR static uint32_t g_boot_magic;
+RTC_NOINIT_ATTR static uint32_t g_boot_count;
 
 static int cmp_u32(const void *a, const void *b)
 {
@@ -43,16 +56,82 @@ static int cmp_u32(const void *a, const void *b)
     return (x > y) - (x < y);
 }
 
+static const char *reset_reason_name(esp_reset_reason_t r)
+{
+    switch ((int)r) {
+    case ESP_RST_POWERON:
+        return "POWERON";
+    case ESP_RST_EXT:
+        return "EXT";
+    case ESP_RST_SW:
+        return "SW";
+    case ESP_RST_PANIC:
+        return "PANIC";
+    case ESP_RST_INT_WDT:
+        return "INT_WDT";
+    case ESP_RST_TASK_WDT:
+        return "TASK_WDT";
+    case ESP_RST_WDT:
+        return "WDT";
+    case ESP_RST_DEEPSLEEP:
+        return "DEEPSLEEP";
+    case ESP_RST_BROWNOUT:
+        return "BROWNOUT";
+    case ESP_RST_SDIO:
+        return "SDIO";
+    case ESP_RST_USB:
+        return "USB";
+    case ESP_RST_JTAG:
+        return "JTAG";
+    case ESP_RST_EFUSE:
+        return "EFUSE";
+    case ESP_RST_PWR_GLITCH:
+        return "PWR_GLITCH";
+    case ESP_RST_CPU_LOCKUP:
+        return "CPU_LOCKUP";
+    default:
+        return "UNKNOWN";
+    }
+}
+
 void app_main(void)
 {
-    for (int i = 3; i >= 0; i--) {
+    esp_reset_reason_t rr = esp_reset_reason();
+    if (g_boot_magic != BOOT_MAGIC) {
+        g_boot_magic = BOOT_MAGIC;
+        g_boot_count = 0;
+    }
+    const uint32_t boot_no = ++g_boot_count;
+
+#if defined(CONFIG_COMPILER_OPTIMIZATION_PERF)
+    const char *opt = "perf(-O2)";
+#elif defined(CONFIG_COMPILER_OPTIMIZATION_SIZE)
+    const char *opt = "size(-Os)";
+#elif defined(CONFIG_COMPILER_OPTIMIZATION_DEBUG)
+    const char *opt = "debug(-Og)";
+#else
+    const char *opt = "custom";
+#endif
+
+    // Print the banner after the countdown: the capture script opens the port a
+    // couple of seconds after the esptool reset, so anything printed earlier is
+    // lost and the log would not carry its own commit/reset evidence.
+    for (int i = 5; i >= 0; i--) {
         printf("starting in %d seconds...\n", i);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 
-    printf("ESP32-S3 bring-up (proxy for Portenta H7; NOT acceptance evidence)\n");
-    printf("Stability+numerics: %d runs x %d UCI samples, quiet loop, WDT fed\n", N_RUNS, N_SAMPLES);
-    printf("Free heap at start: %" PRIu32 " bytes\n", esp_get_free_heap_size());
+    printf("FW commit %s (%s) built %s UTC | opt=%s\n",
+           FW_GIT_COMMIT, FW_GIT_DIRTY, FW_BUILD_UTC, opt);
+    printf("Reset: reason=%d (%s) | boot #%" PRIu32 " since RTC_NOINIT init\n",
+           (int)rr, reset_reason_name(rr), boot_no);
+
+    const uint32_t boot_at_start = g_boot_count;
+    printf("ESP32-S3 bring-up (proxy numerics, NOT tier-B acceptance; Portenta H7 required)\n");
+    printf("Stability+numerics: %d runs x %d UCI samples, quiet loop, WDT fed\n",
+           N_RUNS, N_SAMPLES);
+    printf("Test start: boot #%" PRIu32 " | free heap %" PRIu32 " bytes\n",
+           boot_at_start, esp_get_free_heap_size());
 
     float e_max = 0.0f;
     float per_sample_max[N_SAMPLES];
@@ -61,7 +140,7 @@ void app_main(void)
         per_sample_max[s] = 0.0f;
         last_pred[s] = -3;
     }
-    double mae_sum = 0.0;
+    double mae_sum = 0.0, t_sum = 0.0, t_sq = 0.0;
     long comparisons = 0, invalid = 0, label_mismatch = 0;
 
     for (int r = 0; r < N_RUNS; r++) {
@@ -70,7 +149,10 @@ void app_main(void)
         int64_t t0 = esp_timer_get_time();
         int pred = mambahar_forward_logits((float *)uci_samples[s], logits);
         int64_t t1 = esp_timer_get_time();
-        t_us[r] = (uint32_t)(t1 - t0);
+        uint32_t us = (uint32_t)(t1 - t0);
+        t_us[r] = us;
+        t_sum += us;
+        t_sq += (double)us * us;
         last_pred[s] = pred;
 
         if (pred < 0) {
@@ -91,24 +173,43 @@ void app_main(void)
                 comparisons++;
             }
         }
+        if (r % HEAP_EVERY == 0) {
+            heap_samples[r / HEAP_EVERY] = esp_get_free_heap_size();
+        }
         // Outside the measured window: yield to IDLE0 so the task watchdog is fed.
         vTaskDelay(1);
     }
+    heap_samples[N_RUNS / HEAP_EVERY] = esp_get_free_heap_size();
 
     qsort(t_us, N_RUNS, sizeof(t_us[0]), cmp_u32);
+    double mean = t_sum / N_RUNS;
+    double var = t_sq / N_RUNS - mean * mean;
+    if (var < 0.0) {
+        var = 0.0;
+    }
+
     printf("BENCH DONE: runs=%d samples=%d invalid=%ld label_mismatch=%ld\n",
            N_RUNS, N_SAMPLES, invalid, label_mismatch);
-    printf("tierB (on-device, vs embedded host logits): comparisons=%ld max|dlogit|=%.3e MAE=%.3e\n",
+    printf("proxy numerics (Xtensa/ESP-IDF/C; NOT tier-B): comparisons=%ld max|dlogit|=%.3e MAE=%.3e\n",
            comparisons, (double)e_max, mae_sum / (double)comparisons);
-    printf("time_us: min=%" PRIu32 " p50=%" PRIu32 " p95=%" PRIu32 " max=%" PRIu32 "\n",
-           t_us[0], t_us[N_RUNS / 2], t_us[(int)(N_RUNS * 95 / 100)], t_us[N_RUNS - 1]);
+    printf("time_us: min=%" PRIu32 " p50=%" PRIu32 " p95=%" PRIu32 " max=%" PRIu32
+           " mean=%.0f sd=%.0f\n",
+           t_us[0], t_us[N_RUNS / 2], t_us[(int)(N_RUNS * 95 / 100)], t_us[N_RUNS - 1],
+           mean, sqrt(var));
     printf("heap: end=%" PRIu32 " min_ever=%" PRIu32 " bytes\n",
            esp_get_free_heap_size(), esp_get_minimum_free_heap_size());
+    printf("heap every %d runs (bytes):", HEAP_EVERY);
+    for (int i = 0; i <= N_RUNS / HEAP_EVERY; i++) {
+        printf(" %" PRIu32, heap_samples[i]);
+    }
+    printf("\n");
 
     for (int s = 0; s < N_SAMPLES; s++) {
         printf("sample %d (idx %d): pred=%d host_pred=%d max|d|=%.3e\n",
                s, uci_index[s], last_pred[s], (int)uci_host_pred[s],
                (double)per_sample_max[s]);
     }
-    printf("No reset during test; no prints inside the timing loop.\n");
+    printf("Resets: boot_start=%" PRIu32 " boot_end=%" PRIu32 " | %s\n",
+           boot_at_start, g_boot_count,
+           boot_at_start == g_boot_count ? "no reset during test" : "RESET DETECTED");
 }

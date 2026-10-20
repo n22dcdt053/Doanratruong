@@ -38,7 +38,9 @@ if (-not $SkipBuild) {
     # Native tools (gcc/pio) write warnings to stderr; keep them from tripping
     # ErrorActionPreference=Stop — exit code is the source of truth.
     $ErrorActionPreference = "Continue"
-    pio run 2>&1 | Tee-Object -FilePath (Join-Path $logDir "build_$ts.txt")
+    # -j 1: xtensa-gcc 8.4 ICEs (RTL pass "ira") in esp_lcd_panel_rgb.c under
+    # parallel builds; serial build is the known working workaround.
+    pio run -j 1 2>&1 | Tee-Object -FilePath (Join-Path $logDir "build_$ts.txt")
     $ErrorActionPreference = "Stop"
     if ($LASTEXITCODE -ne 0) { throw "Build failed (see logs\build_$ts.txt)" }
 }
@@ -52,7 +54,20 @@ if (-not $SkipUpload) {
     pio run -t upload 2>&1 | Tee-Object -FilePath (Join-Path $logDir "upload_$ts.txt")
     $ErrorActionPreference = "Stop"
     if ($LASTEXITCODE -ne 0) { throw "Upload failed. Hold BOOT while plugging the board, or check the cable is a data cable." }
-    Start-Sleep -Seconds 2
+    # Traceability (thesis form B.1: firmware-commit-checksum): the firmware log
+    # carries its git commit, so record the exact binary hash next to the upload.
+    $uploadLog = Join-Path $logDir "upload_$ts.txt"
+    foreach ($name in @("firmware.bin", "firmware.elf")) {
+        $path = Join-Path $root ".pio\build\esp32s3\$name"
+        if (Test-Path $path) {
+            $line = "sha256 " + $name + ": " + (Get-FileHash -Algorithm SHA256 $path).Hash.ToLower()
+            Add-Content -Path $uploadLog -Value $line
+            Write-Host $line
+        }
+    }
+    # Open the port right after esptool releases it (0.3 s) so the boot banner
+    # (FW commit / reset reason / boot #) lands in the log, not just the test.
+    Start-Sleep -Milliseconds 300
 } elseif (-not $Port) {
     $Port = Get-UsbSerialPort
     if (-not $Port) { throw "No USB serial port found for capture. Pass -Port COMx." }
