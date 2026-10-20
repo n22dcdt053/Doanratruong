@@ -5,12 +5,14 @@ Chạy suy luận Mamba HAR (6 lớp) trên ESP32-S3 bằng nguồn kế thừa 
 làm bước đệm đo kích thước/độ trễ trước khi có Portenta H7 (STM32H7).
 KHÔNG thay thế nghiệm thu trên Portenta H7.
 
+> Thành viên nhóm mới: đọc [HUONG_DAN_NHOM.md](HUONG_DAN_NHOM.md) để clone đúng upstream + chạy lấy bằng chứng.
+
 ## Nguồn
 - Upstream: `..\..\MambaLite-Micro` (commit `44d51fc`, MIT) — **không sửa**.
 - Port từ `examples/mambahar-arduino-6` (HAR) + `examples/mambakws-esp32-3` (khung ESP-IDF).
 - Wrapper mô hình đã vendor sang `..\common\mambahar.c` (copy 1:1 ngày 18/10/2026,
   sha256 `84AC465D…`); **mọi sửa đổi từ đây làm trên bản vendor**, upstream giữ nguyên.
-  Diff so với upstream ghi vào nhật ký quyết định của `HUONG_PHAT_TRIEN.md`.
+  Diff so với upstream ghi vào nhật ký quyết định nội bộ (không đưa lên repo).
 - Weights `const float` → nằm trong flash; kiểm tra dung lượng sau build.
 
 ## Chạy
@@ -73,7 +75,7 @@ Resets: boot_start=1 boot_end=1 | no reset during test
   lớn khoảng cách 122 ms vs 416 µs trên PC; chưa thử `-O2`/`-Os`.
 - `7,629e-6 = 2^-17` ≈ 1 ULP float32 quanh |logit| ≈ 74 → lệch chủ yếu ở độ phân giải float32.
   Ngưỡng 1e-4 / 1e-5 **chưa được GVHD xác nhận**; chỉ ghi nhận là dưới ngưỡng đã ghi trong
-  `HUONG_PHAT_TRIEN.md`.
+  nhật ký nội bộ.
 - Heap phẳng: 21 mốc đều 385.668 B; Δ216 B chỉ ở lần in đầu. Đỉnh làm việc
   385.668 − 342.196 = **43.472 B**.
 - `-2` vẫn là mã "logits không hữu hạn" (logits lỗi không bị tính thành lớp 0).
