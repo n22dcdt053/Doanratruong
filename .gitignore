@@ -4,3 +4,10 @@ data/
 *.f32
 # PlatformIO compile database (generated)
 compile_commands.json
+
+# Local thesis docs (not published)
+docs/
+YEU_CAU_DE_CUONG.md
+HUONG_PHAT_TRIEN.md
+De_cuong_chi_tiet_DATN_Mamba_HAR_STM32H7.docx
+datn_docx.txt
