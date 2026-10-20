@@ -19,8 +19,9 @@ Mở PowerShell:
 cd D:\DoanNhomQuy\firmware\mambahar-esp32s3
 powershell -ExecutionPolicy Bypass -File .\scripts\flash_and_log.ps1
 ```
-- Lần đầu: script build + nạp + bắt 35 giây log, tự lưu evidence vào `logs\`.
+- Lần đầu (20/10 đã chạy): script build + nạp + bắt 35 giây log, tự lưu evidence vào `logs\`.
 - Đã nạp rồi, chỉ đọc log: thêm `-SkipBuild -SkipUpload`
+- Chỉ định cổng khi có nhiều COM: thêm `-Port COM11` (cổng USB-UART CH343; xem bằng `pio device list`).
 - Không nhận cổng: cắm cáp USB-C **truyền dữ liệu**, hoặc bấm giữ BOOT khi cắm.
 
 ## Log kỳ vọng (bo tự reset mỗi ~17 giây)
@@ -35,16 +36,19 @@ Free heap after: <n> bytes
 Min free heap ever: <n> bytes
 Restarting in 10 seconds...
 ```
-`Prediction` phải nằm trong 0..5. Heap: `before - min ever` ≈ đỉnh bộ nhớ suy luận
-(đúng yêu cầu "bộ nhớ sử dụng khi suy luận"). Muốn biết đúng/sai cần đối chiếu mẫu trong
-`sample_input.h` (bước đối chiếu số học là việc tuần sau theo đề cương MT3).
+`Prediction` nằm trong 0..5; **`-2` = đầu ra không hữu hạn** (mẫu demo `sample_input.h` sai
+thang — log thật 20/10 cho `-2` / `Output: INVALID`, đúng dự kiến). Heap: `before - min ever`
+≈ đỉnh bộ nhớ suy luận (đúng yêu cầu "bộ nhớ sử dụng khi suy luận"). Muốn biết đúng/sai cần
+đối chiếu mẫu trong `sample_input.h` (bước đối chiếu số học là việc tuần sau theo đề cương MT3).
 
 ## Evidence tự động
 - `logs\build_<timestamp>.txt` — output build (có bảng Flash/RAM) → trả lời yêu cầu
   "kiểm tra kích thước mô hình và bộ nhớ sử dụng khi suy luận".
+- `logs\upload_<timestamp>.txt` — output nạp (kèm dòng `Hash of data verified`).
 - `logs\esp32s3_har_<timestamp>.txt` — log serial thô.
 
 ## Giới hạn hiện tại (đúng như upstream, sửa sau theo đề cương)
 - 1 mẫu duy nhất rồi reset (`sample_input.h` có 4000 float ≈ 7 mẫu, hiện chỉ dùng 570 đầu).
 - Chỉ in nhãn argmax, chưa xuất 6 logits (MT2 sẽ làm).
-- Board mặc định: `seeed_xiao_esp32s3`; đổi board khác chỉ cần sửa `board =` trong `platformio.ini`.
+- Board: **ESP32-S3-WROOM-1 N16R8** (`board = esp32-s3-devkitc-1`, flash 16 MB khai trong
+  `platformio.ini`); bo DevKitC-1 có 2 cổng USB — dùng cổng **UART/CH343** (COM11 ngày 20/10).

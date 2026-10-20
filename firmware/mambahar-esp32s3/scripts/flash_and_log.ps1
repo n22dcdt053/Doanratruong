@@ -35,7 +35,11 @@ function Get-UsbSerialPort {
 
 if (-not $SkipBuild) {
     Write-Host "== build =="
+    # Native tools (gcc/pio) write warnings to stderr; keep them from tripping
+    # ErrorActionPreference=Stop — exit code is the source of truth.
+    $ErrorActionPreference = "Continue"
     pio run 2>&1 | Tee-Object -FilePath (Join-Path $logDir "build_$ts.txt")
+    $ErrorActionPreference = "Stop"
     if ($LASTEXITCODE -ne 0) { throw "Build failed (see logs\build_$ts.txt)" }
 }
 
@@ -44,7 +48,9 @@ if (-not $SkipUpload) {
     if (-not $Port) { throw "No USB serial port found. Plug the board with a USB-C data cable, or pass -Port COMx." }
     Write-Host "== upload to $Port =="
     $env:PLATFORMIO_UPLOAD_PORT = $Port
-    pio run -t upload
+    $ErrorActionPreference = "Continue"
+    pio run -t upload 2>&1 | Tee-Object -FilePath (Join-Path $logDir "upload_$ts.txt")
+    $ErrorActionPreference = "Stop"
     if ($LASTEXITCODE -ne 0) { throw "Upload failed. Hold BOOT while plugging the board, or check the cable is a data cable." }
     Start-Sleep -Seconds 2
 } elseif (-not $Port) {
@@ -54,8 +60,16 @@ if (-not $SkipUpload) {
 
 Write-Host "== capturing $DurationSec s on $Port @115200 =="
 $logFile = Join-Path $logDir "esp32s3_har_$ts.txt"
-$sp = New-Object System.IO.Ports.SerialPort $Port, 115200, [System.IO.Ports.Parity]::None, 8, [System.IO.Ports.StopBits]::One
-$sp.DtrEnable = $true
+$sp = New-Object System.IO.Ports.SerialPort
+$sp.PortName = $Port
+$sp.BaudRate = 115200
+$sp.Parity = [System.IO.Ports.Parity]::None
+$sp.DataBits = 8
+$sp.StopBits = [System.IO.Ports.StopBits]::One
+# DTR/RTS off: don't disturb the board after esptool's hard reset (PS 5.1 also
+# mangles enum members inside New-Object -ArgumentList, hence property-by-property).
+$sp.DtrEnable = $false
+$sp.RtsEnable = $false
 $sp.Open()
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 $sb = New-Object System.Text.StringBuilder
