@@ -1,0 +1,15 @@
+﻿=== ASan run 1: default (first error stops the run) ===
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 4770 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7916 KB -> 8940 KB (delta 1024 KB over 1 run(s))
+=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 3130 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7884 KB -> 8848 KB (delta 964 KB over 1 run(s))
+=== ASan done ===

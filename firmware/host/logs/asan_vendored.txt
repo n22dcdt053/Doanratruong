@@ -1,0 +1,13 @@
+﻿=== ASan run 1: default (first error stops the run) ===
+Model_Forward completed.
+Prediction: 0
+Logits: -nan -nan -nan -nan -nan -nan
+Elapsed time: 2731 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7864 KB -> 8816 KB (delta 952 KB over 1 run(s))
+=== ASan run 2: recover mode (halt_on_error=0), leaks reported at exit ===
+Model_Forward completed.
+Prediction: 0
+Logits: -nan -nan -nan -nan -nan -nan
+Elapsed time: 3305 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 7916 KB -> 8972 KB (delta 1056 KB over 1 run(s))
+=== ASan done ===

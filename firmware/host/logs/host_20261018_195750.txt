@@ -1,0 +1,5 @@
+Model_Forward completed.
+Prediction: 0
+Logits: -nan -nan -nan -nan -nan -nan
+Elapsed time: 2062950 us (host wall clock, 4000 run(s), NOT MCU timing)
+Host RSS: 1960 KB -> 2460 KB (delta 500 KB over 4000 run(s))

@@ -1,0 +1,7 @@
+wsl : bash: /firmware/host/run_host_test.sh: No such file or directory
+At D:\DoanNhomQuy\firmware\host\run_host_test.ps1:12 char:8
++ $out = wsl -e bash "$wslRoot/firmware/host/run_host_test.sh" $Iterati ...
++        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (bash: /firmware...le or directory:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

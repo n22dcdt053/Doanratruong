@@ -1,0 +1,31 @@
+﻿starting in 0 seconds...
+ESP32-S3 bring-up (proxy for Portenta H7; NOT acceptance evidence)
+Stability+numerics: 1000 runs x 20 UCI samples, quiet loop, WDT fed
+Free heap at start: 385756 bytes
+BENCH DONE: runs=1000 samples=20 invalid=0 label_mismatch=0
+tierB (on-device, vs embedded host logits): comparisons=6000 max|dlogit|=7.629e-06 MAE=9.157e-07
+time_us: min=123135 p50=123201 p95=123237 max=123460
+heap: end=385540 min_ever=342284 bytes
+sample 0 (idx 79): pred=0 host_pred=0 max|d|=2.742e-06
+sample 1 (idx 80): pred=0 host_pred=0 max|d|=1.431e-06
+sample 2 (idx 81): pred=0 host_pred=0 max|d|=1.431e-06
+sample 3 (idx 128): pred=1 host_pred=1 max|d|=9.537e-07
+sample 4 (idx 133): pred=1 host_pred=1 max|d|=1.907e-06
+sample 5 (idx 134): pred=1 host_pred=1 max|d|=2.146e-06
+sample 6 (idx 109): pred=2 host_pred=2 max|d|=2.861e-06
+sample 7 (idx 110): pred=2 host_pred=2 max|d|=1.907e-06
+sample 8 (idx 111): pred=2 host_pred=2 max|d|=1.907e-06
+sample 9 (idx 31): pred=3 host_pred=3 max|d|=1.907e-06
+sample 10 (idx 33): pred=3 host_pred=3 max|d|=3.815e-06
+sample 11 (idx 34): pred=3 host_pred=3 max|d|=1.907e-06
+sample 12 (idx 0): pred=4 host_pred=4 max|d|=9.537e-07
+sample 13 (idx 1): pred=4 host_pred=4 max|d|=9.537e-07
+sample 14 (idx 2): pred=4 host_pred=4 max|d|=3.815e-06
+sample 15 (idx 55): pred=5 host_pred=5 max|d|=3.815e-06
+sample 16 (idx 56): pred=5 host_pred=5 max|d|=7.629e-06
+sample 17 (idx 57): pred=5 host_pred=5 max|d|=1.907e-06
+sample 18 (idx 112): pred=2 host_pred=2 max|d|=2.861e-06
+sample 19 (idx 35): pred=3 host_pred=3 max|d|=1.907e-06
+No reset during test; no prints inside the timing loop.
+[0;32mI (134449) main_task: Returned from app_main()[0m
+

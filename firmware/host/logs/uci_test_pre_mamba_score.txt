@@ -1,0 +1,14 @@
+﻿samples: 2947
+nan_rows (non-finite logits): 0
+invalid_rows (pred < 0): 0
+accuracy: 0.9267
+macro-F1: 0.9265
+F1 per class: c0=0.9365 c1=0.9132 c2=0.9489 c3=0.8786 c4=0.9035 c5=0.9782
+classes: 0=WALKING 1=WALKING_UPSTAIRS 2=WALKING_DOWNSTAIRS 3=SITTING 4=STANDING 5=LAYING
+confusion matrix (rows=true, cols=pred; pred<0 excluded):
+true 0:   487     3     6     0     0     0
+true 1:    39   426     6     0     0     0
+true 2:    18    12   390     0     0     0
+true 3:     0     3     0   398    89     1
+true 4:     0     0     0    17   515     0
+true 5:     0    18     0     0     4   515

@@ -1,0 +1,71 @@
+Processing portenta_h7_m7 (platform: ststm32; board: portenta_h7_m7; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/ststm32/portenta_h7_m7.html
+PLATFORM: ST STM32 (20.0.0) > Arduino Portenta H7 (M7 core)
+HARDWARE: STM32H747XIH6 480MHz, 511.35KB RAM, 768KB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, jlink, stlink)
+PACKAGES: 
+ - framework-arduino-mbed @ 4.6.0 
+ - tool-dfuutil-arduino @ 1.11.0 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 41 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio\build\portenta_h7_m7\src\main.cpp.o
+Generating LD script .pio\build\portenta_h7_m7\cpp.linker_script.ld
+Compiling .pio\build\portenta_h7_m7\FrameworkArduinoVariant\variant.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\Interrupts.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\Serial.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\Tone.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\USB\PluggableUSBDevice.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\USB\USBCDC.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\USB\USBSerial.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\WMath.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\abi.cpp.o
+pio : In file included from src\main.cpp:19:0:
+At line:1 char:186
++ ... ild_$ts.txt"; pio run -d .\firmware\mambahar-portenta-h7 2>&1 | Tee-O ...
++                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (In file included from src\main.cpp:19:0::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+D:\DoanNhomQuy\firmware\common/mamba.c: In function 'MambaError Mamba_Forward(Mamba_Variables*, Tensor*, Tensor*)':
+D:\DoanNhomQuy\firmware\common/mamba.c:84:9: warning: unused variable 'dim' [-Wunused-variable]
+     int dim = hidden_states->d3;
+         ^~~
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\api\CanMsg.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\api\CanMsgRingbuffer.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\api\Common.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\api\IPAddress.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\api\PluggableUSB.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\api\Print.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\api\Stream.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\api\String.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\arm_hal_random.c.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\as_mbed_library\variant.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\itoa.c.o
+Archiving .pio\build\portenta_h7_m7\libFrameworkArduinoVariant.a
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\main.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\mbed\platform\cxxsupport\mstd_mutex.cpp.o
+Indexing .pio\build\portenta_h7_m7\libFrameworkArduinoVariant.a
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\pinToIndex.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\random_seed.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\timer.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\wiring.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\wiring_analog.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\wiring_digital.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\wiring_pulse.cpp.o
+Compiling .pio\build\portenta_h7_m7\FrameworkArduino\wiring_shift.cpp.o
+Archiving .pio\build\portenta_h7_m7\libFrameworkArduino.a
+Indexing .pio\build\portenta_h7_m7\libFrameworkArduino.a
+Linking .pio\build\portenta_h7_m7\firmware.elf
+Checking size .pio\build\portenta_h7_m7\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]  14.8% (used 77256 bytes from 523624 bytes)
+Flash: [====      ]  39.1% (used 307368 bytes from 786432 bytes)
+Building .pio\build\portenta_h7_m7\firmware.bin
+========================= [SUCCESS] Took 22.56 seconds =========================

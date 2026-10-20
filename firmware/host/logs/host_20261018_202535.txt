@@ -1,0 +1,6 @@
+Model_Forward completed.
+Prediction: -2
+Output: INVALID (non-finite logits), pred=-2 is not a class
+Logits: nan nan nan nan nan nan
+Elapsed time: 1212 us (host wall clock, 1 run(s), NOT MCU timing)
+Host RSS: 2032 KB -> 2536 KB (delta 504 KB over 1 run(s))
