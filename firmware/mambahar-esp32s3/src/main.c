@@ -19,7 +19,7 @@
 #include "../../../MambaLite-Micro/csrc/matrix.c"
 #include "../../common/mamba.c"
 #include "../../common/mambahar.c"
-#include "sample_input.h"
+#include "uci_sample.h"
 
 // shortcut: single-sample run then reboot, same as upstream examples; multi-sample
 // loop arrives with the thesis MT2 work (UART protocol + logits output).
@@ -30,14 +30,21 @@ void app_main(void)
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 
+    printf("Input: UCI HAR test sample 0 (standardized, 570 floats)\n");
     printf("Free heap before: %" PRIu32 " bytes\n", esp_get_free_heap_size());
 
+    float logits[6];
     int64_t start = esp_timer_get_time();
-    int pred = mambahar_forward(input_data);
+    int pred = mambahar_forward_logits(uci_sample, logits);
     int64_t end = esp_timer_get_time();
 
     printf("Model_Forward completed.\n");
     printf("Prediction: %d\n", pred);
+    printf("Logits:");
+    for (int c = 0; c < 6; c++) {
+        printf(" %.6f", logits[c]);
+    }
+    printf("\n");
     if (pred < 0) {
         printf("Output: INVALID (%s), pred=%d is not a class\n",
                pred == -2 ? "non-finite logits" : "allocation/kernel failure", pred);

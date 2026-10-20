@@ -28,18 +28,25 @@ powershell -ExecutionPolicy Bypass -File .\scripts\flash_and_log.ps1
 ```
 starting in 5 seconds...
 ...
+Input: UCI HAR test sample 0 (standardized, 570 floats)
 Free heap before: <n> bytes
 Model_Forward completed.
 Prediction: <0..5>
+Logits: <6 giá trị, 6 chữ số thập phân>
 Elapsed time: <N> microseconds (<x.xx> milliseconds)
 Free heap after: <n> bytes
 Min free heap ever: <n> bytes
 Restarting in 10 seconds...
 ```
-`Prediction` nằm trong 0..5; **`-2` = đầu ra không hữu hạn** (mẫu demo `sample_input.h` sai
-thang — log thật 20/10 cho `-2` / `Output: INVALID`, đúng dự kiến). Heap: `before - min ever`
-≈ đỉnh bộ nhớ suy luận (đúng yêu cầu "bộ nhớ sử dụng khi suy luận"). Muốn biết đúng/sai cần
-đối chiếu mẫu trong `sample_input.h` (bước đối chiếu số học là việc tuần sau theo đề cương MT3).
+Input hiện tại = **mẫu 0 của UCI HAR test set** (`src/uci_sample.h`, đúng bytes
+`firmware/host/logs/uci_test.f32` mà host đã chạy) → so trực tiếp với dòng 0 của
+`firmware/host/logs/uci_test_logits_final.csv` (host: pred **4**, logits
+`-8.880633 -6.193293 -3.396970 2.071888 10.757054 -6.310842`). Ngày 20/10 trên bo:
+pred 4, **max|Δlogit| 1,35e-6, MAE 5,0e-7** (in 6 chữ số nên sai số gồm cả làm tròn
+khi in; ngưỡng tầng B: 1e-4 / 1e-5 — đây là bằng chứng sớm trên ESP32, **chưa thay
+nghiệm thu Portenta H7**). `Prediction: -2` vẫn là nghĩa "logits không hữu hạn" khi
+ai đó thay lại `sample_input.h` (mẫu demo sai thang). Heap: `before - min ever`
+≈ đỉnh bộ nhớ suy luận (đúng yêu cầu "bộ nhớ sử dụng khi suy luận").
 
 ## Evidence tự động
 - `logs\build_<timestamp>.txt` — output build (có bảng Flash/RAM) → trả lời yêu cầu
