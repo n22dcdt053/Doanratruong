@@ -15,8 +15,6 @@ datn_docx.txt
 # Agent / báo cáo / tài liệu nội bộ (không commit)
 *.docx
 *.doc
-BAO_CAO_*.md
-KIEM_CHUNG_*.md
 CLAUDE.md
 Repo
 Yêu Cầu
