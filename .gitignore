@@ -11,3 +11,21 @@ YEU_CAU_DE_CUONG.md
 HUONG_PHAT_TRIEN.md
 De_cuong_chi_tiet_DATN_Mamba_HAR_STM32H7.docx
 datn_docx.txt
+
+# Agent / báo cáo / tài liệu nội bộ (không commit)
+*.docx
+*.doc
+CLAUDE.md
+Repo
+Yêu Cầu
+
+# Upstream clone riêng (xem HUONG_DAN_NHOM.md), không phải của repo này
+MambaLite-Micro/
+
+# Cấu hình IDE cục bộ
+.vscode/
+
+# File tạm khi sửa line ending / tái lập log
+firmware/host/run_host_test_lf.sh
+firmware/host/run_lf2.sh
+firmware/host/logs/repro_logits.csv
