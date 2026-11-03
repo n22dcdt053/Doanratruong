@@ -12,3 +12,4 @@
 *.f32  binary
 *.bin  binary
 *.elf  binary
+*.pt   binary
