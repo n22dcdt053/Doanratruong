@@ -29,6 +29,4 @@ MambaLite-Micro/
 firmware/host/run_host_test_lf.sh
 firmware/host/run_lf2.sh
 firmware/host/logs/repro_logits.csv
-
-# Môi trường Python cho MLP đối chứng (tái lập bằng ml/requirements.txt)
 .venv-ml/
