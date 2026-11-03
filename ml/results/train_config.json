@@ -1,0 +1,32 @@
+{
+  "model": "Linear(561,64) -> ReLU -> Linear(64,6), FP32",
+  "input": "561 dac trung goc, khong padding, khong chuan hoa them",
+  "optimizer": {
+    "name": "Adam",
+    "lr": 0.001,
+    "weight_decay": 0.0
+  },
+  "loss": "CrossEntropyLoss",
+  "batch_size": 64,
+  "shuffle": true,
+  "shuffle_generator_seed": 42,
+  "max_epochs": 100,
+  "early_stop_patience": 10,
+  "checkpoint_selection": "val macro-F1 cao nhat; cai thien nghiem ngat; hoa -> epoch som hon",
+  "seed": 42,
+  "device": "cpu",
+  "torch_num_threads": 1,
+  "deterministic_algorithms": true,
+  "n_train": 5551,
+  "n_val": 1801,
+  "epochs_run": 36,
+  "stopped_epoch": 36,
+  "best_epoch": 26,
+  "best_val_macro_f1": 0.9610658088772065,
+  "versions": {
+    "python": "3.14.3",
+    "torch": "2.14.0+cpu",
+    "numpy": "2.4.4",
+    "sklearn": "1.9.1"
+  }
+}
