@@ -1,0 +1,40 @@
+﻿starting in 4 seconds...
+starting in 3 seconds...
+starting in 2 seconds...
+starting in 1 seconds...
+starting in 0 seconds...
+FW commit 667430b (clean) built 2026-11-03T14:41:43Z UTC | opt=debug(-Og)
+Reset: reason=1 (POWERON) | boot #1 since RTC_NOINIT init
+Previous test: none
+ESP32-S3 MLP-HAR benchmark (control model; error thresholds pending advisor confirmation)
+Stability+numerics: 1000 runs x 20 UCI samples, quiet loop, WDT fed
+Test start: boot #1 | free heap 385732 bytes
+BENCH DONE: runs=1000 samples=20 invalid=0 label_mismatch=0
+numerics vs host C (MLP) (Xtensa/ESP-IDF/C; error thresholds pending advisor confirmation): comparisons=6000 (distinct sample x logit pairs=120, each repeated 50x; deterministic) max|dlogit|=0.000e+00 MAE=0.000e+00
+time_us: min=10664 p50=10666 p95=10692 max=10692 mean=10670 sd=9
+heap: end=385516 min_ever=385516 bytes
+heap every 50 runs (bytes): 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732 385732
+sample 0 (idx 79): pred=0 host_pred=0 max|d|=0.000e+00
+sample 1 (idx 80): pred=0 host_pred=0 max|d|=0.000e+00
+sample 2 (idx 81): pred=0 host_pred=0 max|d|=0.000e+00
+sample 3 (idx 128): pred=2 host_pred=2 max|d|=0.000e+00
+sample 4 (idx 133): pred=1 host_pred=1 max|d|=0.000e+00
+sample 5 (idx 134): pred=1 host_pred=1 max|d|=0.000e+00
+sample 6 (idx 109): pred=2 host_pred=2 max|d|=0.000e+00
+sample 7 (idx 110): pred=2 host_pred=2 max|d|=0.000e+00
+sample 8 (idx 111): pred=2 host_pred=2 max|d|=0.000e+00
+sample 9 (idx 31): pred=3 host_pred=3 max|d|=0.000e+00
+sample 10 (idx 33): pred=3 host_pred=3 max|d|=0.000e+00
+sample 11 (idx 34): pred=3 host_pred=3 max|d|=0.000e+00
+sample 12 (idx 0): pred=4 host_pred=4 max|d|=0.000e+00
+sample 13 (idx 1): pred=4 host_pred=4 max|d|=0.000e+00
+sample 14 (idx 2): pred=4 host_pred=4 max|d|=0.000e+00
+sample 15 (idx 55): pred=5 host_pred=5 max|d|=0.000e+00
+sample 16 (idx 56): pred=5 host_pred=5 max|d|=0.000e+00
+sample 17 (idx 57): pred=5 host_pred=5 max|d|=0.000e+00
+sample 18 (idx 112): pred=2 host_pred=2 max|d|=0.000e+00
+sample 19 (idx 35): pred=3 host_pred=3 max|d|=0.000e+00
+true labels (info only, not used for inference): 0 0 0 2 1 1 2 2 2 3 3 3 4 4 4 5 5 5 2 3
+Resets: boot_count=1 prev_test_interrupted=0 | power-on clean run
+[0;32mI (26507) main_task: Returned from app_main()[0m
+
