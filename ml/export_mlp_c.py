@@ -114,7 +114,7 @@ def main() -> int:
         body.append(fmt_array(name, tensors[name], size_expr))
         body.append("")
 
-    footer = ["#endif /* MLP_WEIGHTS_H */", ""]
+    footer = ["#endif /* MLP_WEIGHTS_H */"]
     text = "\n".join(header + body + footer) + "\n"
 
     out.parent.mkdir(parents=True, exist_ok=True)

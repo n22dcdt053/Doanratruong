@@ -4572,4 +4572,3 @@ static const float mlp_b2[6] = {
 };
 
 #endif /* MLP_WEIGHTS_H */
-

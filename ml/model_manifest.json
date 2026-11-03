@@ -1,7 +1,7 @@
 {
   "files": {
     "firmware/common/mlp_har.c": "bb00a059720eb58a356c06757c47d9546ac2006a72ee981e71efb5f8039e18fa",
-    "firmware/common/mlp_weights.h": "17f04561b9bcf7b43a3ae02442af1770596d007955fe59da7ba45536e069cb1f",
+    "firmware/common/mlp_weights.h": "398dd42647171f99058628b129dd27e83a95d708c57bfb24b581c02e86bdf758",
     "ml/dataset_checksums.json": "cd0e9970b92a8d8f7704a852368cbb7023992ce11035b066b4716ecee203dfaa",
     "ml/results/mlp_seed42.pt": "0999a6a7a73afcb752b99275f640254d4d20c2231079eb0bc5330b7470701239",
     "ml/results/test_metrics.json": "6ee286d86ccac557f4f966c0855c80f3766dc5d70f94ffa0427f01a8239e126a",
