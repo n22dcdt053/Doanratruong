@@ -1,6 +1,6 @@
 /**
  * @file main.c
- * @brief Mamba HAR inference on ESP32-S3 - bring-up proxy for the DATN.
+ * @brief Mamba HAR inference benchmark on the ESP32-S3 (DATN target platform).
  *
  * Adapted from MambaLite-Micro (MIT License, commit 44d51fc):
  *  - examples/mambakws-esp32-3/src/main.c (ESP-IDF app shell)
@@ -9,10 +9,11 @@
  * model wrapper + mamba kernel are vendored under firmware/common/ so thesis
  * changes stay outside the upstream checkout (see HUONG_PHAT_TRIEN.md).
  *
- * Scope: ESP32-S3 bring-up only. The numbers here are PROXY numerics
- * (Xtensa / ESP-IDF / C build), not tier-B acceptance: tier-B needs the
- * Portenta H7 (C++ build via main.cpp) and tolerance thresholds confirmed by
- * the advisor. Not acceptance evidence for any thesis criterion.
+ * Scope: the ESP32-S3 is the project's primary target (the switch from Portenta
+ * H7 was agreed with the advisor by message; no written record yet). Error
+ * thresholds (1e-4 / 1e-5) are pending advisor confirmation, so the measured
+ * errors are reported as numbers, not as "passed". The build is -Og at 160 MHz,
+ * so the timings are not representative of performance.
  *
  * Mode: 1000 consecutive inferences on 20 rotating UCI samples (all 6 classes),
  * single boot, no per-run prints inside the timing loop, WDT fed by a one-tick
@@ -41,14 +42,22 @@
 #define N_RUNS 1000
 #define HEAP_EVERY 50
 #define BOOT_MAGIC 0x48415231u /* "HAR1" */
+#define TEST_IDLE 0u
+#define TEST_RUNNING 0x52554E31u /* "RUN1" */
+#define TEST_DONE 0x444F4E45u    /* "DONE" */
 
 static uint32_t t_us[N_RUNS]; // 4 KB .bss; sorted in place for percentiles
 static uint32_t heap_samples[N_RUNS / HEAP_EVERY + 1];
 
-// Survives software/WDT resets (not a power cycle): lets the log prove whether
-// the board rebooted between the start and the end of the test.
+// Survive software/WDT resets (not a power cycle).
 RTC_NOINIT_ATTR static uint32_t g_boot_magic;
 RTC_NOINIT_ATTR static uint32_t g_boot_count;
+// A TEST_RUNNING value left here by a previous boot proves that run was
+// interrupted by a reset. Comparing counters at the start and end of one
+// app_main call proves nothing (they always match; after a reset the final
+// line is simply never printed). "No reset" evidence is: reason=POWERON,
+// exactly one "Test start" line, and boot_count=1.
+RTC_NOINIT_ATTR static uint32_t g_test_state;
 
 static int cmp_u32(const void *a, const void *b)
 {
@@ -97,11 +106,15 @@ static const char *reset_reason_name(esp_reset_reason_t r)
 void app_main(void)
 {
     esp_reset_reason_t rr = esp_reset_reason();
+    int first_init = 0;
     if (g_boot_magic != BOOT_MAGIC) {
         g_boot_magic = BOOT_MAGIC;
         g_boot_count = 0;
+        g_test_state = TEST_IDLE;
+        first_init = 1;
     }
     const uint32_t boot_no = ++g_boot_count;
+    const int prev_interrupted = !first_init && g_test_state == TEST_RUNNING;
 
 #if defined(CONFIG_COMPILER_OPTIMIZATION_PERF)
     const char *opt = "perf(-O2)";
@@ -125,13 +138,17 @@ void app_main(void)
            FW_GIT_COMMIT, FW_GIT_DIRTY, FW_BUILD_UTC, opt);
     printf("Reset: reason=%d (%s) | boot #%" PRIu32 " since RTC_NOINIT init\n",
            (int)rr, reset_reason_name(rr), boot_no);
+    printf("Previous test: %s\n",
+           first_init ? "none"
+                      : prev_interrupted ? "INTERRUPTED (reset during test)"
+                                         : g_test_state == TEST_DONE ? "completed" : "none");
 
-    const uint32_t boot_at_start = g_boot_count;
-    printf("ESP32-S3 bring-up (proxy numerics, NOT tier-B acceptance; Portenta H7 required)\n");
+    printf("ESP32-S3 HAR benchmark (target platform; error thresholds pending advisor confirmation)\n");
     printf("Stability+numerics: %d runs x %d UCI samples, quiet loop, WDT fed\n",
            N_RUNS, N_SAMPLES);
+    g_test_state = TEST_RUNNING;
     printf("Test start: boot #%" PRIu32 " | free heap %" PRIu32 " bytes\n",
-           boot_at_start, esp_get_free_heap_size());
+           boot_no, esp_get_free_heap_size());
 
     float e_max = 0.0f;
     float per_sample_max[N_SAMPLES];
@@ -179,6 +196,7 @@ void app_main(void)
         // Outside the measured window: yield to IDLE0 so the task watchdog is fed.
         vTaskDelay(1);
     }
+    g_test_state = TEST_DONE;
     heap_samples[N_RUNS / HEAP_EVERY] = esp_get_free_heap_size();
 
     qsort(t_us, N_RUNS, sizeof(t_us[0]), cmp_u32);
@@ -190,8 +208,11 @@ void app_main(void)
 
     printf("BENCH DONE: runs=%d samples=%d invalid=%ld label_mismatch=%ld\n",
            N_RUNS, N_SAMPLES, invalid, label_mismatch);
-    printf("proxy numerics (Xtensa/ESP-IDF/C; NOT tier-B): comparisons=%ld max|dlogit|=%.3e MAE=%.3e\n",
-           comparisons, (double)e_max, mae_sum / (double)comparisons);
+    printf("numerics vs host (Xtensa/ESP-IDF/C; error thresholds pending advisor confirmation): "
+           "comparisons=%ld (distinct sample x logit pairs=%d, each repeated %dx; deterministic) "
+           "max|dlogit|=%.3e MAE=%.3e\n",
+           comparisons, N_SAMPLES * 6, N_RUNS / N_SAMPLES,
+           (double)e_max, mae_sum / (double)comparisons);
     printf("time_us: min=%" PRIu32 " p50=%" PRIu32 " p95=%" PRIu32 " max=%" PRIu32
            " mean=%.0f sd=%.0f\n",
            t_us[0], t_us[N_RUNS / 2], t_us[(int)(N_RUNS * 95 / 100)], t_us[N_RUNS - 1],
@@ -209,7 +230,7 @@ void app_main(void)
                s, uci_index[s], last_pred[s], (int)uci_host_pred[s],
                (double)per_sample_max[s]);
     }
-    printf("Resets: boot_start=%" PRIu32 " boot_end=%" PRIu32 " | %s\n",
-           boot_at_start, g_boot_count,
-           boot_at_start == g_boot_count ? "no reset during test" : "RESET DETECTED");
+    printf("Resets: boot_count=%" PRIu32 " prev_test_interrupted=%d | %s\n",
+           g_boot_count, prev_interrupted,
+           (boot_no == 1 && !prev_interrupted) ? "power-on clean run" : "REBOOTED since RTC init");
 }
