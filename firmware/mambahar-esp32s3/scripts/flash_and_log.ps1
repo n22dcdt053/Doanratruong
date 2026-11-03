@@ -9,7 +9,7 @@
 # Evidence: logs\esp32s3_har_<timestamp>.txt and logs\build_<timestamp>.txt
 param(
     [string]$Port,
-    [int]$DurationSec = 35,
+    [int]$DurationSec = 155,
     [switch]$SkipBuild,
     [switch]$SkipUpload
 )
