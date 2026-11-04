@@ -1,0 +1,16 @@
+Fidelity check: public weights, train input only
+header: MambaLite-Micro\examples\mambahar-arduino-6\include\mamba_weights.h
+header sha256: 187182024b94491be836ec359660d45b5e8207358f2a3a8714c29c3d269c0db7
+data: firmware\host\logs\uci_train.f32 (16762560 bytes, 7352 x 57)
+C logits: ml\results\fidelity_public_weights_c_logits.csv
+PyTorch model: ml/mamba_torch.py (MambaHAR)
+samples: 7352
+pred mismatch: 0
+pred mismatch indices: -
+max|dlogit|: 1.879934254e-04
+MAE: 4.869353319e-06
+max|dlogit| location: sample=1345, class=2, C=1.908983890e-01, torch=1.907103956e-01, d=1.879934254e-04
+C logit range: min=-1.092667240e+02, max=8.971268460e+01
+torch logit range: min=-1.092666779e+02, max=8.971264648e+01
+finite logits: C=True, torch=True
+note: logits are float32; comparisons are computed in float64 after cast
