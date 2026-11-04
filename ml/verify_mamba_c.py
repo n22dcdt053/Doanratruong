@@ -102,7 +102,8 @@ def negative_control(header: Path, f32: Path, torch_logits: np.ndarray) -> dict:
         (tmp / "mamba_weights.h").write_text(mutated, encoding="utf-8", newline="\n")
         out_csv = tmp / "neg_logits.csv"
         bin_wsl = "/tmp/host_main_mamba_neg_bin"
-        includes = " ".join(shq(wsl_path(p)) for p in (tmp, VENDOR, CSRC, UPSTREAM_INC))
+        includes = " ".join(
+            f"-I{shq(wsl_path(p))}" for p in (tmp, VENDOR, CSRC, UPSTREAM_INC))
         cmd = (f"gcc -O2 -o {shq(bin_wsl)} {shq(wsl_path(HOST_C))} {includes} -lm")
         build = subprocess.run(["wsl", "-e", "bash", "-c", cmd],
                                capture_output=True, text=True)
