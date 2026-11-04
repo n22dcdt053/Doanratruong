@@ -57,6 +57,27 @@ wsl -e bash -c 'cd /mnt/c/StudyStuff/QBA/DoanNhomQuy && bash firmware/host/run_h
 .\.venv-ml\Scripts\python ml\check_fidelity.py
 ```
 
+## Bootstrap CI 95% theo cụm người (Mamba huấn luyện lại vs MLP)
+
+Chỉ đọc dự đoán đã có. **Không đọc `data/UCI HAR Dataset/`, không nạp checkpoint, không chạy lại
+mô hình, không đụng `ml/split_manifest.csv` để chọn gì.**
+
+```powershell
+# chạy chính thức (một lần) -> ml/results/bootstrap/
+.\.venv-ml\Scripts\python ml\bootstrap_ci.py
+
+# kiểm tính tất định: chạy lần hai ra thư mục tạm (không commit), so sha256 từng tệp
+.\.venv-ml\Scripts\python ml\bootstrap_ci.py --out-dir <thư mục tạm>
+```
+
+- Đầu vào: `ml/results/predictions_test.csv`, `ml/results/mamba_retrained/predictions_test.csv`,
+  `ml/results/test_metrics.json`, `ml/results/mamba_retrained/test_metrics.json`.
+- Đầu ra (`ml/results/bootstrap/`): `bootstrap_results.json`, `bootstrap_draws.csv`,
+  `per_subject_metrics.csv`, `loso_delta.csv`, `bootstrap_summary.md`.
+- Tham số cố định: seed 42, B = 2.000, mỗi lần rút 9 mã người có hoàn lại (giữ toàn bộ cửa sổ
+  của mỗi người), khoảng 95% bằng percentile 2,5 / 97,5. Không chỉnh tham số, không chạy lại để
+  chọn seed.
+
 ## Cảnh báo
 
 - **Không chạy `eval_mlp.py` trước khi commit checkpoint.** Tập test chỉ được đọc một lần,
