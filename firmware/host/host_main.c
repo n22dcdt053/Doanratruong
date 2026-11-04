@@ -1,7 +1,8 @@
 /**
  * @file host_main.c
- * @brief PC (host) build of the C inference chain used by the Portenta H7
- *        firmware (firmware/mambahar-portenta-h7/src/main.cpp).
+ * @brief PC (host) build of the C inference chain shared by the ESP32-S3
+ *        firmware (firmware/mambahar-esp32s3/src/main.c) and the legacy
+ *        Portenta H7 demo (firmware/mambahar-portenta-h7/src/main.cpp).
  *
  * Sources: firmware/common/mamba.c + mambahar.c (vendored dev copies) +
  * upstream csrc/{matrix,tensor}.c + upstream weights/sample headers.

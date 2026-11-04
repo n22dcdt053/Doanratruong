@@ -7,10 +7,11 @@
   "paper": "arXiv:2509.05488 (MambaLite-Micro: Memory-Optimized Mamba Inference on MCUs)",
   "local_checkout": "MambaLite-Micro/",
   "target_example": "examples/mambahar-arduino-6",
+  "hash_basis": "sha256 of file content with CRLF normalized to LF",
   "weights": {
     "file": "examples/mambahar-arduino-6/include/mamba_weights.h",
-    "sha256": "187182024B94491BE836EC359660D45B5E8207358F2A3A8714C29C3D269C0DB7",
-    "bytes": 653235,
+    "sha256": "C3326F9E1EC2123F4A5E7E2C0EF66D8B38B63917FCC0BCE0C1653E556600FE3A",
+    "bytes": 648547,
     "note": "653.235 B là kích thước file header dạng text (số float viết dạng chữ). Mô hình ~36,7 nghìn tham số FP32 -> trọng số nhị phân chỉ ~147 KB, khớp flash firmware Portenta 307 KB."
   },
   "vendored": [
@@ -21,19 +22,19 @@
     },
     {
       "file": "firmware/common/mamba.c",
-      "sha256": "A4A2AEBB3D77CC5E5D8E8457CBFB8ABB6F80E0F5AE54A38B5D31DE41554FB5E3",
+      "sha256": "79084F5852C4A18D93E1A89B310512F235D8E68DED9291142B6702EEA26FD90E",
       "note": "kernel; khác upstream 1 dòng OOB read; diff: mamba_vs_upstream.diff"
     }
   ],
   "upstream_files": [
     {
       "file": "MambaLite-Micro/csrc/mamba.c",
-      "sha256": "BA59A6AF7F93027087F608D0351971BDA685509C347D2F3D905A7D8B9E970DA9",
+      "sha256": "E44324635BC7ADE82EB5A3799761AC0EA4795B8EAE63AC48A8A9E8786EAE8866",
       "note": "kernel upstream 1:1; đối chiếu A/B bằng run_upstream_cmp.sh"
     },
     {
       "file": "MambaLite-Micro/examples/mambahar-arduino-6/include/mambahar.c",
-      "sha256": "84AC465DF0310DD09DEAC4423F11F625C6F352C4F3DB6CCF03B947085BFE7957",
+      "sha256": "2C077E27BF5CCBC9DA63DC0E63A515DEE10BD80CBB1D43C1E26426D997CAB8C0",
       "note": "wrapper upstream 1:1 (đúng bản 1:1 đã ghi là 84AC465D…); đối chiếu A/B bằng run_upstream_cmp.sh"
     }
   ]

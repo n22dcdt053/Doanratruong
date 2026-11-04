@@ -1,0 +1,39 @@
+﻿starting in 4 seconds...
+starting in 3 seconds...
+starting in 2 seconds...
+starting in 1 seconds...
+starting in 0 seconds...
+FW commit 8c0ac36 (clean) built 2026-11-04T13:35:25Z UTC | opt=debug(-Og)
+Reset: reason=1 (POWERON) | boot #1 since RTC_NOINIT init
+Previous test: none
+ESP32-S3 Mamba-HAR (retrained, seed 42) benchmark (control comparison; error thresholds pending advisor confirmation)
+Stability+numerics: 1000 runs x 20 UCI samples, quiet loop, WDT fed
+Test start: boot #1 | free heap 385668 bytes
+BENCH DONE: runs=1000 samples=20 invalid=0 label_mismatch=0
+numerics vs host (Xtensa/ESP-IDF/C; error thresholds pending advisor confirmation): comparisons=6000 (distinct sample x logit pairs=120, each repeated 50x; deterministic) max|dlogit|=1.526e-05 MAE=1.029e-06
+time_us: min=121933 p50=121973 p95=122036 max=122235 mean=121981 sd=30
+heap: end=385452 min_ever=342196 bytes
+heap every 50 runs (bytes): 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668 385668
+sample 0 (idx 79): pred=0 host_pred=0 max|d|=5.364e-07
+sample 1 (idx 80): pred=0 host_pred=0 max|d|=9.537e-07
+sample 2 (idx 81): pred=0 host_pred=0 max|d|=1.907e-06
+sample 3 (idx 128): pred=1 host_pred=1 max|d|=1.907e-06
+sample 4 (idx 133): pred=1 host_pred=1 max|d|=1.192e-06
+sample 5 (idx 134): pred=1 host_pred=1 max|d|=4.768e-07
+sample 6 (idx 109): pred=2 host_pred=2 max|d|=1.907e-06
+sample 7 (idx 110): pred=2 host_pred=2 max|d|=9.537e-07
+sample 8 (idx 111): pred=2 host_pred=2 max|d|=1.907e-06
+sample 9 (idx 31): pred=3 host_pred=3 max|d|=9.537e-07
+sample 10 (idx 33): pred=3 host_pred=3 max|d|=1.144e-05
+sample 11 (idx 34): pred=3 host_pred=3 max|d|=1.907e-06
+sample 12 (idx 0): pred=4 host_pred=4 max|d|=1.907e-06
+sample 13 (idx 1): pred=4 host_pred=4 max|d|=3.815e-06
+sample 14 (idx 2): pred=4 host_pred=4 max|d|=1.907e-06
+sample 15 (idx 55): pred=5 host_pred=5 max|d|=3.815e-06
+sample 16 (idx 56): pred=5 host_pred=5 max|d|=0.000e+00
+sample 17 (idx 57): pred=5 host_pred=5 max|d|=1.526e-05
+sample 18 (idx 112): pred=2 host_pred=2 max|d|=3.815e-06
+sample 19 (idx 35): pred=3 host_pred=3 max|d|=1.907e-06
+Resets: boot_count=1 prev_test_interrupted=0 | power-on clean run
+[0;32mI (136500) main_task: Returned from app_main()[0m
+

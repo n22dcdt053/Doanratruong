@@ -1,0 +1,11 @@
+{
+  "files": {
+    "ml/dataset_checksums.json": "cd0e9970b92a8d8f7704a852368cbb7023992ce11035b066b4716ecee203dfaa",
+    "ml/results/fidelity_public_weights.txt": "674bdf67fb23a91026660af13da3d16b1055b63980c6f6ed1991d245bde18efe",
+    "ml/results/mamba_retrained/mamba_seed42.pt": "f742597b772f609968040e0ffc22f50b011a996ebf3c05fdbdfa8ec95b6f7839",
+    "ml/results/mamba_retrained/mamba_weights.h": "5d8499d2dfb07e425814492b17ab83368cd6e8c199895d4c69493905d9687c50",
+    "ml/results/mamba_retrained/test_metrics.json": "1b50df3a2712b3f207e2137b0b19eca6cacde2d2003e9892ab9bc65dc71a1a2b",
+    "ml/split_manifest.csv": "a634d00a8fb0084212469791ab780b6c7fe07e482f03991aff8f9f5a450326f0"
+  },
+  "hash_basis": "text files: CRLF->LF normalized; .pt: raw bytes"
+}

@@ -1,0 +1,51 @@
+Doi chieu MLP: C (firmware/common/mlp_har.c) vs PyTorch (FP32, CPU)
+
+c_csv: ml/results/mlp_c_logits_test.csv
+torch_csv: ml/results/predictions_test.csv
+header: firmware/common/mlp_weights.h
+samples: 2947
+pred khac nhau: 0
+max|dlogit|: 1.430000000e-05
+MAE: 1.596712522e-06
+vi tri lech lon nhat: sample_index=2683 logit=5 c=-8.317975040e+00 torch=-8.317960740e+00 delta=1.430000000e-05
+
+uci_har.py score (CSV tu C):
+samples: 2947
+nan_rows (non-finite logits): 0
+invalid_rows (pred < 0): 0
+accuracy: 0.9403
+macro-F1: 0.9400
+F1 per class: c0=0.9545 c1=0.9421 c2=0.9470 c3=0.8952 c4=0.9078 c5=0.9934
+classes: 0=WALKING 1=WALKING_UPSTAIRS 2=WALKING_DOWNSTAIRS 3=SITTING 4=STANDING 5=LAYING
+confusion matrix (rows=true, cols=pred; pred<0 excluded):
+true 0:   482     1    13     0     0     0
+true 1:    27   439     4     0     1     0
+true 2:     5    19   393     0     3     0
+true 3:     0     2     0   410    79     0
+true 4:     0     0     0    15   517     0
+true 5:     0     0     0     0     7   530
+
+uci_har.py score (CSV tu PyTorch):
+samples: 2947
+nan_rows (non-finite logits): 0
+invalid_rows (pred < 0): 0
+accuracy: 0.9403
+macro-F1: 0.9400
+F1 per class: c0=0.9545 c1=0.9421 c2=0.9470 c3=0.8952 c4=0.9078 c5=0.9934
+classes: 0=WALKING 1=WALKING_UPSTAIRS 2=WALKING_DOWNSTAIRS 3=SITTING 4=STANDING 5=LAYING
+confusion matrix (rows=true, cols=pred; pred<0 excluded):
+true 0:   482     1    13     0     0     0
+true 1:    27   439     4     0     1     0
+true 2:     5    19   393     0     3     0
+true 3:     0     2     0   410    79     0
+true 4:     0     0     0    15   517     0
+true 5:     0     0     0     0     7   530
+
+Kiem tra am tinh: sua 1 trong so trong ban sao tam cua header, build lai, chay lai
+  mlp_w1[0]: 6.688839942e-02 -> 1.066888399e+00 (+1.0)
+  pred khac nhau: 15
+  max|dlogit|: 2.508068000e-01
+  MAE: 5.871457764e-02
+
+OK: pred giong het; logit lech o muc float32 (ky vong dinh tinh ~1e-6).
+OK: kiem tra am tinh lam sai lech tang ro ret.

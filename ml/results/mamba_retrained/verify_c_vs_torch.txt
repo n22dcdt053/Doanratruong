@@ -1,0 +1,56 @@
+Doi chieu Mamba huan luyen lai: C (firmware/common/mamba.c) vs PyTorch (FP32, CPU)
+
+c_csv: ml/results/mamba_retrained/mamba_c_logits_test.csv
+torch_csv: ml/results/mamba_retrained/predictions_test.csv
+header: ml/results/mamba_retrained/mamba_weights.h
+header sha256: 5d8499d2dfb07e425814492b17ab83368cd6e8c199895d4c69493905d9687c50
+samples: 2947
+pred khac nhau: 0
+max|dlogit|: 2.210000000e-04
+MAE: 5.427799054e-06
+vi tri lech lon nhat: sample_index=2825 logit=0 c=-1.093559110e+02 torch=-1.093556900e+02 delta=2.210000000e-04
+khoang logit C: min=-2.096164860e+02 max=1.212419200e+02
+khoang logit PyTorch: min=-2.096164860e+02 max=1.212419200e+02
+
+uci_har.py score (CSV tu C):
+samples: 2947
+nan_rows (non-finite logits): 0
+invalid_rows (pred < 0): 0
+accuracy: 0.9298
+macro-F1: 0.9273
+F1 per class: c0=0.9305 c1=0.9048 c2=0.8929 c3=0.9108 c4=0.9255 c5=0.9991
+classes: 0=WALKING 1=WALKING_UPSTAIRS 2=WALKING_DOWNSTAIRS 3=SITTING 4=STANDING 5=LAYING
+confusion matrix (rows=true, cols=pred; pred<0 excluded):
+true 0:   482     5     9     0     0     0
+true 1:    34   437     0     0     0     0
+true 2:    24    50   346     0     0     0
+true 3:     0     2     0   429    59     1
+true 4:     0     1     0    22   509     0
+true 5:     0     0     0     0     0   537
+
+uci_har.py score (CSV tu PyTorch):
+samples: 2947
+nan_rows (non-finite logits): 0
+invalid_rows (pred < 0): 0
+accuracy: 0.9298
+macro-F1: 0.9273
+F1 per class: c0=0.9305 c1=0.9048 c2=0.8929 c3=0.9108 c4=0.9255 c5=0.9991
+classes: 0=WALKING 1=WALKING_UPSTAIRS 2=WALKING_DOWNSTAIRS 3=SITTING 4=STANDING 5=LAYING
+confusion matrix (rows=true, cols=pred; pred<0 excluded):
+true 0:   482     5     9     0     0     0
+true 1:    34   437     0     0     0     0
+true 2:    24    50   346     0     0     0
+true 3:     0     2     0   429    59     1
+true 4:     0     1     0    22   509     0
+true 5:     0     0     0     0     0   537
+
+Kiem tra am tinh: sua 1 trong so trong ban sao tam cua header, build lai, chay lai
+  linear_in_weight[0]: 1.247683987e-01 -> 1.124768399e+00 (+1.0)
+  pred khac nhau: 90
+  max|dlogit|: 2.645896900e+01
+  MAE: 2.047375117e+00
+
+Ghi chu: chi bao so do; khong dat nguong dung sai cho |dlogit|. P2 do tren tap
+train (trong so cong khai): pred khop 7352/7352, max|dlogit| 1.879934254e-04.
+
+Kiem tra am tinh: sai lech tang ro ret so voi baseline (xem so o tren).
