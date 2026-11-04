@@ -38,6 +38,25 @@ wsl -e bash -c 'cd /mnt/c/StudyStuff/QBA/DoanNhomQuy && bash firmware/host/run_m
 .\.venv-ml\Scripts\python ml\verify_ml_manifest.py
 ```
 
+## Mamba — kiểm tra độ trung thực với runner C (P2, chỉ tập train)
+
+Dùng trọng số công khai nạp vào `ml/mamba_torch.py`, so logit với runner C hiện có trên
+7.352 mẫu train. Không đọc `X_test.txt` hay `uci_test.f32`.
+
+```powershell
+# 1. X_train.txt -> 570 float32 LE (561 + 9 số 0), 7.352 mẫu; *.f32 bị gitignore
+.\.venv-ml\Scripts\python ml\make_train_f32.py
+
+# 2. Runner C: firmware/host/host_main.c qua firmware/host/run_host_test.sh (WSL).
+#    Script tự build `gcc -O2 host_main.c -I firmware/common -I MambaLite-Micro/csrc
+#    -I MambaLite-Micro/examples/mambahar-arduino-6/include -lm` (trọng số công khai),
+#    binary tạm trong /tmp và xóa khi thoát.
+wsl -e bash -c 'cd /mnt/c/StudyStuff/QBA/DoanNhomQuy && bash firmware/host/run_host_test.sh --batch firmware/host/logs/uci_train.f32 ml/results/fidelity_public_weights_c_logits.csv'
+
+# 3. So PyTorch (ml/mamba_torch.py + ml/load_public_weights.py) với CSV logit của C
+.\.venv-ml\Scripts\python ml\check_fidelity.py
+```
+
 ## Cảnh báo
 
 - **Không chạy `eval_mlp.py` trước khi commit checkpoint.** Tập test chỉ được đọc một lần,
