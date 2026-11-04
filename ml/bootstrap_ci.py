@@ -603,8 +603,8 @@ def main() -> int:
     lines.append(f"5. Doi chung am tinh (MLP vs MLP): max|Δ| = {neg_max:.1e}, CI Δacc = "
                  f"[{neg_lo_acc:.1f}, {neg_hi_acc:.1f}], CI Δmacro-F1 = "
                  f"[{neg_lo_f1:.1f}, {neg_hi_f1:.1f}] (thap phan).")
-    lines.append("6. Tinh tat dinh: so sha256 tung file ket qua giua hai lan chay "
-                 "(ghi trong `docs/briefs/REPORT_06.md`).")
+    lines.append("6. Tinh tat dinh: chay lai cung dau vao va seed cho sha256 tung file "
+                 "ket qua giong het nhau.")
     lines.append("")
     lines.append("## 8. Ghi chu bat buoc")
     lines.append("")

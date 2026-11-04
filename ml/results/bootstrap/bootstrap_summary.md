@@ -83,7 +83,7 @@ Chay lai bootstrap voi seed 43 va 44 **chi de xem dau mut khoang 95% dich bao nh
 3. Chi so toan test tinh lai bang ma tran nham lan khop hai test_metrics.json: sai khac tuyet doi lon nhat 0.0e+00 (<= 1e-12).
 4. So lan gap lop co mau so 0 trong 2000 lan bootstrap (ca 2 mo hinh): 0.
 5. Doi chung am tinh (MLP vs MLP): max|Δ| = 0.0e+00, CI Δacc = [0.0, 0.0], CI Δmacro-F1 = [0.0, 0.0] (thap phan).
-6. Tinh tat dinh: so sha256 tung file ket qua giua hai lan chay (ghi trong `docs/briefs/REPORT_06.md`).
+6. Tinh tat dinh: chay lai cung dau vao va seed cho sha256 tung file ket qua giong het nhau.
 
 ## 8. Ghi chu bat buoc
 
