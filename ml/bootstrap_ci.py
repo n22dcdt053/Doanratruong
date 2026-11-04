@@ -619,7 +619,6 @@ def main() -> int:
                  "`ml/split_manifest.csv` voi MLP; trong so Mamba cong khai **khong** tham gia.")
     lines.append("- Khong xep hang hai mo hinh; tai lieu chi mo ta chenh lech va do bat dinh "
                  "cua phep do.")
-    lines.append("")
     summary_text = "\n".join(lines) + "\n"
     (out_dir / "bootstrap_summary.md").write_text(
         summary_text, encoding="utf-8", newline="\n")

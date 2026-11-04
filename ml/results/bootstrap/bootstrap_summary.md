@@ -92,4 +92,3 @@ Chay lai bootstrap voi seed 43 va 44 **chi de xem dau mut khoang 95% dich bao nh
 - Nguong sai so (neu co) chua duoc GVHD chot; tai lieu nay khong dung nguong nao.
 - Mamba huan luyen lai bang PyTorch thuan (khong `mamba_ssm`), cung `ml/split_manifest.csv` voi MLP; trong so Mamba cong khai **khong** tham gia.
 - Khong xep hang hai mo hinh; tai lieu chi mo ta chenh lech va do bat dinh cua phep do.
-
