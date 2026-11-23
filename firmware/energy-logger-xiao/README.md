@@ -24,7 +24,8 @@ Marker devkit (`GPIO4`) nối **D0** của XIAO. Bảng chân devkit: `firmware/
 
 - Ghi cấu hình vào thanh ghi `0x00`: `AVG = 1`, `VBUSCT = VSHCT = 1,1 ms`, `MODE = 111` (shunt + bus, liên tục) → giá trị **`0x4127`**, chu kỳ chuyển đổi ≈ 2,2 ms.
   (`0x4127` cũng là giá trị mặc định sau reset; firmware vẫn ghi lệnh reset `0x8000`, chờ 2 ms, ghi cấu hình và đọc lại để kiểm.)
-- Đọc `0xFE` (Manufacturer ID, kỳ vọng `0x5449`) và `0xFF` (Die ID). Sai/không đọc được → in `ERR ina226_id` và **không đo** (cần reset bo sau khi sửa dây). Đọc lại cấu hình sai → `ERR ina226_cfg` và không đo.
+- Đọc `0xFE` (Manufacturer ID, kỳ vọng `0x5449`) và `0xFF` (Die ID). Sai/không đọc được → in `ERR ina226_id` và **không đo** (cần reset bo sau khi sửa dây).
+  Dòng `ERR` lúc boot có thể mất nếu chưa có ai mở cổng USB, nên lý do lỗi được **lặp lại mỗi 5 s** cùng `STAT`: `# fw=… ERR ina226 (khong do) reason=… i2c_esp_err=… value=0x…` rồi `ERR …` (`i2c_esp_err=259` là `ESP_FAIL`, tức INA226 không trả lời ACK ở 0x40). Đọc lại cấu hình sai → `ERR ina226_cfg` và không đo.
 - Lấy mẫu: poll thanh ghi Mask/Enable `0x06` (việc đọc xóa cờ CVRF); khi CVRF = 1 thì đọc `0x01` (shunt) rồi `0x02` (bus). Thời điểm mẫu = `esp_timer_get_time()` **ngay sau khi đọc xong `0x02`**.
 - **Chỉ ghi mã thô.** Không dùng thanh ghi calibration/current/power. Quy đổi ở PC: `V_shunt = raw · 2,5 µV` (số có dấu 16 bit), `V_bus = raw · 1,25 mV`, `I = V_shunt / R_shunt`.
   `R_shunt = 0,1 Ω` là **giá trị danh nghĩa, chưa đo**; ghi trong dòng tiêu đề.

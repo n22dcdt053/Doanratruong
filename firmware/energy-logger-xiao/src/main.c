@@ -97,6 +97,11 @@ static char g_header[200];
 
 static volatile uint32_t g_samples, g_edges, g_drops, g_i2c_err;
 
+/* Ly do khoi dong that bai (de lap lai moi 5 s, vi dong ERR luc boot co the mat khi chua co ben doc USB) */
+static const char *g_fail_reason = "";
+static int g_fail_err;      /* esp_err_t cua lenh I2C that bai (0 neu khong phai loi bus) */
+static uint16_t g_fail_mfr; /* ina226_id: gia tri doc duoc; ina226_cfg: thanh ghi cau hinh doc lai */
+
 /* ------------------------------------------------------------------ dau ra USB-CDC */
 
 /* Ghi mot khoi (gom nhieu dong day du) duoi mutex de cac task khong chen giua dong. Tra true neu ghi het. */
@@ -338,22 +343,34 @@ static bool init_ina226(uint16_t *mfr, uint16_t *die)
     if (e == ESP_OK)
         e = ina_read(INA_REG_DIE, die);
     if (e != ESP_OK) {
+        g_fail_reason = "ina226_id";
+        g_fail_err = (int)e;
         out_line("X,%lld,%d", (long long)esp_timer_get_time(), (int)e);
         out_line("ERR ina226_id");
         return false;
     }
     if (*mfr != INA_MANUF_ID) {
+        g_fail_reason = "ina226_id";
+        g_fail_mfr = *mfr;
         out_line("ERR ina226_id");
         return false;
     }
     uint16_t back = 0;
-    if (ina_write(INA_REG_CONFIG, 0x8000) != ESP_OK) { /* RST */
+    e = ina_write(INA_REG_CONFIG, 0x8000); /* RST */
+    if (e != ESP_OK) {
+        g_fail_reason = "ina226_cfg";
+        g_fail_err = (int)e;
         out_line("ERR ina226_cfg");
         return false;
     }
     vTaskDelay(pdMS_TO_TICKS(2));
-    if (ina_write(INA_REG_CONFIG, INA_CFG) != ESP_OK || ina_read(INA_REG_CONFIG, &back) != ESP_OK ||
-        back != INA_CFG) {
+    e = ina_write(INA_REG_CONFIG, INA_CFG);
+    if (e == ESP_OK)
+        e = ina_read(INA_REG_CONFIG, &back);
+    if (e != ESP_OK || back != INA_CFG) {
+        g_fail_reason = "ina226_cfg";
+        g_fail_err = (int)e;
+        g_fail_mfr = back; /* gia tri doc lai thanh ghi cau hinh */
         out_line("ERR ina226_cfg");
         return false;
     }
@@ -380,10 +397,14 @@ void app_main(void)
 
     uint16_t mfr = 0, die = 0;
     bool measure = false;
-    if (init_i2c() == ESP_OK)
+    esp_err_t ie = init_i2c();
+    if (ie == ESP_OK) {
         measure = init_ina226(&mfr, &die);
-    else
+    } else {
+        g_fail_reason = "ina226_id";
+        g_fail_err = (int)ie;
         out_line("ERR ina226_id");
+    }
 
     if (measure) {
         snprintf(g_header, sizeof g_header,
@@ -394,7 +415,9 @@ void app_main(void)
         out_write(g_header, strlen(g_header));
         out_write("\n", 1);
     } else {
-        snprintf(g_header, sizeof g_header, "# fw=%s ERR ina226 (khong do)", FW_GIT_COMMIT);
+        snprintf(g_header, sizeof g_header,
+                 "# fw=%s ERR ina226 (khong do) reason=%s i2c_esp_err=%d value=0x%04x\nERR %s", FW_GIT_COMMIT,
+                 g_fail_reason, g_fail_err, (unsigned)g_fail_mfr, g_fail_reason);
     }
 
     /* canh marker o ca hai che do (marker van ghi ngay ca khi INA226 loi) */
