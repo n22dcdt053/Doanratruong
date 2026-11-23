@@ -254,6 +254,9 @@ static void run_session(int session, int order_mf, uint32_t seed)
     uart_flush_input(CMD_UART);
 }
 
+#define ENERGY_TASK_STACK 8192
+static void energy_task(void *arg);
+
 void app_main(void)
 {
     // Marker thap ngay tu dau app_main (dat muc truoc, roi moi doi sang dau ra, tranh xung gai).
@@ -286,6 +289,14 @@ void app_main(void)
     printf("Energy firmware: Mamba (retrained, seed 42) + MLP, %d samples, marker GPIO%d, UART0 115200\n",
            ENERGY_N_SAMPLES, ENERGY_MARKER_GPIO);
 
+    // sdkconfig co dinh (byte-identical) nen stack app_main chi 3584 B; vong phien (snprintf %e + chuoi goi
+    // sau hon) chay trong task rieng 8 KB, cung loi 0 va cung muc uu tien voi app_main.
+    xTaskCreatePinnedToCore(energy_task, "energy", ENERGY_TASK_STACK, NULL, uxTaskPriorityGet(NULL), NULL, 0);
+}
+
+static void energy_task(void *arg)
+{
+    (void)arg;
     static char cmd[LINE_CAP];
     int64_t next_ready = 0;
     for (;;) {
