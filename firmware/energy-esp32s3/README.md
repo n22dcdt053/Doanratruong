@@ -56,6 +56,7 @@ void energy_permutation(uint32_t seed, uint8_t perm[60]); // perm[i]=i; i từ 5
 - **Nghỉ thêm 2 s sau 10 xung rỗng, trước khối 0**, để có khoảng nền yên giữa xung rỗng cuối và khối đầu. Giữa các khối nghỉ 2 s (5 lần mỗi cấu hình, không nghỉ sau khối 5); sau khối 5 nghỉ 5 s.
 - `energy_sched.c` biên dịch thành tệp riêng (`src/CMakeLists.txt` quét mọi tệp trong `src/`); `main.c` chỉ include `energy_sched.h`.
 - Marker bằng `gpio_set_level`; chưa đo độ trễ của lời gọi này (không thêm vùng đo).
+- Vòng chờ lệnh và các phiên chạy trong **task riêng stack 8 KB** (lõi 0); stack của `app_main` chỉ 3584 B và `sdkconfig.esp32s3` phải giữ byte-identical.
 - Mã khởi động (`esp_reset_reason()` và đếm boot `RTC_NOINIT`) chỉ in lúc boot, theo cách của `mamba-retrained-esp32s3/src/main.c`.
 
 ## Build (trên PC)
