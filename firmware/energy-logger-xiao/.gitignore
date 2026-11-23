@@ -1,0 +1,4 @@
+.pio/
+build.log
+src/build_info.h
+sdkconfig.seeed_xiao_esp32s3
