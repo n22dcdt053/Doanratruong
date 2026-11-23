@@ -6,6 +6,7 @@
 
 Ghi NGUYEN VAN tung dong (chi doi ket dong thanh LF), khong sua so. Dong dau tien do capture them:
   # host_time_utc=<ISO 8601>
+Dong cuoi khong ket thuc bang LF (bi cat luc dung) khong duoc ghi; dong dau tien co the bi cat (mo cong giua dong) va vao bad_lines.
 Khi ket thuc ghi sha256 cua tep ra <out>.sha256 va in tom tat so dong S/E/X/STAT. Dong khong khop mau van duoc ghi
 nguyen va tang bad_lines (vd: dong boot cua ROM luc XIAO reset). Cong noi tiep can pyserial (--port); --replay thi khong.
 
@@ -67,8 +68,10 @@ def iter_serial(port, baud, seconds, send):
             while b"\n" in buf:
                 line, buf = buf.split(b"\n", 1)
                 yield line + b"\n"
+        # Phan du khong ket thuc bang '\n' la dong BI CAT khi dung capture (da gap: 'S,<t>,1262,43' thay vi
+        # 'S,<t>,1262,4306' van khop mau S va se thanh mau sai). Bo di, khong ghi.
         if buf:
-            yield buf
+            print("(bo dong cuoi bi cat: %r)" % buf.decode("latin-1"), file=sys.stderr)
     finally:
         ser.close()
 

@@ -16,8 +16,8 @@ Ba công cụ và bộ kiểm thử bằng **dữ liệu tổng hợp** (chưa c
    ```powershell
    py -3 tools\energy\capture.py --port COM7 --out logs\s1_logger.csv
    ```
-   (`--send P` gửi `PING` sau khi mở cổng; `--seconds N` tự dừng.)
-3. Gửi lệnh tới devkit qua adapter USB-TTL (UART0, 115200 8N1), và **lưu log UART của devkit ra một tệp văn bản**:
+   (`--send P` gửi `PING` sau khi mở cổng; `--seconds N` tự dừng. Dòng cuối bị cắt dở khi dừng không được ghi; dòng đầu có thể bị cắt do mở cổng giữa dòng và vào `bad_lines`. Vài trăm dòng `S` đầu tiên có thể là dữ liệu cũ trong vòng đệm USB của logger, có `t_us` nhỏ hơn hẳn.)
+3. Gửi lệnh tới devkit qua adapter USB-TTL (UART0, 115200 8N1), và **lưu log UART của devkit ra một tệp văn bản**. **Gửi một dòng trống (chỉ `LF`) và chờ ~0,5 s trước `START`**: lần đầu gửi `START` ngay thì devkit trả `ERR cmd` (nghi một byte rác từ adapter dính vào đầu lệnh; chưa chứng minh nguyên nhân). Devkit trả `ERR cmd` cho dòng trống, vô hại. Lệnh:
    `START <session 1..5> <MF|LF> <seed>` (ví dụ `START 1 MF 42`). Devkit in `ACK …` rồi chạy.
 4. Chờ dòng `SESSION_DONE session=<s>` ở log devkit, rồi dừng capture (Ctrl-C).
 5. Ghép:
