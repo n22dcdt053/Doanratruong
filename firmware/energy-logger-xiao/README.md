@@ -10,7 +10,7 @@ từ devkit, gán cả hai vào **cùng một đồng hồ `esp_timer` (µs)**, 
 
 | Chức năng | XIAO | GPIO | Ghi chú |
 |---|---|---|---|
-| I2C SDA (INA226) | D4 | 5 | 400 kHz, INA226 địa chỉ 0x40 (A0 = A1 = GND). Bật thêm pull-up nội bộ (module thường đã có pull-up riêng). |
+| I2C SDA (INA226) | D4 | 5 | 400 kHz. Địa chỉ INA226 là macro `LOGGER_INA226_ADDR` (mặc định 0x40 = A0 và A1 nối GND; `platformio.ini` đang đặt 0x44 cho module trên bàn đo, xem dưới). Bật thêm pull-up nội bộ (module thường đã có pull-up riêng). |
 | I2C SCL (INA226) | D5 | 6 | |
 | Marker vào (từ devkit `GPIO4`) | D0 | 1 | Đầu vào, kéo xuống nội bộ, ngắt cả hai cạnh. |
 | Tự kiểm ra | D3 | 4 | Lệnh `T`. Không dùng D2 (GPIO3) vì là chân strapping. |
@@ -79,3 +79,7 @@ Nếu XIAO không vào chế độ nạp, giữ nút **B** (boot) khi cắm USB.
 - Thời điểm mẫu là sau khi đọc xong thanh ghi bus, chưa bù trễ chuyển đổi (cỡ một chu kỳ + thời gian đọc I2C).
 - Chưa thử trên bo: hành vi mở cổng USB Serial/JTAG (DTR/RTS có thể reset XIAO), tốc độ thực của vòng poll, độ trễ ISR, việc hàng đợi có tràn không khi host đọc chậm.
 - **Không cắm USB của devkit khi đang cấp nguồn qua INA226** (hai đường cấp nguồn song song làm sai phép đo và có thể ngược dòng qua INA226).
+
+## Địa chỉ I2C của module INA226 trên bàn đo (23/11/2026)
+
+Quét I2C trên bo thật thấy **một thiết bị ở 0x44**, không phải 0x40; đọc ID cho `mfr_id=0x5449`, `die_id=0x2260`, tức INA226 với chân A1 nối VCC và A0 nối GND. `platformio.ini` đặt `-DLOGGER_INA226_ADDR=0x44` cho module này. Nếu nối A0 và A1 xuống GND thì bỏ dòng `build_flags` (địa chỉ về 0x40). Khi INA226 không trả lời, dòng lỗi lặp lại mỗi 5 s có thêm `scan=<các địa chỉ thấy>` và mức `sda`/`scl` để chẩn đoán.

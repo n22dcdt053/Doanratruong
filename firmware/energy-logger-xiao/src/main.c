@@ -54,7 +54,10 @@
 #error "cac chan logger phai khac nhau"
 #endif
 
-#define INA_ADDR 0x40
+#ifndef LOGGER_INA226_ADDR
+#define LOGGER_INA226_ADDR 0x40 /* A0 = A1 = GND; doi bang -DLOGGER_INA226_ADDR=0x4x neu module noi A0/A1 khac */
+#endif
+#define INA_ADDR LOGGER_INA226_ADDR
 #define INA_REG_CONFIG 0x00
 #define INA_REG_SHUNT 0x01
 #define INA_REG_BUS 0x02
@@ -408,16 +411,26 @@ void app_main(void)
 
     if (measure) {
         snprintf(g_header, sizeof g_header,
-                 "# fw=%s cfg=0x%04x avg=%d vct_us=%d rshunt_nominal_ohm=0.1 marker_gpio=%d mfr_id=0x%04x "
+                 "# fw=%s cfg=0x%04x avg=%d vct_us=%d rshunt_nominal_ohm=0.1 marker_gpio=%d ina_addr=0x%02x mfr_id=0x%04x "
                  "die_id=0x%04x fw_tree=%s",
-                 FW_GIT_COMMIT, (unsigned)INA_CFG, INA_AVG_SAMPLES, INA_VCT_US, LOGGER_MARKER_GPIO,
+                 FW_GIT_COMMIT, (unsigned)INA_CFG, INA_AVG_SAMPLES, INA_VCT_US, LOGGER_MARKER_GPIO, INA_ADDR,
                  (unsigned)mfr, (unsigned)die, FW_GIT_DIRTY);
         out_write(g_header, strlen(g_header));
         out_write("\n", 1);
     } else {
+        /* Chan doan: quet dia chi 0x08..0x77 va doc muc day SDA/SCL (khi rang, ca hai phai o muc cao nho pull-up) */
+        char scan[48] = "";
+        size_t sl = 0;
+        if (ie == ESP_OK) {
+            for (int a = 0x08; a <= 0x77 && sl < sizeof scan - 6; a++) {
+                if (i2c_master_probe(g_bus, (uint16_t)a, 10) == ESP_OK)
+                    sl += (size_t)snprintf(scan + sl, sizeof scan - sl, "%s0x%02x", sl ? "," : "", a);
+            }
+        }
         snprintf(g_header, sizeof g_header,
-                 "# fw=%s ERR ina226 (khong do) reason=%s i2c_esp_err=%d value=0x%04x\nERR %s", FW_GIT_COMMIT,
-                 g_fail_reason, g_fail_err, (unsigned)g_fail_mfr, g_fail_reason);
+                 "# fw=%s ERR ina226 (khong do) reason=%s i2c_esp_err=%d value=0x%04x scan=%s sda=%d scl=%d\nERR %s",
+                 FW_GIT_COMMIT, g_fail_reason, g_fail_err, (unsigned)g_fail_mfr, sl ? scan : "none",
+                 gpio_get_level(LOGGER_SDA_GPIO), gpio_get_level(LOGGER_SCL_GPIO), g_fail_reason);
     }
 
     /* canh marker o ca hai che do (marker van ghi ngay ca khi INA226 loi) */
