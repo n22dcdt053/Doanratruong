@@ -1,0 +1,24 @@
+{
+  "brief": "07-G1",
+  "seed": 42,
+  "rng": "numpy.random.default_rng",
+  "numpy_version_note": "ket qua rng.choice phu thuoc phien ban numpy; da chay voi numpy 1.26.4",
+  "per_class": 10,
+  "source_split": "val (ml/split_manifest.csv), khong dung test",
+  "n_samples": 60,
+  "split_manifest_sha256": "a634d00a8fb0084212469791ab780b6c7fe07e482f03991aff8f9f5a450326f0",
+  "checkpoint_sha256": {
+    "mamba_retrained": "f742597b772f609968040e0ffc22f50b011a996ebf3c05fdbdfa8ec95b6f7839",
+    "mlp": "0999a6a7a73afcb752b99275f640254d4d20c2231079eb0bc5330b7470701239"
+  },
+  "weights_sha256": {
+    "mamba_weights.h": "5d8499d2dfb07e425814492b17ab83368cd6e8c199895d4c69493905d9687c50",
+    "mlp_weights.h": "398dd42647171f99058628b129dd27e83a95d708c57bfb24b581c02e86bdf758"
+  },
+  "files_sha256": {
+    "energy_samples.csv": "fbd2d664366a582452dc042b1e9c61d7576f647205d378bbc6d054a443f1abf5",
+    "energy_samples.h": "c199cfc05534fd5c6365d6f977ec5b353204c82a39d78338f95429ade679ed77",
+    "ref_mamba_logits.csv": "b6d55bc83a590722cd212a208b4a4e1d035677e1a95a0e120a244299bec7b3a8",
+    "ref_mlp_logits.csv": "5ce590444a9733237aba2f1ce54b71d727115c4273850ee8b424a6f575ad6391"
+  }
+}
