@@ -1,0 +1,8 @@
+# host_time_utc=2026-11-23T06:02:43Z
+PING,7696425
+STAT,10022251,samples=0,edges=0,drops=0,i2c_err=0
+# fw=e58b47b ERR ina226 (khong do)
+STAT,15022251,samples=0,edges=0,drops=0,i2c_err=0
+# fw=e58b47b ERR ina226 (khong do)
+STAT,20022251,samples=0,edges=0,drops=0,i2c_err=0
+# fw=e58b47b ERR ina226 (khong do)

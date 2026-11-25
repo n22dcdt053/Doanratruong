@@ -1,0 +1,36 @@
+READY fw=7a3fae6 gpio=4
+ACK session=2 order=LF seed=43
+EMP s=2 cfg=mlp pulse=1 t_rise_us=786127644 t_fall_us=786128645
+EMP s=2 cfg=mlp pulse=2 t_rise_us=786227632 t_fall_us=786228633
+EMP s=2 cfg=mlp pulse=3 t_rise_us=786327632 t_fall_us=786328633
+EMP s=2 cfg=mlp pulse=4 t_rise_us=786427632 t_fall_us=786428633
+EMP s=2 cfg=mlp pulse=5 t_rise_us=786527632 t_fall_us=786528633
+EMP s=2 cfg=mlp pulse=6 t_rise_us=786627632 t_fall_us=786628633
+EMP s=2 cfg=mlp pulse=7 t_rise_us=786727632 t_fall_us=786728633
+EMP s=2 cfg=mlp pulse=8 t_rise_us=786827632 t_fall_us=786828633
+EMP s=2 cfg=mlp pulse=9 t_rise_us=786927632 t_fall_us=786928633
+EMP s=2 cfg=mlp pulse=10 t_rise_us=787027632 t_fall_us=787028633
+BLK s=2 b=0 cfg=mlp pulse=11 t_rise_us=789169133 t_fall_us=789268109 n=10 idx=23,34,43,17,26,37,14,58,35,3 pred=4,0,5,5,2,4,2,2,2,0 ref=4,0,5,5,2,4,2,2,2,0 maxdl=0.000e+00 invalid=0
+BLK s=2 b=1 cfg=mlp pulse=12 t_rise_us=791269131 t_fall_us=791368122 n=10 idx=41,49,25,47,16,36,27,51,56,20 pred=3,5,3,4,3,0,1,0,3,2 ref=3,5,3,4,3,0,1,0,3,2 maxdl=0.000e+00 invalid=0
+BLK s=2 b=2 cfg=mlp pulse=13 t_rise_us=793369130 t_fall_us=793468109 n=10 idx=21,38,8,28,54,44,45,1,7,42 pred=1,4,0,1,4,0,2,0,5,3 ref=1,4,0,1,4,0,2,0,5,3 maxdl=0.000e+00 invalid=0
+BLK s=2 b=3 cfg=mlp pulse=14 t_rise_us=795469130 t_fall_us=795568109 n=10 idx=10,6,11,19,33,39,48,15,59,2 pred=2,3,4,0,0,4,5,4,1,0 ref=2,3,4,0,0,4,5,4,1,0 maxdl=0.000e+00 invalid=0
+BLK s=2 b=4 cfg=mlp pulse=15 t_rise_us=797569130 t_fall_us=797668109 n=10 idx=22,12,50,24,55,53,29,30,52,31 pred=1,5,5,3,3,1,1,4,2,3 ref=1,5,5,3,3,1,1,4,2,3 maxdl=0.000e+00 invalid=0
+BLK s=2 b=5 cfg=mlp pulse=16 t_rise_us=799669128 t_fall_us=799768107 n=10 idx=5,46,18,40,57,13,32,0,4,9 pred=4,1,0,3,3,5,5,5,2,1 ref=4,1,0,3,3,5,5,5,2,1 maxdl=0.000e+00 invalid=0
+EMP s=2 cfg=mamba pulse=17 t_rise_us=809367642 t_fall_us=809368643
+EMP s=2 cfg=mamba pulse=18 t_rise_us=809467632 t_fall_us=809468633
+EMP s=2 cfg=mamba pulse=19 t_rise_us=809567632 t_fall_us=809568633
+EMP s=2 cfg=mamba pulse=20 t_rise_us=809667632 t_fall_us=809668633
+EMP s=2 cfg=mamba pulse=21 t_rise_us=809767632 t_fall_us=809768633
+EMP s=2 cfg=mamba pulse=22 t_rise_us=809867632 t_fall_us=809868633
+EMP s=2 cfg=mamba pulse=23 t_rise_us=809967632 t_fall_us=809968633
+EMP s=2 cfg=mamba pulse=24 t_rise_us=810067632 t_fall_us=810068633
+EMP s=2 cfg=mamba pulse=25 t_rise_us=810167632 t_fall_us=810168633
+EMP s=2 cfg=mamba pulse=26 t_rise_us=810267632 t_fall_us=810268633
+BLK s=2 b=0 cfg=mamba pulse=27 t_rise_us=812409139 t_fall_us=813629188 n=10 idx=23,34,43,17,26,37,14,58,35,3 pred=4,0,5,5,2,4,2,2,2,0 ref=4,0,5,5,2,4,2,2,2,0 maxdl=2.289e-05 invalid=0
+BLK s=2 b=1 cfg=mamba pulse=28 t_rise_us=815629135 t_fall_us=816849528 n=10 idx=41,49,25,47,16,36,27,51,56,20 pred=3,5,3,4,4,0,1,0,3,2 ref=3,5,3,4,4,0,1,0,3,2 maxdl=7.629e-06 invalid=0
+BLK s=2 b=2 cfg=mamba pulse=29 t_rise_us=818849136 t_fall_us=820069313 n=10 idx=21,38,8,28,54,44,45,1,7,42 pred=1,4,0,1,4,0,2,0,5,3 ref=1,4,0,1,4,0,2,0,5,3 maxdl=3.052e-05 invalid=0
+BLK s=2 b=3 cfg=mamba pulse=30 t_rise_us=822069134 t_fall_us=823289356 n=10 idx=10,6,11,19,33,39,48,15,59,2 pred=2,3,4,0,0,4,5,4,1,0 ref=2,3,4,0,0,4,5,4,1,0 maxdl=1.526e-05 invalid=0
+BLK s=2 b=4 cfg=mamba pulse=31 t_rise_us=825289136 t_fall_us=826509461 n=10 idx=22,12,50,24,55,53,29,30,52,31 pred=1,5,5,3,3,1,1,4,2,3 ref=1,5,5,3,3,1,1,4,2,3 maxdl=3.815e-06 invalid=0
+BLK s=2 b=5 cfg=mamba pulse=32 t_rise_us=828509132 t_fall_us=829729491 n=10 idx=5,46,18,40,57,13,32,0,4,9 pred=4,1,0,3,3,5,5,5,2,1 ref=4,1,0,3,3,5,5,5,2,1 maxdl=7.629e-06 invalid=0
+SESSION_DONE session=2
+READY fw=7a3fae6 gpio=4
